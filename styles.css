@@ -252,3 +252,55 @@ body {
     color: var(--text-muted);
     font-size: 0.8rem;
 }
+/* --- ESTILO CINEMÁTICA DEDSEC / GLITCH --- */
+.dedsec-manifesto {
+    background: #000;
+    border: 2px solid var(--dedsec-pink);
+    padding: 1.2rem;
+    box-shadow: -5px 5px 0px var(--dedsec-yellow);
+    position: relative;
+    overflow: hidden;
+}
+
+.glitch-wrapper {
+    position: relative;
+}
+
+.glitch-text {
+    font-family: var(--font-heading);
+    font-size: 2.5rem !important;
+    color: var(--dedsec-cyan);
+    letter-spacing: 3px;
+    position: relative;
+    text-shadow: 2px 0 var(--dedsec-pink), -2px 0 var(--dedsec-yellow);
+    animation: glitch-anim 2s infinite linear alternate-reverse;
+}
+
+.typewriter-text {
+    color: var(--dedsec-yellow);
+    font-size: 0.85rem;
+    border-right: 2px solid var(--dedsec-cyan);
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+    animation: typing 3.5s steps(40, end) forwards, blink 0.75s step-end infinite;
+}
+
+/* ANIMACIONES */
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink {
+    from, to { border-color: transparent }
+    50% { border-color: var(--dedsec-cyan); }
+}
+
+@keyframes glitch-anim {
+    0% { text-shadow: 2px 0 var(--dedsec-pink), -2px 0 var(--dedsec-yellow); }
+    25% { text-shadow: -2px 0 var(--dedsec-pink), 2px 0 var(--dedsec-yellow); }
+    50% { text-shadow: 2px -1px var(--dedsec-cyan), -2px 1px var(--dedsec-pink); }
+    75% { text-shadow: -1px 2px var(--dedsec-yellow), 1px -2px var(--dedsec-cyan); }
+    100% { text-shadow: 2px 0 var(--dedsec-pink), -2px 0 var(--dedsec-yellow); }
+}
