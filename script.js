@@ -3,37 +3,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const formResponse = document.getElementById('formResponse');
 
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Evita que la página se recargue
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-            // Obtener los datos del formulario
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
-
-            // Deshabilitar botón temporalmente para dar efecto de procesamiento
             const submitBtn = contactForm.querySelector('button[type="submit"]');
+
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
 
-            setTimeout(() => {
-                // Generar respuesta automática visible para el cliente
-                formResponse.className = 'form-response success';
-                formResponse.innerHTML = `
-                    <div class="auto-reply">
-                        <i class="fa-solid fa-circle-check"></i>
-                        <div>
-                            <h4>¡Mensaje recibido con éxito!</h4>
-                            <p>Gracias <strong>${name}</strong>. Se ha registrado tu consulta desde <em>${email}</em>.</p>
-                            <small><i class="fa-solid fa-robot"></i> Confirmación automática: Tu mensaje ha sido canalizado al contenedor de evidencias de Seguridad Informática.</small>
-                        </div>
-                    </div>
-                `;
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    body: new FormData(contactForm),
+                    headers: { 'Accept': 'application/json' }
+                });
 
-                // Limpiar el formulario
-                contactForm.reset();
+                if (response.ok) {
+                    formResponse.className = 'form-response success';
+                    formResponse.innerHTML = `
+                        <div class="auto-reply">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <div>
+                                <h4>¡Mensaje transmitido con éxito!</h4>
+                                <p>Gracias <strong>${name}</strong>. El mensaje ha sido enviado a la bandeja principal.</p>
+                                <small><i class="fa-solid fa-robot"></i> Notificación enviada desde <em>${email}</em>.</small>
+                            </div>
+                        </div>
+                    `;
+                    contactForm.reset();
+                } else {
+                    throw new Error('Error al enviar');
+                }
+            } catch (error) {
+                formResponse.className = 'form-response error';
+                formResponse.innerHTML = `<p><i class="fa-solid fa-triangle-exclamation"></i> Ocurrió un error al enviar el mensaje. Inténtalo de nuevo.</p>`;
+            } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Mensaje';
-            }, 1000);
+            }
         });
     }
 });
