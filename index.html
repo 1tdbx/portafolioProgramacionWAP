@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio | CNO IV - Seguridad Informática</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- FontAwesome para íconos técnicos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- 1. ENCABEZADO (HEADER) -->
+    <header class="header">
+        <div class="header-container">
+            <div class="student-info">
+                <h1 class="student-name">Jesús Israel Martínez Escobedo</h1>
+                <p class="course-badge"><i class="fa-solid fa-shield-halved"></i> CNO IV - Seguridad Informática</p>
+                <p class="academic-details">
+                    <span><i class="fa-solid fa-university"></i> Universidad Politécnica de San Luis Potosí</span> | 
+                    <span><i class="fa-solid fa-calendar"></i> Semestre 2026</span>
+                </p>
+            </div>
+            
+            <nav class="navbar">
+                <ul>
+                    <li><a href="#inicio" class="active">Inicio</a></li>
+                    <li><a href="#parcial1">Parcial 1</a></li>
+                    <li><a href="#parcial2" class="disabled">Parcial 2</a></li>
+                    <li><a href="#parcial3" class="disabled">Parcial 3</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="inicio" class="main-content">
+        <!-- BANNER ESTILO CINEMÁTICA DEDSEC -->
+        <div class="dedsec-manifesto">
+            <div class="glitch-wrapper">
+                <h2 class="glitch-text" data-text="/// JOIN_THE_RESISTANCE">/// JOIN_THE_RESISTANCE</h2>
+            </div>
+            <p class="typewriter-text">> CNO_IV // OPERACIÓN_PORTAFOLIO_ACTIVA... [SISTEMA_SECURED]</p>
+        </div>
+        <!-- 2. PRESENTACIÓN DEL PORTAFOLIO -->
+        <section class="section-card presentation">
+            <h2><i class="fa-solid fa-folder-open"></i> Presentación del Portafolio</h2>
+            <p>
+                Bienvenido a mi Portafolio de evidencias para la materia de 
+                <strong>CNO IV - Seguridad Informática</strong>. Este sitio web tiene como propósito documentar, 
+                estructurar y presentar de forma sistemática los aprendizajes, prácticas y análisis desarrollados a lo largo de la materia.
+            </p>
+            <p>
+                El enfoque del curso abarca áreas fundamentales de la <strong>seguridad informática</strong>, 
+                tales como la evaluación de vulnerabilidades, pruebas de penetración (pentesting), análisis de amenazas 
+                y aplicación de estándares de ciberseguridad. Este portafolio servirá como testimonio de la evolución 
+                técnica y práctica durante la materia.
+            </p>
+        </section>
+
+        <!-- 3. PERFIL DEL ESTUDIANTE -->
+        <section class="section-card profile">
+            <h2><i class="fa-solid fa-user-ninja"></i> Perfil del Estudiante</h2>
+            <p>
+                Estudiante apasionado por la ingeniería de software, la ciberseguridad y el desarrollo de sistemas computacionales. 
+                Orientado al análisis profundo de arquitecturas, resolución de problemas algorítmicos y exploración de la seguridad ofensiva y defensiva.
+            </p>
+            <div class="interests-tags">
+                <span class="tag"><i class="fa-solid fa-bug"></i> Pruebas de Penetración</span>
+                <span class="tag"><i class="fa-solid fa-magnifying-glass-chart"></i> Análisis de Vulnerabilidades</span>
+                <span class="tag"><i class="fa-solid fa-code"></i> Desarrollo Seguro</span>
+                <span class="tag"><i class="fa-solid fa-network-wired"></i> Seguridad en Redes</span>
+            </div>
+        </section>
+
+        <!-- 4. INFORMACIÓN TÉCNICA BÁSICA -->
+        <section class="section-card tech-info">
+            <h2><i class="fa-solid fa-laptop-code"></i> Información Técnica del Sitio</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <i class="fa-brands fa-html5"></i>
+                    <strong>Tecnologías:</strong>
+                    <p>HTML5, CSS3, JavaScript (ES6+)</p>
+                </div>
+                <div class="tech-item">
+                    <i class="fa-brands fa-github"></i>
+                    <strong>Control de Versiones:</strong>
+                    <p>Git / GitHub Repository</p>
+                </div>
+                <div class="tech-item">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <strong>Plataforma de Publicación:</strong>
+                    <p>GitHub Pages (SSL Encrypted)</p>
+                </div>
+            </div>
+        </section>
+        <!-- ACTIVIDADES DEL PRIMER PARCIAL -->
+
+        <section id="parcial1" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-folder-tree"></i>
+                Primer Parcial
+            </h2>
+
+            <p>
+                Actividades y evidencias correspondientes al primer parcial
+                de la materia CNO IV - Seguridad Informática.
+            </p>
+
+            <div class="tech-grid">
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-file-code"></i>
+
+                    <strong>Actividad 03</strong>
+
+                    <p>
+                        No presiones Esc... todavía
+                    </p>
+
+                    <a href="P1/Actividades/Act02.html" class="activity-button">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        Ver actividad
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+        <!-- 5. FORMULARIO DE CONTACTO -->
+        <section id="contacto" class="section-card contact">
+            <h2><i class="fa-solid fa-paper-plane"></i> Formulario de Contacto</h2>
+            <p>Envía un mensaje técnico o consulta. Recibirás una confirmación en tu pantalla al enviar.</p>
+            
+            <form id="contactForm" action="https://formspree.io/f/mqpzogjp" method="POST" class="contact-form">
+                <div class="form-group">
+                    <label for="name">Nombre completo:</label>
+                    <input type="text" id="name" name="name" placeholder="Ej. Ana García" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo electrónico:</label>
+                    <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Mensaje:</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Escribe tu mensaje o consulta..." required></textarea>
+                </div>
+                <button type="submit" class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Enviar Mensaje</button>
+            </form>
+            
+            <!-- Contenedor para respuesta automática -->
+            <div id="formResponse" class="form-response hidden"></div>
+        </section>
+
+    </main>
+
+    <!-- 6. PIE DE PÁGINA (FOOTER) -->
+    <footer class="footer">
+        <p>&copy; 2026 Jesús Israel Martínez Escobedo. Todos los derechos reservados.</p>
+        <p><i class="fa-solid fa-lock"></i> Conexión Segura mediante Protocolo HTTPS / SSL</p>
+    </footer>
+
+
+    <script src="script.js"></script>
+</body>
+</html>

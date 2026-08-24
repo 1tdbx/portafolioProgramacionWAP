@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Actividad 03 | No presiones ESC... todavía</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <a href="#" class="back-to-top" title="Volver arriba">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
+    <header class="header">
+        <div class="header-container">
+
+            <div class="student-info">
+
+                <h1 class="student-name">
+                    Actividad 03
+                </h1>
+
+                <p class="course-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    No presiones ESC... todavía
+                </p>
+
+                <p class="academic-details">
+                    <span>
+                        <i class="fa-solid fa-university"></i>
+                        Universidad Politécnica de San Luis Potosí
+                    </span>
+                    |
+                    <span>
+                        <i class="fa-solid fa-calendar"></i>
+                        CNO IV - Seguridad Informática
+                    </span>
+                </p>
+
+            </div>
+
+            <nav class="navbar">
+                <ul>
+                    <li>
+                        <a href="../../index.html">
+                            <i class="fa-solid fa-house"></i>
+                            Inicio
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#objetivo">
+                            Objetivo
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#implementacion">
+                            Implementación
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#evidencias">
+                            Evidencias
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#comunicacion">
+                            Comunicación
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#resultados">
+                            Resultados
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#codigo">
+                            Código
+                        </a>
+                    </li>   
+
+                    <li>
+                        <a href="#conclusiones">
+                            Conclusiones
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+
+        </div>
+    </header>
+
+
+    <main class="main-content" id="pdf-content">
+
+        <!-- CONTENIDO DE LA ACTIVIDAD -->
+
+        <div class="dedsec-manifesto">
+
+            <div class="glitch-wrapper">
+
+                <h2 class="glitch-text"
+                    data-text="/// ACT03_EVENT_HOOKS">
+                    /// ACT03_NO_PRESS_ESC
+                </h2>
+
+            </div>
+
+            <p class="typewriter-text">
+                &gt; CNO_IV // ACTIVIDAD_03 // LABORATORIO_CONTROLADO...
+            </p>
+
+        </div>
+
+
+        <section id="objetivo" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-crosshairs"></i>
+                Objetivo
+            </h2>
+
+            <div class="objective-content">
+
+            <p>
+                El objetivo general de esta actividad fue implementar y
+                documentar, en un entorno de laboratorio controlado, un
+                programa basado en <strong>event hooks</strong> y
+                <strong>callbacks</strong> capaz de registrar eventos de
+                teclado, asociarlos temporalmente y transmitir telemetría
+                hacia un receptor de laboratorio.
+            </p>
+
+            <p>
+                La actividad permitió comprender el funcionamiento técnico
+                de una técnica de captura de entrada y analizar sus
+                implicaciones dentro del área de la ciberseguridad.
+            </p>
+
+            <h3>Objetivos específicos</h3>
+
+            <ul>
+                <li>
+                    Incorporar persistencia de los registros generados
+                    durante la ejecución del programa.
+                </li>
+
+                <li>
+                    Asociar cada evento con una marca de fecha y hora,
+                    permitiendo identificar su orden y temporalidad.
+                </li>
+
+                <li>
+                    Implementar el envío controlado de eventos hacia una
+                    máquina Kali Linux dentro del laboratorio.
+                </li>
+
+                <li>
+                    Comprobar el funcionamiento mediante pruebas,
+                    capturas de pantalla y análisis del código desarrollado.
+                </li>
+
+                <li>
+                    Documentar y publicar la actividad dentro del
+                    portafolio digital.
+                </li>
+            </ul>
+
+        </div>
+
+        </section>
+
+
+        <section id="implementacion" class="section-card">
+
+                <h2>
+                    <i class="fa-solid fa-code"></i>
+                    Implementación técnica
+                </h2>
+
+                <p>
+                    La implementación se realizó utilizando
+                    <strong>Python 3</strong> y la biblioteca
+                    <strong>pynput</strong>, tomando como base el código
+                    proporcionado durante la clase.
+                </p>
+
+                <p>
+                    El programa utiliza un
+                    <strong>Listener</strong> para detectar eventos generados
+                    por el teclado. Mediante funciones callback se procesan
+                    los eventos de presión y liberación de las teclas.
+                </p>
+
+                <div class="tech-grid">
+
+                    <div class="tech-item">
+
+                        <i class="fa-solid fa-keyboard"></i>
+
+                        <strong>Event Hooks</strong>
+
+                        <p>
+                            El Listener permite detectar eventos de teclado
+                            generados durante la ejecución del programa.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tech-item">
+
+                        <i class="fa-solid fa-code-branch"></i>
+
+                        <strong>Callbacks</strong>
+
+                        <p>
+                            Las funciones
+                            <code>on_press()</code> y
+                            <code>on_release()</code>
+                            procesan cada evento detectado.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tech-item">
+
+                        <i class="fa-solid fa-clock"></i>
+
+                        <strong>Asociación temporal</strong>
+
+                        <p>
+                            Cada evento incorpora fecha, hora y milisegundos
+                            mediante la función
+                            <code>datetime.now()</code>.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tech-item">
+
+                        <i class="fa-solid fa-file-lines"></i>
+
+                        <strong>Persistencia</strong>
+
+                        <p>
+                            Los eventos se almacenan en
+                            <code>registro.txt</code>,
+                            permitiendo conservar la información después
+                            de finalizar la ejecución.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tech-item">
+
+                        <i class="fa-solid fa-arrow-right-arrow-left"></i>
+
+                        <strong>Transmisión TCP</strong>
+
+                        <p>
+                            La telemetría generada se transmite mediante
+                            una conexión TCP hacia un receptor ejecutándose
+                            en Kali Linux.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tech-item">
+
+                        <i class="fa-brands fa-linux"></i>
+
+                        <strong>Receptor de laboratorio</strong>
+
+                        <p>
+                            Kali Linux recibe y muestra los eventos enviados
+                            por el programa durante las pruebas.
+                        </p>
+
+                    </div>
+
+            </div>
+
+
+            <h3>
+                Formato del registro
+            </h3>
+
+            <p>
+                Cada evento se almacena siguiendo una estructura que
+                permite identificar el momento, tipo, orden y contenido
+                del evento:
+            </p>
+
+            <pre><code>
+        2026-08-24 15:43:32.010 | PRESS | evento_289 | a
+        2026-08-24 15:43:32.078 | RELEASE | evento_290 | 'a'
+        2026-08-24 15:43:36.815 | PRESS | evento_291 | b
+        2026-08-24 15:43:36.882 | RELEASE | evento_292 | 'b'
+            </code></pre>
+
+        </section>
+
+
+        <section id="evidencias" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-camera"></i>
+                Evidencias de la actividad
+            </h2>
+
+            <p>
+                A continuación se presentan las evidencias obtenidas durante
+                la implementación y las pruebas realizadas en el entorno
+                de laboratorio.
+            </p>
+
+
+            <!-- EVIDENCIA 1 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-code"></i>
+                    Evidencia 01 — Implementación del programa
+                </h3>
+
+                <p>
+                    En esta evidencia se muestra la estructura del proyecto
+                    en Visual Studio Code, incluyendo el archivo
+                    <strong>Act02.py</strong> y el archivo de registro
+                    utilizado para almacenar los eventos.
+                </p>
+
+                <img
+                    src="evidencias/evidencia-01-implementacion.png"
+                    alt="Implementación del programa en Visual Studio Code"
+                    class="evidence-image"
+                >
+
+            </div>
+
+
+            <!-- EVIDENCIA 2 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-server"></i>
+                    Evidencia 02 — Recepción en Kali Linux
+                </h3>
+
+                <p>
+                    La siguiente evidencia demuestra la transmisión de
+                    telemetría desde el programa ejecutado en Windows hacia
+                    el receptor implementado en Kali Linux mediante una
+                    conexión TCP.
+                </p>
+
+                <img
+                    src="evidencias/evidencia-02-kali.png"
+                    alt="Recepción de eventos en Kali Linux"
+                    class="evidence-image"
+                >
+
+            </div>
+
+
+            <!-- EVIDENCIA 3 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-file-lines"></i>
+                    Evidencia 03 — Persistencia y asociación temporal
+                </h3>
+
+                <p>
+                    El archivo de registro conserva los eventos después de
+                    finalizar la ejecución. Cada registro contiene una marca
+                    temporal, el tipo de evento, un identificador secuencial
+                    y el dato asociado.
+                </p>
+
+                <img
+                    src="evidencias/evidencia-03-registro.png"
+                    alt="Archivo de registro con eventos temporales"
+                    class="evidence-image"
+                >
+
+            </div>
+
+        </section>
+
+        <section id="comunicacion" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-network-wired"></i>
+                Comunicación con Kali Linux
+            </h2>
+
+            <p>
+                Para comprobar el envío controlado de telemetría se
+                configuró una máquina virtual con Kali Linux como receptor.
+                El programa desarrollado en Windows estableció una conexión
+                TCP con el receptor utilizando el puerto <strong>5000</strong>.
+            </p>
+
+            <div class="network-flow">
+
+                <div class="network-node">
+
+                    <i class="fa-brands fa-windows"></i>
+
+                    <strong>Windows</strong>
+
+                    <span>
+                        Act02.py
+                    </span>
+
+                </div>
+
+
+                <div class="network-arrow">
+
+                    <span>TCP :5000</span>
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </div>
+
+
+                <div class="network-node">
+
+                    <i class="fa-brands fa-linux"></i>
+
+                    <strong>Kali Linux</strong>
+
+                    <span>
+                        receptor.py
+                    </span>
+
+                </div>
+
+            </div>
+
+            <p>
+                Durante la prueba se generaron eventos de teclado de forma
+                controlada. El receptor mostró los eventos recibidos,
+                incluyendo sus marcas temporales, identificadores y tipo
+                de evento.
+            </p>
+
+            <pre><code>
+        Conexión desde: ('192.168.100.99', 65250)
+
+        2026-08-24 15:43:32.010 | PRESS | evento_289 | a
+        2026-08-24 15:43:32.078 | RELEASE | evento_290 | 'a'
+        2026-08-24 15:43:36.815 | PRESS | evento_291 | b
+        2026-08-24 15:43:36.882 | RELEASE | evento_292 | 'b'
+            </code></pre>
+
+        </section>
+
+        
+
+        <section id="resultados" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-chart-line"></i>
+                Resultados de las pruebas
+            </h2>
+
+            <p>
+                Durante las pruebas se verificó el funcionamiento de los
+                diferentes componentes implementados en el programa.
+                Los resultados obtenidos permitieron comprobar la captura,
+                persistencia, asociación temporal y transmisión de los
+                eventos generados.
+            </p>
+
+
+            <div class="tech-grid">
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    <strong>Registro local</strong>
+
+                    <p>
+                        Los eventos fueron almacenados correctamente en
+                        <code>registro.txt</code> y permanecieron disponibles
+                        después de finalizar la ejecución.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-clock"></i>
+
+                    <strong>Asociación temporal</strong>
+
+                    <p>
+                        Cada evento incluyó fecha, hora y milisegundos,
+                        permitiendo determinar el orden en que ocurrieron
+                        las acciones.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                    <strong>Transmisión</strong>
+
+                    <p>
+                        La información fue enviada mediante TCP hacia el
+                        receptor configurado en Kali Linux utilizando el
+                        puerto 5000.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-desktop"></i>
+
+                    <strong>Recepción</strong>
+
+                    <p>
+                        Kali Linux recibió correctamente los eventos,
+                        incluyendo los registros de PRESS y RELEASE y sus
+                        identificadores correspondientes.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <h3>
+                Prueba de funcionamiento
+            </h3>
+
+            <p>
+                Como prueba final se generaron eventos de teclado de forma
+                controlada. El receptor de Kali Linux mostró correctamente
+                la información transmitida:
+            </p>
+
+            <pre><code>
+        2026-08-24 15:43:32.010 | PRESS | evento_289 | a
+        2026-08-24 15:43:32.078 | RELEASE | evento_290 | 'a'
+        2026-08-24 15:43:36.815 | PRESS | evento_291 | b
+        2026-08-24 15:43:36.882 | RELEASE | evento_292 | 'b'
+        2026-08-24 15:43:41.218 | PRESS | evento_293 | Key.esc
+        2026-08-24 15:43:41.288 | RELEASE | evento_294 | Key.esc
+            </code></pre>
+
+        </section>
+
+        <section id="codigo" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-terminal"></i>
+                Código fuente
+            </h2>
+
+            <p>
+                El siguiente archivo contiene el código fuente desarrollado
+                para la implementación de la actividad. El programa fue
+                ejecutado en Python 3 utilizando la biblioteca
+                <strong>pynput</strong>.
+            </p>
+
+            <div class="tech-grid">
+
+                <div class="tech-item">
+
+                    <i class="fa-brands fa-python"></i>
+
+                    <strong>Act02.py</strong>
+
+                    <p>
+                        Código fuente principal de la actividad.
+                    </p>
+
+                    <a href="Act02.py" download>
+                        <i class="fa-solid fa-download"></i>
+                        Descargar código
+                    </a>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-file-lines"></i>
+
+                    <strong>registro.txt</strong>
+
+                    <p>
+                        Archivo generado durante la ejecución que contiene
+                        los eventos registrados y sus marcas temporales.
+                    </p>
+
+                    <a href="registro.txt" download>
+                        <i class="fa-solid fa-download"></i>
+                        Descargar registro
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section id="conclusiones" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-flag-checkered"></i>
+                Conclusiones
+            </h2>
+
+            <p>
+                La actividad permitió comprender de manera práctica el
+                funcionamiento de los <strong>event hooks</strong> y
+                <strong>callbacks</strong> utilizados para detectar y
+                procesar eventos de teclado mediante Python y la biblioteca
+                <strong>pynput</strong>.
+            </p>
+
+            <p>
+                La implementación de un archivo de registro permitió
+                conservar los eventos generados durante la ejecución,
+                mientras que la incorporación de marcas temporales y
+                números de evento permitió establecer una relación entre
+                el momento y el orden en que ocurrieron.
+            </p>
+
+            <p>
+                También se comprobó la transmisión controlada de telemetría
+                hacia una máquina Kali Linux mediante una conexión TCP,
+                verificando que el receptor pudiera obtener los eventos
+                enviados por el programa.
+            </p>
+
+            <p>
+                Finalmente, la práctica permitió identificar las
+                implicaciones de seguridad relacionadas con las técnicas de
+                captura de entrada y comprender la importancia de analizar
+                este tipo de mecanismos dentro de entornos controlados de
+                laboratorio.
+            </p>
+
+            <div class="conclusion-box">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+                <div>
+                    <strong>Conclusión de seguridad</strong>
+
+                    <p>
+                        Las técnicas estudiadas pueden utilizarse para
+                        analizar eventos de entrada en un sistema, pero
+                        también representan un riesgo cuando son utilizadas
+                        sin autorización. Por ello, su implementación y
+                        análisis deben realizarse únicamente en sistemas
+                        propios o dentro de entornos autorizados.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-file-pdf"></i>
+                Informe
+            </h2>
+
+            <p>
+                Consulta o descarga el informe completo de la actividad.
+            </p>
+
+            <button type="button"
+                class="btn-submit"
+                onclick="generarPDF()">
+
+                <i class="fa-solid fa-file-pdf"></i>
+                Generar informe PDF
+
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <footer class="footer">
+
+        <p>
+            &copy; 2026 Jesús Israel Martínez Escobedo.
+        </p>
+
+        <p>
+            <i class="fa-solid fa-lock"></i>
+            Conexión Segura mediante HTTPS / SSL
+        </p>
+
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        function generarPDF() {
+
+            const elemento = document.getElementById("pdf-content");
+
+            const opciones = {
+                margin: 10,
+                filename: "Actividad_03_No_presiones_Esc_todavia.pdf",
+                image: {
+                    type: "jpeg",
+                    quality: 0.95
+                },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true
+                },
+                jsPDF: {
+                    unit: "mm",
+                    format: "a4",
+                    orientation: "portrait"
+                }
+            };
+
+            html2pdf()
+                .set(opciones)
+                .from(elemento)
+                .save();
+        }
+    </script>
+</body>
+</html>
