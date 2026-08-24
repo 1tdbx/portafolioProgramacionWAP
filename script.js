@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <i class="fa-solid fa-circle-check"></i>
                             <div>
                                 <h4>¡MENSAJE TRANSMITIDO CON ÉXITO!</h4>
-                                p>Gracias <strong>${name}</strong>. Tu paquete de datos ha sido enviado a la bandeja de entrada.</p>
+                                <p>Gracias <strong>${name}</strong>. Tu paquete de datos ha sido enviado a la bandeja de entrada.</p>
                                 <small><i class="fa-solid fa-robot"></i> Confirmación desde <em>${email}</em>.</small>
                             </div>
                         </div>

@@ -304,3 +304,103 @@ body {
     75% { text-shadow: -1px 2px var(--dedsec-yellow), 1px -2px var(--dedsec-cyan); }
     100% { text-shadow: 2px 0 var(--dedsec-pink), -2px 0 var(--dedsec-yellow); }
 }
+/* --- EVIDENCIAS DE ACTIVIDADES --- */
+
+.evidence-item {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #000;
+    border: 1px solid var(--border-tech);
+    border-left: 3px solid var(--dedsec-pink);
+}
+
+.evidence-item h3 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--dedsec-cyan);
+    margin-bottom: 0.7rem;
+    text-transform: uppercase;
+}
+
+.evidence-item p {
+    color: var(--text-main);
+    margin-bottom: 1.2rem;
+}
+
+.evidence-image {
+    display: block;
+    width: 100%;
+    max-width: 900px;
+    height: auto;
+    margin: 1.5rem auto 0;
+    border: 1px solid var(--dedsec-cyan);
+    box-shadow: -4px 4px 0px var(--dedsec-yellow);
+}
+/* --- BOTÓN FLOTANTE VOLVER ARRIBA --- */
+
+.back-to-top {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--dedsec-yellow);
+    color: #000;
+
+    border: 2px solid var(--dedsec-pink);
+
+    text-decoration: none;
+    font-size: 1.2rem;
+
+    box-shadow: -4px 4px 0px var(--dedsec-cyan);
+
+    z-index: 9999;
+
+    transition: all 0.2s ease;
+}
+
+.back-to-top:hover {
+    background-color: var(--dedsec-cyan);
+    color: #000;
+
+    transform: translate(2px, -2px);
+
+    box-shadow: -6px 6px 0px var(--dedsec-yellow);
+}
+/* --- BOTONES DE ACTIVIDADES --- */
+
+.activity-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    margin-top: 1rem;
+    padding: 0.7rem 1.2rem;
+
+    background-color: var(--dedsec-yellow);
+    color: #000;
+
+    border: 2px solid var(--dedsec-pink);
+
+    text-decoration: none;
+    font-weight: bold;
+
+    box-shadow: -4px 4px 0px var(--dedsec-cyan);
+
+    transition: all 0.2s ease;
+}
+
+.activity-button:hover {
+    background-color: var(--dedsec-cyan);
+
+    transform: translate(2px, -2px);
+
+    box-shadow: -6px 6px 0px var(--dedsec-yellow);
+}
