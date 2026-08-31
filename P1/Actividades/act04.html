@@ -1,0 +1,3039 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Actividad 04 | Una página demasiado convincente</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @media print {
+
+            .index-list li a {
+                color: #111 !important;
+                text-decoration: none !important;
+            }
+
+            .index-number,
+            .index-title {
+                color: #111 !important;
+            }
+
+
+            /* ===== CONFIGURACIÓN DE PÁGINA ===== */
+
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+
+
+            /* ===== OCULTAR ELEMENTOS DE LA WEB ===== */
+
+            .header,
+            .navbar,
+            .back-to-top,
+            .footer,
+            .btn-submit {
+                display: none !important;
+            }
+
+
+            /* ===== CONFIGURACIÓN GENERAL ===== */
+
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+
+                background: white !important;
+                color: #111 !important;
+
+                font-family: Arial, sans-serif !important;
+            }
+
+            .main-content {
+                margin: 0 !important;
+                padding: 0 !important;
+
+                width: 100% !important;
+                max-width: none !important;
+            }
+
+            #pdf-content {
+                margin: 0 !important;
+                padding: 0 !important;
+
+                background: white !important;
+                color: #111 !important;
+            }
+
+            #pdf-content * {
+                color: #111 !important;
+                text-shadow: none !important;
+                box-shadow: none !important;
+            }
+
+
+            /* ===== PORTADA ===== */
+
+            .dedsec-manifesto {
+                min-height: 240mm !important;
+
+                display: flex !important;
+                flex-direction: column !important;
+
+                justify-content: center !important;
+                align-items: center !important;
+
+                text-align: center !important;
+
+                page-break-after: always !important;
+                break-after: page !important;
+            }
+
+            .dedsec-manifesto h2 {
+                font-size: 28pt !important;
+                margin-bottom: 20px !important;
+            }
+
+            .dedsec-manifesto p {
+                font-size: 12pt !important;
+            }
+
+            .cover-info {
+                margin-top: 20mm !important;
+                text-align: center !important;
+            }
+
+            .cover-info p {
+                margin: 4mm 0 !important;
+                font-size: 11pt !important;
+            }
+
+            .cover-info p:first-child {
+                font-size: 17pt !important;
+                font-weight: bold !important;
+                margin-bottom: 10mm !important;
+            }
+
+            .cover-info p:nth-child(2) {
+                font-size: 13pt !important;
+                font-weight: bold !important;
+            }
+
+            .cover-info p:nth-child(3) {
+                font-size: 13pt !important;
+                font-weight: bold !important;
+            }
+
+            .cover-info p:nth-child(4) {
+                font-size: 12pt !important;
+                font-weight: bold !important;
+            }
+
+
+            /* ===== SECCIONES ===== */
+
+            .section-card {
+                background: white !important;
+
+                border: none !important;
+                border-radius: 0 !important;
+
+                margin: 0 0 15mm 0 !important;
+                padding: 0 !important;
+
+                page-break-inside: auto !important;
+                break-inside: auto !important;
+            }
+
+            .section-card h2 {
+                font-size: 18pt !important;
+
+                border-bottom: 2px solid #111 !important;
+
+                padding-bottom: 5px !important;
+                margin-top: 0 !important;
+                margin-bottom: 12px !important;
+
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+            }
+
+            .section-card h3 {
+                font-size: 13pt !important;
+
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+            }
+
+            p,
+            li {
+                font-size: 10.5pt !important;
+                line-height: 1.55 !important;
+            }
+
+
+            /* ===== ÍNDICE ===== */
+
+            .index-list {
+                margin-top: 8mm !important;
+            }
+
+            .index-list li {
+                margin-bottom: 3mm !important;
+            }
+
+            .index-list li a {
+                background: white !important;
+                border-left: none !important;
+
+                padding: 2mm 0 !important;
+            }
+
+
+            /* ===== EVIDENCIAS ===== */
+
+            .evidence-item {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+
+                margin-bottom: 15mm !important;
+            }
+
+            .evidence-image {
+                display: block !important;
+
+                max-width: 100% !important;
+                width: auto !important;
+                height: auto !important;
+
+                margin: 8mm auto !important;
+
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+
+            /* ===== FLUJO ===== */
+
+            .lab-flow,
+            .capture-flow {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+
+                margin: 8mm 0 !important;
+            }
+
+            .flow-node,
+            .capture-node {
+                background: white !important;
+                border: 1px solid #333 !important;
+
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .flow-arrow,
+            .capture-connector {
+                color: #111 !important;
+            }
+
+
+            /* ===== GRIDS ===== */
+
+            .tech-grid,
+            .indicator-grid,
+            .controls-grid,
+            .comparison-grid {
+                display: grid !important;
+
+                grid-template-columns: 1fr 1fr !important;
+
+                gap: 6mm !important;
+            }
+
+            .tech-item,
+            .indicator-card,
+            .control-card,
+            .comparison-card {
+                background: white !important;
+                border: 1px solid #ccc !important;
+
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+
+                padding: 5mm !important;
+            }
+
+
+            /* ===== QUINTO CONTROL ===== */
+
+            .control-card:last-child {
+                grid-column: 1 / -1 !important;
+            }
+
+
+            /* ===== CONCLUSIÓN ===== */
+
+            .final-conclusion {
+                page-break-inside: auto !important;
+                break-inside: auto !important;
+            }
+
+            .conclusion-highlight,
+            .conclusion-box,
+            .security-summary,
+            .reference-note {
+                background: #f5f5f5 !important;
+                border: 1px solid #333 !important;
+
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+
+            /* ===== REFERENCIAS ===== */
+
+            .reference-item {
+                background: white !important;
+                border: 1px solid #ccc !important;
+
+                color: #111 !important;
+
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+
+            /* ===== BLOQUES DE CÓDIGO ===== */
+
+            pre {
+                white-space: pre-wrap !important;
+                word-wrap: break-word !important;
+
+                background: #f2f2f2 !important;
+                border: 1px solid #ccc !important;
+
+                color: #111 !important;
+
+                padding: 8px !important;
+                font-size: 8.5pt !important;
+
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            code {
+                color: #111 !important;
+            }
+            
+            /* ===== PAGINACIÓN DEL INFORME ===== */
+
+            #indice {
+                page-break-after: always !important;
+                break-after: page !important;
+            }
+
+            .document-section {
+                page-break-before: always !important;
+                break-before: page !important;
+            }
+            .pdf-anchor {
+                display: block;
+                width: 1px;
+                height: 1px;
+                margin: 0;
+                padding: 0;
+            }
+            .evidence-image {
+                display: block !important;
+
+                width: auto !important;
+                max-width: 100% !important;
+                height: auto !important;
+
+                margin: 8mm auto !important;
+
+                border: 1px solid #333 !important;
+                border-radius: 4px !important;
+
+                box-sizing: border-box !important;
+
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+        }
+    </style>
+    <style>
+
+        /* ===== ÍNDICE ===== */
+
+        .index-list {
+            list-style: none;
+            padding: 0;
+            margin: 25px 0;
+        }
+
+        .index-list li {
+            margin-bottom: 12px;
+        }
+
+        .index-list li a {
+            display: block;
+            padding: 12px 16px;
+
+            color: inherit;
+            text-decoration: none;
+
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid currentColor;
+
+            transition: 0.2s ease;
+        }
+
+        .index-list li a:hover {
+            padding-left: 22px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .index-number {
+            display: inline-block;
+            min-width: 28px;
+
+            font-weight: bold;
+            opacity: 0.6;
+        }
+        .index-number::after {
+            content: "  //";
+            margin-left: 4px;
+            opacity: 0.7;
+        }
+
+        .index-title {
+            margin-left: 6px;
+        }
+
+        /* ===== FLUJO DEL LABORATORIO ===== */
+        .lab-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-node {
+            min-width: 150px;
+            padding: 20px 15px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+
+            border: 1px solid currentColor;
+            border-radius: 8px;
+
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .flow-node i {
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+
+        .flow-node strong {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .flow-node span {
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            opacity: 0.6;
+        }
+        
+        /* ===== EVIDENCIAS ===== */
+
+        .evidence-item {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+
+            margin-bottom: 15mm !important;
+            padding: 6mm !important;
+
+            border: 1px solid #333 !important;
+            border-bottom: 1px solid #333 !important;
+
+            box-sizing: border-box !important;
+        }
+
+        .evidence-item:last-child {
+            border-bottom: none;
+        }
+
+        .evidence-item h3 {
+            margin-bottom: 12px;
+        }
+
+        .evidence-item p {
+            line-height: 1.7;
+        }
+
+        .evidence-image {
+            display: block;
+            width: 85%;
+            max-width: 900px;
+            height: auto;
+            margin: 22px auto;
+            border-radius: 6px;
+        }
+        
+        /* ===== FLUJO DE CAPTURA ===== */
+
+        .capture-flow {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 10px;
+            margin: 35px 0;
+            flex-wrap: wrap;
+        }
+
+        .capture-node {
+            position: relative;
+
+            flex: 1;
+            min-width: 155px;
+            max-width: 190px;
+
+            padding: 25px 18px;
+
+            text-align: center;
+
+            border: 1px solid currentColor;
+            border-radius: 8px;
+
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .capture-node i {
+            display: block;
+            font-size: 27px;
+            margin: 8px 0 12px;
+        }
+
+        .capture-node strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .capture-node p {
+            margin: 0;
+            font-size: 12px;
+            line-height: 1.5;
+            opacity: 0.75;
+        }
+
+        .capture-number {
+            position: absolute;
+            top: 9px;
+            left: 11px;
+
+            font-size: 10px;
+            font-weight: bold;
+
+            opacity: 0.55;
+        }
+
+        .capture-connector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 20px;
+            opacity: 0.55;
+        }
+
+
+        /* ===== COMPARACIÓN ===== */
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .comparison-card {
+            padding: 25px;
+
+            border: 1px solid currentColor;
+            border-radius: 8px;
+
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .comparison-card h3 {
+            margin-top: 0;
+            margin-bottom: 18px;
+        }
+
+        .comparison-card ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .comparison-card li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+
+        /* ===== RESPONSIVE ===== */
+
+        @media (max-width: 850px) {
+
+            .capture-connector {
+                display: none;
+            }
+
+            .capture-node {
+                min-width: 180px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .capture-node {
+                max-width: none;
+                width: 100%;
+            }
+
+        }
+       
+        /* ===== INDICADORES DE PHISHING ===== */
+
+        .indicator-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 30px;
+        }
+
+        .indicator-card {
+            position: relative;
+
+            padding: 28px 22px 24px;
+
+            border: 1px solid currentColor;
+            border-radius: 8px;
+
+            background: rgba(255, 255, 255, 0.03);
+
+            transition: transform 0.2s ease;
+        }
+
+        .indicator-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .indicator-card i {
+            display: block;
+            font-size: 25px;
+            margin-bottom: 16px;
+        }
+
+        .indicator-card h3 {
+            margin: 0 0 12px;
+            font-size: 16px;
+        }
+
+        .indicator-card p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.65;
+            opacity: 0.78;
+        }
+
+        .indicator-number {
+            position: absolute;
+
+            top: 12px;
+            right: 14px;
+
+            font-size: 11px;
+            font-weight: bold;
+
+            opacity: 0.45;
+        }
+
+
+        /* ===== RESPONSIVE INDICADORES ===== */
+
+        @media (max-width: 950px) {
+
+            .indicator-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .indicator-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+       /* ===== CONTROLES DE SEGURIDAD ===== */
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .control-card {
+            padding: 25px;
+
+            border: 1px solid currentColor;
+            border-radius: 8px;
+
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .control-header {
+            position: relative;
+
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+
+            margin-bottom: 18px;
+            padding-bottom: 15px;
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .control-header i {
+            font-size: 25px;
+        }
+
+        .control-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .control-number {
+            position: absolute;
+
+            top: -8px;
+            right: 0;
+
+            font-size: 10px;
+            font-weight: bold;
+
+            opacity: 0.45;
+        }
+
+        .control-card > p {
+            font-size: 13px;
+            line-height: 1.65;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .control-detail {
+            display: flex;
+            flex-direction: column;
+
+            gap: 5px;
+
+            margin-top: 12px;
+            padding: 12px 14px;
+
+            border-left: 3px solid currentColor;
+
+            background: rgba(255, 255, 255, 0.025);
+        }
+
+        .control-detail strong {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .control-detail span {
+            font-size: 12px;
+            line-height: 1.5;
+            opacity: 0.75;
+        }
+
+        .control-detail.limitation {
+            opacity: 0.85;
+        }
+       .control-card:last-child {
+            grid-column: 1 / -1;
+        }
+    
+        /* ===== CONCLUSIÓN ===== */
+
+        .final-conclusion {
+            display: grid;
+            grid-template-columns: 75px 1fr;
+            gap: 25px;
+
+            margin-top: 30px;
+        }
+
+        .conclusion-icon {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+
+            padding-top: 5px;
+
+            font-size: 38px;
+        }
+
+        .final-conclusion p {
+            margin: 0 0 18px;
+
+            font-size: 14px;
+            line-height: 1.8;
+
+            opacity: 0.82;
+        }
+
+        .conclusion-highlight {
+            display: flex;
+            align-items: flex-start;
+
+            gap: 15px;
+
+            margin-top: 28px;
+            padding: 20px;
+
+            border: 1px solid currentColor;
+            border-radius: 8px;
+
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .conclusion-highlight i {
+            font-size: 22px;
+            margin-top: 2px;
+        }
+
+        .conclusion-highlight strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .conclusion-highlight span {
+            display: block;
+
+            font-size: 12px;
+            line-height: 1.6;
+
+            opacity: 0.75;
+        }
+        
+        /* ===== REFERENCIAS ===== */
+
+        .references-list {
+            display: flex;
+            flex-direction: column;
+
+            gap: 12px;
+
+            margin-top: 30px;
+        }
+
+        .reference-item {
+            display: grid;
+            grid-template-columns: 45px 1fr 25px;
+
+            align-items: center;
+            gap: 15px;
+
+            padding: 16px 18px;
+
+            border: 1px solid currentColor;
+            border-radius: 7px;
+
+            background: rgba(255, 255, 255, 0.03);
+
+            text-decoration: none;
+            color: inherit;
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .reference-item:hover {
+            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .reference-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 42px;
+            height: 42px;
+
+            border: 1px solid currentColor;
+            border-radius: 6px;
+
+            font-size: 17px;
+        }
+
+        .reference-item strong {
+            display: block;
+
+            margin-bottom: 4px;
+
+            font-size: 13px;
+        }
+
+        .reference-item span {
+            display: block;
+
+            font-size: 11px;
+            line-height: 1.5;
+
+            opacity: 0.7;
+        }
+
+        .reference-item > i {
+            font-size: 13px;
+            opacity: 0.55;
+        }
+
+        .reference-note {
+            display: flex;
+            align-items: flex-start;
+
+            gap: 14px;
+
+            margin-top: 22px;
+            padding: 17px 18px;
+
+            border-radius: 7px;
+
+            background: rgba(255, 255, 255, 0.03);
+
+            font-size: 12px;
+            line-height: 1.6;
+
+            opacity: 0.75;
+        }
+
+        .reference-note i {
+            margin-top: 2px;
+        }
+
+
+        /* ===== RESPONSIVE REFERENCIAS ===== */
+
+        @media (max-width: 600px) {
+
+            .reference-item {
+                grid-template-columns: 40px 1fr 20px;
+                gap: 10px;
+                padding: 14px;
+            }
+
+            .reference-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+        }
+
+
+        /* ===== RESPONSIVE CONCLUSIÓN ===== */
+
+        @media (max-width: 600px) {
+
+            .final-conclusion {
+                grid-template-columns: 1fr;
+            }
+
+            .conclusion-icon {
+                justify-content: flex-start;
+            }
+
+        }
+
+
+        /* ===== RESUMEN DE SEGURIDAD ===== */
+
+        .security-summary {
+            display: flex;
+            align-items: flex-start;
+
+            gap: 18px;
+
+            margin-top: 30px;
+            padding: 22px;
+
+            border: 1px solid currentColor;
+            border-radius: 8px;
+
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .security-summary > i {
+            font-size: 25px;
+            margin-top: 3px;
+        }
+
+        .security-summary strong {
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .security-summary p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.6;
+            opacity: 0.75;
+        }
+
+
+        /* ===== RESPONSIVE CONTROLES ===== */
+
+        @media (max-width: 800px) {
+
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+        
+    </style>
+</head>
+
+
+<body>
+
+    <a href="#" class="back-to-top" title="Volver arriba">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <div class="student-info">
+
+                <h1 class="student-name">
+                    Actividad 04
+                </h1>
+
+                <p class="course-badge">
+                    <i class="fa-solid fa-user-secret"></i>
+                    Una página demasiado convincente
+                </p>
+
+                <p class="academic-details">
+
+                    <span>
+                        <i class="fa-solid fa-university"></i>
+                        Universidad Politécnica de San Luis Potosí
+                    </span>
+
+                    |
+
+                    <span>
+                        <i class="fa-solid fa-calendar"></i>
+                        CNO IV - Seguridad Informática
+                    </span>
+
+                </p>
+
+            </div>
+
+
+            <nav class="navbar">
+
+                <ul>
+
+                    <li>
+                        <a href="../../index.html">
+                            <i class="fa-solid fa-house"></i>
+                            Inicio
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#introduccion">
+                            Introducción
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#objetivo">
+                            Objetivo
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#escenario">
+                            Escenario
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#configuracion">
+                            Configuración
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#evidencias">
+                            Evidencias
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#flujo">
+                            Flujo
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#indicadores">
+                            Indicadores
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#controles">
+                            Controles
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#conclusion">
+                            Conclusión
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#referencias">
+                            Referencias
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <main class="main-content" id="pdf-content">
+        <!-- PORTADA  -->
+
+        <div class="dedsec-manifesto">
+
+            <div class="glitch-wrapper">
+
+                <h2 class="glitch-text"
+                    data-text="/// ACT04_SOCIAL_ENGINEERING">
+                    /// ACT04_SOCIAL_ENGINEERING
+                </h2>
+
+            </div>
+
+
+            <p class="typewriter-text">
+                &gt; CNO_IV // ACTIVIDAD_04 // LABORATORIO_CONTROLADO...
+            </p>
+
+
+            <div class="cover-info">
+
+                <p>
+                    <strong>Una página demasiado convincente</strong>
+                </p>
+
+                <p>
+                    Profesor: Servando López Contreras
+                </p>
+
+                <p>
+                    Jesús Israel Martínez Escobedo - 175325
+                </p>
+
+                <p>
+                    Ingeniería en Tecnologías de la Información
+                </p>
+
+                <p>
+                    Universidad Politécnica de San Luis Potosí
+                </p>
+
+                <p>
+                    CNO IV - Seguridad Informática
+                </p>
+
+                <p>
+                    2026
+                </p>
+
+            </div>
+
+        </div>
+        <!-- ===== ÍNDICE ===== -->
+
+        <section class="section-card" id="indice">
+
+            <h2>
+                <i class="fa-solid fa-list"></i>
+                Índice
+            </h2>
+
+            <ol class="index-list">
+
+                <li>
+                    <a href="#introduccion">
+                        <span class="index-number">01</span>
+                        <span class="index-title">Introducción</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#objetivo">
+                        <span class="index-number">02</span>
+                        <span class="index-title">Objetivo de la actividad</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#escenario">
+                        <span class="index-number">03</span>
+                        <span class="index-title">Descripción del escenario</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#configuracion">
+                        <span class="index-number">04</span>
+                        <span class="index-title">Configuración del laboratorio</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#evidencias">
+                        <span class="index-number">05</span>
+                        <span class="index-title">Evidencias y descripción del funcionamiento</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#flujo">
+                        <span class="index-number">06</span>
+                        <span class="index-title">Flujo de captura de información</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#indicadores">
+                        <span class="index-number">07</span>
+                        <span class="index-title">Indicadores de phishing</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#controles">
+                        <span class="index-number">08</span>
+                        <span class="index-title">Controles de seguridad</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#conclusion">
+                        <span class="index-number">09</span>
+                        <span class="index-title">Conclusión</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#referencias">
+                        <span class="index-number">10</span>
+                        <span class="index-title">Referencias</span>
+                    </a>
+                </li>
+
+            </ol>
+
+        </section>
+
+        <!-- ===== INTRODUCCIÓN ===== -->
+
+        <section id="introduccion" class="section-card document-section">
+            
+            <h2>
+                <i class="fa-solid fa-terminal"></i>
+                Introducción
+            </h2>
+
+            <p>
+                La ingeniería social constituye una de las técnicas utilizadas para
+                manipular el comportamiento de las personas con el propósito de
+                obtener información, provocar determinadas acciones o generar una
+                sensación de confianza hacia una fuente aparentemente legítima.
+            </p>
+
+            <p>
+                Dentro de este contexto, el phishing puede utilizar páginas web que
+                imitan la apariencia de portales institucionales para inducir al
+                usuario a proporcionar información de autenticación. La eficacia
+                de este tipo de ataques no depende únicamente de aspectos técnicos,
+                sino también de factores como la confianza, la urgencia y la falta
+                de verificación del usuario.
+            </p>
+
+            <p>
+                En esta actividad se analiza este escenario mediante un laboratorio
+                controlado basado en una página web ficticia y herramientas de
+                seguridad ejecutadas localmente. El propósito es comprender el
+                funcionamiento general del flujo de información, reconocer
+                indicadores de phishing y proponer controles que permitan reducir
+                el riesgo.
+            </p>
+
+        </section>
+
+        <!-- ===== OBJETIVO ===== -->
+
+        <section id="objetivo" class="section-card document-section">
+
+            <h2>
+                <i class="fa-solid fa-crosshairs"></i>
+                Objetivo de la actividad
+            </h2>
+
+            <p>
+                El objetivo general de esta actividad fue implementar y analizar,
+                dentro de un entorno de laboratorio controlado, una simulación de
+                ingeniería social mediante <strong>Social-Engineer Toolkit (SET)</strong>,
+                utilizando una página web ficticia para comprender el funcionamiento
+                de una técnica de captura de información y reconocer los elementos
+                que permiten identificar un posible intento de phishing.
+            </p>
+
+
+            <h3>
+                Objetivos específicos
+            </h3>
+
+
+            <ul>
+
+                <li>
+                    Configurar un escenario básico de ingeniería social utilizando
+                    Social-Engineer Toolkit (SET).
+                </li>
+
+                <li>
+                    Implementar una página web ficticia mediante el módulo
+                    <strong>Credential Harvester</strong>.
+                </li>
+
+                <li>
+                    Analizar el proceso mediante el cual la información introducida
+                    en un formulario web puede ser transmitida y registrada por
+                    un servidor.
+                </li>
+
+                <li>
+                    Identificar indicadores técnicos y visuales que permitan
+                    reconocer una página potencialmente fraudulenta.
+                </li>
+
+                <li>
+                    Proponer controles de seguridad orientados a prevenir o reducir
+                    el impacto de ataques de phishing.
+                </li>
+
+            </ul>
+
+        </section>
+
+        <!-- ===== ESCENARIO ===== -->
+
+        <section id="escenario" class="section-card document-section">
+            
+            <h2>
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Descripción del escenario
+            </h2>
+
+            <p>
+                El área de seguridad informática de una organización recibió
+                diversos reportes de empleados que afirmaron haber recibido un
+                mensaje relacionado con una supuesta actualización de sus
+                credenciales.
+            </p>
+
+            <p>
+                El mensaje contenía un enlace que dirigía a un portal que,
+                visualmente, aparentaba pertenecer a la organización. La página
+                presentaba elementos comunes de un sistema institucional de
+                autenticación, incluyendo un nombre de sistema, campos para
+                usuario y contraseña y un botón de ingreso.
+            </p>
+
+            <div class="conclusion-box">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <div>
+
+                    <strong>Mensaje presentado al usuario</strong>
+
+                    <p>
+                        “Su sesión ha expirado. Inicie sesión nuevamente para
+                        continuar.”
+                    </p>
+
+                </div>
+
+            </div>
+
+            <p>
+                A primera vista, el portal podía parecer legítimo debido a su
+                diseño y a la utilización de elementos visuales asociados con
+                sistemas corporativos. Sin embargo, el portal no pertenecía
+                realmente a la organización.
+            </p>
+
+            <p>
+                Para esta actividad se recreó este escenario exclusivamente
+                dentro de un <strong>laboratorio controlado</strong>, utilizando
+                una página web ficticia y un servidor local. No se utilizaron
+                servicios reales, credenciales personales, dominios externos ni
+                infraestructura expuesta a Internet.
+            </p>
+
+        </section>
+
+        <!-- ===== CONFIGURACIÓN DEL LABORATORIO ===== -->
+
+        <section id="configuracion" class="section-card document-section">
+
+            <h2>
+                <i class="fa-solid fa-flask"></i>
+                Configuración del laboratorio
+            </h2>
+
+            <p>
+                La actividad se desarrolló en un entorno de laboratorio controlado
+                utilizando una máquina virtual con <strong>Kali Linux</strong>.
+                El objetivo fue analizar de forma segura el funcionamiento de una
+                simulación de ingeniería social sin utilizar servicios reales ni
+                exponer la infraestructura hacia Internet.
+            </p>
+
+
+            <div class="tech-grid">
+
+                <div class="tech-item">
+
+                    <i class="fa-brands fa-linux"></i>
+
+                    <strong>Kali Linux</strong>
+
+                    <p>
+                        Sistema utilizado para ejecutar las herramientas de
+                        seguridad y realizar las pruebas del laboratorio.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-terminal"></i>
+
+                    <strong>Social-Engineer Toolkit</strong>
+
+                    <p>
+                        Framework utilizado para estudiar técnicas de ingeniería
+                        social, incluyendo el módulo
+                        <strong>Credential Harvester</strong>.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-globe"></i>
+
+                    <strong>Página web ficticia</strong>
+
+                    <p>
+                        Se desarrolló un portal institucional simulado denominado
+                        <strong>CNO Systems</strong>, diseñado exclusivamente para
+                        el laboratorio.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-server"></i>
+
+                    <strong>Servidor local</strong>
+
+                    <p>
+                        La página fue servida localmente mediante un servidor HTTP
+                        ejecutado en Kali Linux, utilizando la dirección
+                        <code>127.0.0.1:8000</code>.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-network-wired"></i>
+
+                    <strong>Red de laboratorio</strong>
+
+                    <p>
+                        Las pruebas se realizaron dentro de una red privada y
+                        controlada, sin publicar el servidor hacia Internet.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <strong>Datos ficticios</strong>
+
+                    <p>
+                        Para las pruebas se utilizaron únicamente datos de
+                        laboratorio. No se emplearon credenciales personales ni
+                        información perteneciente a terceros.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <h3>
+                Flujo general del laboratorio
+            </h3>
+
+
+            <div class="lab-flow">
+
+                <div class="flow-node">
+
+                    <i class="fa-solid fa-code"></i>
+
+                    <strong>Página ficticia</strong>
+
+                    <span>
+                        CNO Systems
+                    </span>
+
+                </div>
+
+
+                <div class="flow-arrow">
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </div>
+
+
+                <div class="flow-node">
+
+                    <i class="fa-solid fa-server"></i>
+
+                    <strong>Servidor local</strong>
+
+                    <span>
+                        127.0.0.1:8000
+                    </span>
+
+                </div>
+
+
+                <div class="flow-arrow">
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </div>
+
+
+                <div class="flow-node">
+
+                    <i class="fa-solid fa-globe"></i>
+
+                    <strong>Navegador</strong>
+
+                    <span>
+                        Prueba controlada
+                    </span>
+
+                </div>
+
+
+                <div class="flow-arrow">
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </div>
+
+
+                <div class="flow-node">
+
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+
+                    <strong>Análisis</strong>
+
+                    <span>
+                        DevTools / Network
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="conclusion-box">
+
+                <i class="fa-solid fa-lock"></i>
+
+                <div>
+
+                    <strong>Alcance del laboratorio</strong>
+
+                    <p>
+                        Toda la actividad se mantuvo dentro del entorno local.
+                        No se utilizaron páginas reales, dominios externos,
+                        credenciales personales, técnicas de suplantación DNS,
+                        payloads ni código malicioso.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+        
+        <!-- ===== EVIDENCIAS ===== -->
+
+        <section id="evidencias" class="section-card document-section">
+            
+
+            <h2>
+                <i class="fa-solid fa-camera"></i>
+                Evidencias y descripción del funcionamiento
+            </h2>
+
+            <p>
+                En esta sección se presentan las evidencias obtenidas durante la
+                preparación y análisis del escenario de laboratorio. Las pruebas
+                se realizaron exclusivamente con una página web ficticia y dentro
+                de un entorno local y controlado.
+            </p>
+
+
+            <!-- EVIDENCIA 01 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-terminal"></i>
+                    Evidencia 01 — Inicio de Social-Engineer Toolkit
+                </h3>
+
+                <p>
+                    Se muestra el menú principal de Social-Engineer Toolkit (SET)
+                    ejecutándose en Kali Linux. Desde este menú se puede acceder
+                    a diferentes módulos relacionados con técnicas de ingeniería
+                    social.
+                </p>
+
+                <img
+                    src="evidencias/ev1.png"
+                    alt="Menú principal de Social-Engineer Toolkit"
+                    class="evidence-image"
+                >
+
+            </div>
+
+
+            <!-- EVIDENCIA 02 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-globe"></i>
+                    Evidencia 02 — Website Attack Vectors
+                </h3>
+
+                <p>
+                    Se muestra el menú de <strong>Website Attack Vectors</strong>,
+                    donde SET presenta diferentes métodos de ataque basados en
+                    aplicaciones web. Entre las opciones disponibles se encuentra
+                    Credential Harvester Attack Method.
+                </p>
+
+                <img
+                    src="evidencias/ev2.png"
+                    alt="Menú Website Attack Vectors de SET"
+                    class="evidence-image"
+                >
+
+            </div>
+
+
+            <!-- EVIDENCIA 03 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-key"></i>
+                    Evidencia 03 — Credential Harvester Attack Method
+                </h3>
+
+                <p>
+                    Se muestra la selección del módulo
+                    <strong>Credential Harvester Attack Method</strong>. Este
+                    componente permite analizar el funcionamiento de formularios
+                    web y el registro de los parámetros enviados a un servidor.
+                </p>
+
+                <img
+                    src="evidencias/ev3.png"
+                    alt="Credential Harvester Attack Method"
+                    class="evidence-image"
+                >
+
+            </div>
+
+
+            <!-- EVIDENCIA 04 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-file-import"></i>
+                    Evidencia 04 — Custom Import
+                </h3>
+
+                <p>
+                    Se seleccionó la opción <strong>Custom Import</strong> para
+                    incorporar al escenario una página web desarrollada
+                    específicamente para el laboratorio. De esta manera se evitó
+                    utilizar páginas pertenecientes a servicios o instituciones
+                    reales.
+                </p>
+
+                <img
+                    src="evidencias/ev4.png"
+                    alt="Selección de Custom Import"
+                    class="evidence-image"
+                >
+
+            </div>
+
+
+            <!-- EVIDENCIA 05 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-display"></i>
+                    Evidencia 05 — Portal ficticio CNO Systems
+                </h3>
+
+                <p>
+                    Se muestra el portal ficticio
+                    <strong>CNO Systems</strong> ejecutándose en Mozilla Firefox
+                    mediante la dirección local
+                    <code>127.0.0.1:8000</code>. La página contiene los elementos
+                    de un sistema institucional de autenticación, incluyendo
+                    identificación de empleado, contraseña y un mensaje relacionado
+                    con la expiración de sesión.
+                </p>
+
+                <img
+                    src="evidencias/ev5.png"
+                    alt="Portal ficticio CNO Systems"
+                    class="evidence-image"
+                >
+
+            </div>
+
+
+            <!-- EVIDENCIA 06 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-folder-open"></i>
+                    Evidencia 06 — Importación de la carpeta completa
+                </h3>
+
+                <p>
+                    SET detectó el archivo <code>index.html</code> dentro del
+                    directorio utilizado para el laboratorio. Se seleccionó la
+                    opción <strong>Copy the entire folder</strong> para incorporar
+                    los archivos de la página ficticia al escenario.
+                </p>
+
+                <img
+                    src="evidencias/ev6.png"
+                    alt="Selección de Copy the entire folder"
+                    class="evidence-image"
+                >
+
+            </div>
+
+
+            <!-- EVIDENCIA 07 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-server"></i>
+                    Evidencia 07 — Verificación del servidor local
+                </h3>
+
+                <p>
+                    Se utilizó el comando
+                    <code>curl -I http://127.0.0.1:8000</code>
+                    para comprobar que el servidor HTTP local estaba disponible.
+                    La respuesta <strong>HTTP 200 OK</strong> confirmó que el
+                    recurso podía ser solicitado correctamente.
+                </p>
+
+                <img
+                    src="evidencias/ev7.png"
+                    alt="Verificación HTTP mediante curl"
+                    class="evidence-image"
+                >
+
+            </div>
+
+
+            <!-- EVIDENCIA 08 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-code"></i>
+                    Evidencia 08 — Verificación del contenido HTML
+                </h3>
+
+                <p>
+                    Se realizó una solicitud mediante <code>curl</code> y se
+                    utilizaron las primeras 20 líneas de salida para comprobar
+                    que el servidor estaba entregando el documento HTML
+                    correspondiente al portal ficticio.
+                </p>
+
+                <img
+                    src="evidencias/ev8.png"
+                    alt="Contenido HTML obtenido mediante curl"
+                    class="evidence-image"
+                >
+
+            </div>
+
+
+            <!-- EVIDENCIA 09 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-network-wired"></i>
+                    Evidencia 09 — Inspección detallada de HTTP
+                </h3>
+
+                <p>
+                    Se utilizó <code>curl -v</code> para observar detalladamente
+                    la comunicación entre el cliente y el servidor. La salida
+                    permite identificar el establecimiento de la conexión, la
+                    solicitud HTTP y la respuesta <strong>200 OK</strong>.
+                </p>
+
+                <img
+                    src="evidencias/ev9.png"
+                    alt="Comunicación HTTP mediante curl -v"
+                    class="evidence-image"
+                >
+
+            </div>
+
+
+            <!-- EVIDENCIA 10 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-chart-line"></i>
+                    Evidencia 10 — Verificación mediante DevTools
+                </h3>
+
+                <p>
+                    Mediante las herramientas de desarrollo del navegador se
+                    inspeccionó la pestaña <strong>Network</strong>. La solicitud
+                    correspondiente al recurso principal <code>/</code> presentó
+                    un estado <strong>200 OK</strong>, confirmando que el navegador
+                    recibió correctamente el recurso desde el servidor local.
+                </p>
+
+                <img
+                    src="evidencias/ev10.png"
+                    alt="Network mostrando respuesta 200 OK"
+                    class="evidence-image"
+                >
+
+            </div>
+
+
+            <!-- EVIDENCIA 11 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-code"></i>
+                    Evidencia 11 — Inspección del formulario
+                </h3>
+
+                <p>
+                    Se inspeccionó mediante la herramienta
+                    <strong>Inspector</strong> la estructura HTML del formulario.
+                    Se identificaron los campos de usuario y contraseña, así como
+                    el botón <strong>Sign In</strong>. También se observa la
+                    instrucción <code>onsubmit="return false;"</code>, utilizada
+                    para impedir el envío del formulario durante la simulación.
+                </p>
+
+                <img
+                    src="evidencias/ev11.png"
+                    alt="Inspección del formulario HTML"
+                    class="evidence-image"
+                >
+
+            </div>
+
+
+            <!-- EVIDENCIA 12 -->
+
+            <div class="evidence-item">
+
+                <h3>
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Evidencia 12 — Prueba controlada de envío
+                </h3>
+
+                <p>
+                    Se introdujo el identificador ficticio
+                    <code>LAB-175325</code> en el campo de usuario y se presionó
+                    el botón <strong>Sign In</strong>, manteniendo el campo de
+                    contraseña vacío. La observación de la pestaña
+                    <strong>Network</strong> permitió comprobar que no se generó
+                    una nueva solicitud asociada al envío del formulario.
+                </p>
+
+                <div class="conclusion-box">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <div>
+
+                        <strong>Resultado de la prueba</strong>
+
+                        <p>
+                            El formulario permaneció controlado y no transmitió
+                            credenciales ni información personal. Esto permitió
+                            analizar la interfaz y el comportamiento de red sin
+                            utilizar datos reales.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <img
+                    src="evidencias/ev12.png"
+                    alt="Prueba controlada con identificador ficticio"
+                    class="evidence-image"
+                >
+
+            </div>
+
+        </section>
+        
+        <!-- ===== FLUJO DE INFORMACIÓN ===== -->
+
+        <section id="flujo" class="section-card document-section">
+            
+            <h2>
+                <i class="fa-solid fa-route"></i>
+                Flujo de captura de información
+            </h2>
+
+            <p>
+                En una implementación de Credential Harvester, el flujo de
+                información comienza cuando un usuario interactúa con un formulario
+                web y proporciona datos. El navegador genera una solicitud HTTP
+                hacia el servidor definido para procesar el formulario.
+            </p>
+
+
+            <div class="capture-flow">
+
+                <div class="capture-node">
+
+                    <span class="capture-number">01</span>
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <strong>Usuario</strong>
+
+                    <p>
+                        Introduce información en el formulario.
+                    </p>
+
+                </div>
+
+
+                <div class="capture-connector">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+
+                <div class="capture-node">
+
+                    <span class="capture-number">02</span>
+
+                    <i class="fa-solid fa-window-maximize"></i>
+
+                    <strong>Formulario web</strong>
+
+                    <p>
+                        Recibe los parámetros introducidos.
+                    </p>
+
+                </div>
+
+
+                <div class="capture-connector">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+
+                <div class="capture-node">
+
+                    <span class="capture-number">03</span>
+
+                    <i class="fa-solid fa-paper-plane"></i>
+
+                    <strong>Petición HTTP</strong>
+
+                    <p>
+                        Los parámetros pueden viajar en una solicitud, por ejemplo
+                        mediante POST.
+                    </p>
+
+                </div>
+
+
+                <div class="capture-connector">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+
+                <div class="capture-node">
+
+                    <span class="capture-number">04</span>
+
+                    <i class="fa-solid fa-server"></i>
+
+                    <strong>Servidor</strong>
+
+                    <p>
+                        Procesa la solicitud recibida.
+                    </p>
+
+                </div>
+
+
+                <div class="capture-connector">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+
+                <div class="capture-node">
+
+                    <span class="capture-number">05</span>
+
+                    <i class="fa-solid fa-file-lines"></i>
+
+                    <strong>Registro</strong>
+
+                    <p>
+                        Los parámetros recibidos pueden quedar registrados.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <h3>
+                Aplicación al laboratorio
+            </h3>
+
+            <p>
+                En la práctica realizada, este flujo se mantuvo deliberadamente
+                incompleto. Aunque se construyó el formulario y se analizó la
+                comunicación HTTP, el atributo
+                <code>onsubmit="return false;"</code>
+                impidió que el formulario generara una petición de envío.
+            </p>
+
+            <div class="comparison-grid">
+
+                <div class="comparison-card">
+
+                    <h3>
+                        <i class="fa-solid fa-flask"></i>
+                        Laboratorio
+                    </h3>
+
+                    <ul>
+
+                        <li>
+                            Página ficticia.
+                        </li>
+
+                        <li>
+                            Servidor local.
+                        </li>
+
+                        <li>
+                            Datos ficticios.
+                        </li>
+
+                        <li>
+                            Sin envío de credenciales.
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <div class="comparison-card">
+
+                    <h3>
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        Escenario de phishing
+                    </h3>
+
+                    <ul>
+
+                        <li>
+                            Página controlada por un atacante.
+                        </li>
+
+                        <li>
+                            Formulario configurado para recibir información.
+                        </li>
+
+                        <li>
+                            Solicitud HTTP con parámetros.
+                        </li>
+
+                        <li>
+                            Posible registro de los datos recibidos.
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <div class="conclusion-box">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                <div>
+
+                    <strong>Captura de credenciales ≠ vulneración de contraseña</strong>
+
+                    <p>
+                        La captura de credenciales consiste en obtener los datos que
+                        un usuario introduce voluntariamente en un formulario
+                        fraudulento. Esto no significa necesariamente que el atacante
+                        haya descifrado, vulnerado o comprometido criptográficamente
+                        la contraseña original.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+        
+        <!-- ===== INDICADORES DE PHISHING ===== -->
+
+        <section id="indicadores" class="section-card document-section">
+        
+
+            <h2>
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Indicadores de phishing
+            </h2>
+
+            <p>
+                El phishing utiliza elementos técnicos y psicológicos para generar
+                confianza y conseguir que una persona proporcione información o
+                realice una acción. En el escenario analizado se identifican los
+                siguientes indicadores.
+            </p>
+
+
+            <div class="indicator-grid">
+
+                <div class="indicator-card">
+
+                    <span class="indicator-number">01</span>
+
+                    <i class="fa-solid fa-link"></i>
+
+                    <h3>URL sospechosa</h3>
+
+                    <p>
+                        La dirección del portal no corresponde con el dominio oficial
+                        de la organización. La revisión de la URL es uno de los
+                        primeros mecanismos para detectar un sitio fraudulento.
+                    </p>
+
+                </div>
+
+
+                <div class="indicator-card">
+
+                    <span class="indicator-number">02</span>
+
+                    <i class="fa-solid fa-key"></i>
+
+                    <h3>Solicitud inesperada de credenciales</h3>
+
+                    <p>
+                        Un mensaje que solicita volver a introducir usuario y
+                        contraseña debe verificarse antes de proporcionar cualquier
+                        información.
+                    </p>
+
+                </div>
+
+
+                <div class="indicator-card">
+
+                    <span class="indicator-number">03</span>
+
+                    <i class="fa-solid fa-clock"></i>
+
+                    <h3>Urgencia o presión</h3>
+
+                    <p>
+                        Mensajes relacionados con sesiones expiradas, bloqueos o
+                        problemas de acceso pueden provocar una respuesta impulsiva
+                        antes de verificar la legitimidad del mensaje.
+                    </p>
+
+                </div>
+
+
+                <div class="indicator-card">
+
+                    <span class="indicator-number">04</span>
+
+                    <i class="fa-solid fa-building"></i>
+
+                    <h3>Apariencia institucional</h3>
+
+                    <p>
+                        Logotipos, colores, nombres de sistemas y diseños similares
+                        a los utilizados por una organización pueden utilizarse para
+                        aumentar la credibilidad de un portal fraudulento.
+                    </p>
+
+                </div>
+
+
+                <div class="indicator-card">
+
+                    <span class="indicator-number">05</span>
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                    <h3>Enlace no verificado</h3>
+
+                    <p>
+                        Los enlaces incluidos en correos o mensajes inesperados deben
+                        comprobarse antes de utilizarlos. El texto visible del enlace
+                        no garantiza que su destino sea legítimo.
+                    </p>
+
+                </div>
+
+
+                <div class="indicator-card">
+
+                    <span class="indicator-number">06</span>
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <h3>Autenticación insuficiente</h3>
+
+                    <p>
+                        Un sistema que depende únicamente de usuario y contraseña
+                        ofrece menos protección frente a la reutilización o captura
+                        de credenciales que uno que incorpora mecanismos adicionales
+                        de autenticación.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+        
+        <!-- ===== CONTROLES DE SEGURIDAD ===== -->
+
+        <section id="controles" class="section-card document-section">
+            
+
+            <h2>
+                <i class="fa-solid fa-shield-halved"></i>
+                Controles de seguridad propuestos
+            </h2>
+
+            <p>
+                La prevención del phishing requiere combinar controles técnicos,
+                administrativos y de concientización. Ninguna medida elimina por
+                completo el riesgo, por lo que se recomienda utilizar diferentes
+                capas de protección.
+            </p>
+
+
+            <div class="controls-grid">
+
+                <!-- CONTROL 01 -->
+
+                <div class="control-card">
+
+                    <div class="control-header">
+
+                        <span class="control-number">01</span>
+
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+
+                        <h3>
+                            Autenticación multifactor
+                        </h3>
+
+                    </div>
+
+                    <p>
+                        Implementar MFA agrega un segundo factor de autenticación
+                        además de la contraseña, reduciendo el impacto de una
+                        credencial que haya sido capturada mediante phishing.
+                    </p>
+
+                    <div class="control-detail">
+
+                        <strong>
+                            Alcance
+                        </strong>
+
+                        <span>
+                            Protege las cuentas incluso cuando una contraseña ha
+                            sido expuesta.
+                        </span>
+
+                    </div>
+
+                    <div class="control-detail limitation">
+
+                        <strong>
+                            Limitación
+                        </strong>
+
+                        <span>
+                            No elimina completamente el riesgo de phishing, ya que
+                            existen ataques que intentan engañar al usuario durante
+                            el proceso de autenticación.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTROL 02 -->
+
+                <div class="control-card">
+
+                    <div class="control-header">
+
+                        <span class="control-number">02</span>
+
+                        <i class="fa-solid fa-envelope-circle-check"></i>
+
+                        <h3>
+                            Protección del correo electrónico
+                        </h3>
+
+                    </div>
+
+                    <p>
+                        Utilizar filtros de correo, análisis de reputación y
+                        mecanismos de detección de enlaces o archivos sospechosos
+                        permite bloquear una parte importante de los mensajes
+                        utilizados para distribuir campañas de phishing.
+                    </p>
+
+                    <div class="control-detail">
+
+                        <strong>
+                            Alcance
+                        </strong>
+
+                        <span>
+                            Reduce la cantidad de mensajes maliciosos que llegan
+                            directamente al usuario.
+                        </span>
+
+                    </div>
+
+                    <div class="control-detail limitation">
+
+                        <strong>
+                            Limitación
+                        </strong>
+
+                        <span>
+                            Los atacantes pueden utilizar dominios nuevos,
+                            técnicas de evasión o mensajes suficientemente
+                            convincentes para superar algunos filtros.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTROL 03 -->
+
+                <div class="control-card">
+
+                    <div class="control-header">
+
+                        <span class="control-number">03</span>
+
+                        <i class="fa-solid fa-link"></i>
+
+                        <h3>
+                            Análisis y protección de URLs
+                        </h3>
+
+                    </div>
+
+                    <p>
+                        Los mecanismos de análisis de URLs y reputación web pueden
+                        identificar dominios conocidos por distribuir contenido
+                        malicioso o páginas relacionadas con campañas de phishing.
+                    </p>
+
+                    <div class="control-detail">
+
+                        <strong>
+                            Alcance
+                        </strong>
+
+                        <span>
+                            Permite bloquear o advertir sobre determinados sitios
+                            antes de que el usuario interactúe con ellos.
+                        </span>
+
+                    </div>
+
+                    <div class="control-detail limitation">
+
+                        <strong>
+                            Limitación
+                        </strong>
+
+                        <span>
+                            Un dominio recién creado o una página que todavía no
+                            ha sido clasificada puede no aparecer inmediatamente
+                            como una amenaza.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTROL 04 -->
+
+                <div class="control-card">
+
+                    <div class="control-header">
+
+                        <span class="control-number">04</span>
+
+                        <i class="fa-solid fa-user-graduate"></i>
+
+                        <h3>
+                            Capacitación de usuarios
+                        </h3>
+
+                    </div>
+
+                    <p>
+                        La formación periódica permite que los usuarios reconozcan
+                        señales como URLs sospechosas, solicitudes inesperadas,
+                        mensajes urgentes y páginas que solicitan información
+                        sensible.
+                    </p>
+
+                    <div class="control-detail">
+
+                        <strong>
+                            Alcance
+                        </strong>
+
+                        <span>
+                            Fortalece el factor humano y mejora la capacidad de
+                            detectar ataques que logran superar los controles
+                            tecnológicos.
+                        </span>
+
+                    </div>
+
+                    <div class="control-detail limitation">
+
+                        <strong>
+                            Limitación
+                        </strong>
+
+                        <span>
+                            La capacitación no garantiza que una persona nunca
+                            cometa un error, especialmente ante campañas muy
+                            convincentes.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTROL 05 -->
+
+                <div class="control-card">
+
+                    <div class="control-header">
+
+                        <span class="control-number">05</span>
+
+                        <i class="fa-solid fa-key"></i>
+
+                        <h3>
+                            Gestión segura de credenciales
+                        </h3>
+
+                    </div>
+
+                    <p>
+                        El uso de contraseñas únicas y administradores de contraseñas
+                        reduce el impacto de una credencial expuesta, evitando que
+                        una misma contraseña pueda utilizarse para acceder a
+                        diferentes servicios.
+                    </p>
+
+                    <div class="control-detail">
+
+                        <strong>
+                            Alcance
+                        </strong>
+
+                        <span>
+                            Limita el efecto de una contraseña comprometida sobre
+                            otras cuentas del usuario.
+                        </span>
+
+                    </div>
+
+                    <div class="control-detail limitation">
+
+                        <strong>
+                            Limitación
+                        </strong>
+
+                        <span>
+                            No impide por sí mismo que el usuario introduzca una
+                            contraseña en un sitio fraudulento.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="security-summary">
+
+                <i class="fa-solid fa-layer-group"></i>
+
+                <div>
+
+                    <strong>
+                        Defensa en profundidad
+                    </strong>
+
+                    <p>
+                        La protección más efectiva surge de combinar controles
+                        tecnológicos con procedimientos y educación. Si una capa
+                        falla, las demás pueden reducir la probabilidad o el impacto
+                        de un incidente.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ===== CONCLUSIÓN ===== -->
+
+        <section id="conclusion" class="section-card document-section">
+            
+
+            <h2>
+                <i class="fa-solid fa-flag-checkered"></i>
+                Conclusión
+            </h2>
+
+            <div class="final-conclusion">
+
+                <div class="conclusion-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <div>
+
+                    <p>
+                        La actividad permitió analizar de manera práctica el
+                        funcionamiento de una campaña de phishing basada en la
+                        captura de información mediante formularios web, utilizando
+                        exclusivamente un entorno controlado y una página ficticia
+                        desarrollada para el laboratorio.
+                    </p>
+
+                    <p>
+                        El escenario permitió comprobar que una página puede
+                        presentar una apariencia institucional y solicitar
+                        información de autenticación sin que necesariamente
+                        pertenezca a la organización que aparenta representar.
+                        Elementos como una solicitud inesperada de inicio de sesión,
+                        mensajes de urgencia, enlaces no verificados y una URL que
+                        no corresponde con el dominio legítimo constituyen señales
+                        que deben ser analizadas antes de proporcionar información.
+                    </p>
+
+                    <p>
+                        Desde el punto de vista técnico, el análisis permitió
+                        relacionar el formulario web con el modelo de comunicación
+                        HTTP, identificando el papel del navegador, la petición, el
+                        servidor y el posible registro de parámetros. También se
+                        distinguió entre la captura de credenciales mediante un
+                        formulario y la vulneración o descifrado de una contraseña,
+                        conceptos que representan procesos diferentes.
+                    </p>
+
+                    <p>
+                        Finalmente, se comprobó que la protección contra phishing
+                        requiere una estrategia de defensa en profundidad. Medidas
+                        como la autenticación multifactor, protección del correo,
+                        análisis de URLs, capacitación de usuarios y gestión segura
+                        de credenciales pueden reducir significativamente el riesgo,
+                        aunque ninguna medida individual elimina por completo la
+                        posibilidad de un ataque.
+                    </p>
+
+                    <div class="conclusion-highlight">
+
+                        <i class="fa-solid fa-flask"></i>
+
+                        <strong>
+                            Resultado del laboratorio
+                        </strong>
+
+                        <span>
+                            La simulación se mantuvo dentro de un entorno local,
+                            utilizando únicamente una página ficticia y datos de
+                            prueba, sin emplear servicios reales, credenciales
+                            personales ni exponer el servidor hacia Internet.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+        
+        <!-- ===== REFERENCIAS ===== -->
+
+        <section id="referencias" class="section-card document-section">
+    
+
+            <h2>
+                <i class="fa-solid fa-book"></i>
+                Referencias
+            </h2>
+
+            <p>
+                Las siguientes fuentes fueron utilizadas para sustentar los
+                conceptos, riesgos, controles de seguridad y aspectos técnicos
+                abordados durante el laboratorio.
+            </p>
+
+
+            <div class="references-list">
+
+
+                <!-- CISA -->
+
+                <a
+                    href="https://www.cisa.gov/topics/cyber-threats-and-advisories/phishing"
+                    target="_blank"
+                    class="reference-item"
+                >
+
+                    <div class="reference-icon">
+                        <i class="fa-solid fa-building-shield"></i>
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Cybersecurity and Infrastructure Security Agency (CISA)
+                        </strong>
+
+                        <span>
+                            Phishing — Indicadores, riesgos y recomendaciones de
+                            protección.
+                        </span>
+
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                </a>
+
+
+                <!-- NIST -->
+
+                <a
+                    href="https://www.nist.gov/itl/smallbusinesscyber/guidance-topic/phishing"
+                    target="_blank"
+                    class="reference-item"
+                >
+
+                    <div class="reference-icon">
+                        <i class="fa-solid fa-landmark"></i>
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            National Institute of Standards and Technology (NIST)
+                        </strong>
+
+                        <span>
+                            Phishing — Orientación para reconocer y reducir el
+                            riesgo de ataques.
+                        </span>
+
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                </a>
+
+
+                <!-- OWASP -->
+
+                <a
+                    href="https://owasp.org/www-community/attacks/Phishing"
+                    target="_blank"
+                    class="reference-item"
+                >
+
+                    <div class="reference-icon">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            OWASP
+                        </strong>
+
+                        <span>
+                            Phishing — Consideraciones de seguridad relacionadas
+                            con ataques de ingeniería social y aplicaciones web.
+                        </span>
+
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                </a>
+
+
+                <!-- Microsoft -->
+
+                <a
+                    href="https://www.microsoft.com/en-us/security/business/security-101/what-is-phishing"
+                    target="_blank"
+                    class="reference-item"
+                >
+
+                    <div class="reference-icon">
+                        <i class="fa-brands fa-microsoft"></i>
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Microsoft Security
+                        </strong>
+
+                        <span>
+                            What is phishing? — Características, técnicas y
+                            recomendaciones de protección.
+                        </span>
+
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                </a>
+
+
+                <!-- FTC -->
+
+                <a
+                    href="https://www.ftc.gov/business-guidance/small-businesses/cybersecurity/phishing"
+                    target="_blank"
+                    class="reference-item"
+                >
+
+                    <div class="reference-icon">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Federal Trade Commission (FTC)
+                        </strong>
+
+                        <span>
+                            Phishing — Reconocimiento, prevención y respuesta ante
+                            intentos de fraude.
+                        </span>
+
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                </a>
+
+
+                <!-- SET -->
+
+                <a
+                    href="https://github.com/trustedsec/social-engineer-toolkit"
+                    target="_blank"
+                    class="reference-item"
+                >
+
+                    <div class="reference-icon">
+                        <i class="fa-brands fa-github"></i>
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            TrustedSec — Social-Engineer Toolkit (SET)
+                        </strong>
+
+                        <span>
+                            Repositorio oficial — Herramienta utilizada para el
+                            escenario de laboratorio y sus módulos de ingeniería
+                            social.
+                        </span>
+
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                </a>
+
+
+                <!-- MDN -->
+
+                <a
+                    href="https://developer.mozilla.org/en-US/docs/Web/HTTP"
+                    target="_blank"
+                    class="reference-item"
+                >
+
+                    <div class="reference-icon">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            MDN Web Docs
+                        </strong>
+
+                        <span>
+                            HTTP — Referencia técnica utilizada para comprender
+                            solicitudes, respuestas y comunicación entre cliente
+                            y servidor.
+                        </span>
+
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                </a>
+
+
+            </div>
+
+
+            <div class="reference-note">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                <span>
+                    Las fuentes se utilizaron como apoyo conceptual y técnico.
+                    Las pruebas prácticas fueron realizadas exclusivamente en
+                    un entorno local controlado, utilizando una página ficticia
+                    y datos de prueba.
+                </span>
+
+            </div>
+
+        </section>
+        
+        <!-- ===== INFORME PDF ===== -->
+
+        <section class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-file-pdf"></i>
+                Informe
+            </h2>
+
+            <p>
+                Consulta o descarga el informe completo de la actividad.
+            </p>
+
+            <button type="button"
+                class="btn-submit"
+                onclick="generarPDF()">
+
+                <i class="fa-solid fa-file-pdf"></i>
+                Generar informe PDF
+
+            </button>
+
+        </section>
+    </main>
+
+
+    <footer class="footer">
+
+        <p>
+            &copy; 2026 Jesús Israel Martínez Escobedo.
+        </p>
+
+        <p>
+            <i class="fa-solid fa-lock"></i>
+            Conexión Segura mediante HTTPS / SSL
+        </p>
+
+    </footer>
+
+    <script>
+        function generarPDF() {
+            window.print();
+        }
+    </script>
+</body>
+
+</html>
