@@ -404,3 +404,219 @@ body {
 
     box-shadow: -6px 6px 0px var(--dedsec-yellow);
 }
+```css
+/* ==========================================
+   ROAD TO HALL OF FAME
+   ========================================== */
+
+.hall-intro {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.hall-intro h2 {
+    justify-content: center;
+    font-size: 2.8rem;
+}
+
+.hall-intro p {
+    color: var(--text-muted);
+}
+
+/* CONTENEDOR DEL ROADMAP */
+
+.roadmap {
+    position: relative;
+    margin: 3rem auto;
+    padding: 1rem 0;
+    max-width: 850px;
+}
+
+/* LÍNEA CENTRAL */
+
+.roadmap::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background-color: var(--dedsec-cyan);
+    box-shadow: 0 0 8px rgba(0, 255, 204, 0.4);
+    transform: translateX(-50%);
+}
+
+/* CADA ETAPA */
+
+.roadmap-item {
+    position: relative;
+    width: 50%;
+    padding: 1rem 2rem;
+    margin-bottom: 2rem;
+}
+
+.roadmap-item:nth-child(odd) {
+    left: 0;
+    text-align: right;
+}
+
+.roadmap-item:nth-child(even) {
+    left: 50%;
+}
+
+/* NODO */
+
+.roadmap-node {
+    position: absolute;
+    top: 1.5rem;
+    width: 22px;
+    height: 22px;
+
+    background-color: var(--dedsec-black);
+    border: 3px solid var(--dedsec-yellow);
+
+    box-shadow:
+        0 0 8px rgba(255, 239, 0, 0.6);
+
+    z-index: 2;
+}
+
+.roadmap-item:nth-child(odd) .roadmap-node {
+    right: -11px;
+}
+
+.roadmap-item:nth-child(even) .roadmap-node {
+    left: -11px;
+}
+
+/* TARJETA */
+
+.roadmap-card {
+    background-color: #000;
+    border: 1px solid var(--border-tech);
+    padding: 1.5rem;
+
+    text-align: left;
+
+    box-shadow: -4px 4px 0px var(--dedsec-pink);
+
+    transition: all 0.2s ease;
+}
+
+.roadmap-card:hover {
+    border-color: var(--dedsec-cyan);
+    transform: translateY(-3px);
+    box-shadow: -6px 6px 0px var(--dedsec-yellow);
+}
+
+.roadmap-number {
+    color: var(--dedsec-pink);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+}
+
+.roadmap-card h3 {
+    font-family: var(--font-heading);
+    color: var(--dedsec-cyan);
+    font-size: 1.6rem;
+    line-height: 1.1;
+    margin: 0.4rem 0 0.8rem;
+    text-transform: uppercase;
+}
+
+.roadmap-card p {
+    color: var(--text-main);
+    margin-bottom: 1rem;
+}
+
+/* ESPACIO PARA FUTURA IMAGEN */
+
+.lab-placeholder {
+    min-height: 140px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 1rem 0;
+
+    background-color: #0a0a0c;
+    border: 1px dashed var(--border-tech);
+
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.lab-placeholder i {
+    color: var(--dedsec-cyan);
+    margin-right: 0.5rem;
+}
+
+/* ESTADO PENDIENTE */
+
+.lab-status {
+    display: inline-block;
+
+    padding: 0.3rem 0.7rem;
+
+    border: 1px solid var(--dedsec-yellow);
+
+    color: var(--dedsec-yellow);
+
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* DOCUMENTACIÓN PDF */
+
+.hall-document {
+    margin-top: 3rem;
+    text-align: center;
+
+    border-top: 1px solid var(--border-tech);
+    padding-top: 2rem;
+}
+
+.hall-document h3 {
+    font-family: var(--font-heading);
+    color: var(--dedsec-yellow);
+    font-size: 1.8rem;
+    text-transform: uppercase;
+}
+
+.hall-document p {
+    color: var(--text-muted);
+    margin: 0.5rem 0 1rem;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+
+    .roadmap::before {
+        left: 15px;
+    }
+
+    .roadmap-item,
+    .roadmap-item:nth-child(even) {
+        width: 100%;
+        left: 0;
+        padding-left: 3rem;
+        padding-right: 0;
+        text-align: left;
+    }
+
+    .roadmap-item:nth-child(odd) .roadmap-node,
+    .roadmap-item:nth-child(even) .roadmap-node {
+        left: 4px;
+        right: auto;
+    }
+
+    .roadmap-card h3 {
+        font-size: 1.4rem;
+    }
+}
+```

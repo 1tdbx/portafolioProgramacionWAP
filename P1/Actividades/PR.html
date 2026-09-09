@@ -1,0 +1,524 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PROYECTO | De la teoría a la práctica: walkthrough en acción (guía y video).</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <div class="student-info">
+
+                <h1 class="student-name">
+                    Jesús Israel Martínez Escobedo
+                </h1>
+
+                <p class="course-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    CNO IV - Seguridad Informática
+                </p>
+
+                <p class="academic-details">
+                    <span>
+                        <i class="fa-solid fa-university"></i>
+                        Universidad Politécnica de San Luis Potosí
+                    </span>
+                    |
+                    <span>
+                        <i class="fa-solid fa-calendar"></i>
+                        Semestre 2026
+                    </span>
+                </p>
+
+            </div>
+
+            <nav class="navbar">
+
+                <ul>
+
+                    <li>
+                        <a href="../../index.html" class="active">
+                            Inicio
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#objetivo">
+                            Objetivo
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#proceso">
+                            Proceso
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#resultados">
+                            Resultados
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#recursos">
+                            Recursos
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <!-- ==================== CONTENIDO ==================== -->
+
+    <main class="main-content" id="inicio">
+
+
+        <!-- ==================== PORTADA ==================== -->
+
+        <div class="dedsec-manifesto">
+
+            <div class="glitch-wrapper">
+
+                <h2 class="glitch-text"
+                    data-text="/// SNAKEOIL_SECURITY_AUDIT">
+                    /// SNAKEOIL_SECURITY_AUDIT
+                </h2>
+
+            </div>
+
+            <p class="typewriter-text">
+                > CNO_IV // PROYECTO // DE_LA_TEORIA_A_LA_PRACTICA.[SYSTEM_COMPROMISED]
+            </p>
+
+        </div>
+
+
+        <!-- ==================== PRESENTACIÓN ==================== -->
+
+        <section class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-file-code"></i>
+                Proyecto
+            </h2>
+
+            <p>
+                <strong>
+                   De la teoría a la práctica: walkthrough en acción (guía y video).
+                </strong>
+            </p>
+
+            <div class="tech-grid">
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <strong>Alumno</strong>
+
+                    <p>
+                        Jesús Israel Martínez Escobedo
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <strong>Materia</strong>
+
+                    <p>
+                        CNO IV - Seguridad Informática
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-graduation-cap"></i>
+
+                    <strong>Programa</strong>
+
+                    <p>
+                        Ingeniería en Tecnologías de la Información
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-server"></i>
+
+                    <strong>Máquina objetivo</strong>
+
+                    <p>
+                        SNAKEOIL
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================== OBJETIVO ==================== -->
+
+        <section id="objetivo" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-bullseye"></i>
+                Objetivo
+            </h2>
+
+            <p>
+                Realizar una auditoría de seguridad sobre la máquina vulnerable
+                SNAKEOIL dentro de un entorno controlado y aislado, identificando
+                servicios expuestos, rutas accesibles, vulnerabilidades de la
+                aplicación web y mecanismos que permitan demostrar el impacto
+                de una explotación.
+            </p>
+
+            <p>
+                La actividad tuvo como finalidad aplicar técnicas de
+                reconocimiento, enumeración, explotación y escalada de
+                privilegios dentro de un laboratorio de seguridad informática.
+            </p>
+
+        </section>
+
+
+        <!-- ==================== PROCESO ==================== -->
+
+        <section id="proceso" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-list-check"></i>
+                Proceso realizado
+            </h2>
+
+
+            <div class="tech-grid">
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-network-wired"></i>
+
+                    <strong>01 // Reconocimiento</strong>
+
+                    <p>
+                        Identificación del host objetivo dentro de la red
+                        Host-Only mediante Nmap.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <strong>02 // Enumeración</strong>
+
+                    <p>
+                        Identificación de servicios, versiones y rutas
+                        accesibles de la aplicación web mediante Nmap,
+                        Curl y Gobuster.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-bug"></i>
+
+                    <strong>03 // Análisis</strong>
+
+                    <p>
+                        Identificación de exposición de usuarios, mecanismos
+                        de autenticación y comportamiento vulnerable de los
+                        endpoints de la aplicación.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-key"></i>
+
+                    <strong>04 // Acceso</strong>
+
+                    <p>
+                        Obtención de un JWT mediante una cuenta de laboratorio
+                        y acceso al endpoint protegido /secret.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-terminal"></i>
+
+                    <strong>05 // Explotación</strong>
+
+                    <p>
+                        Confirmación de SSRF y ejecución remota de comandos
+                        mediante el endpoint /run.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-user-shield"></i>
+
+                    <strong>06 // Escalada</strong>
+
+                    <p>
+                        Obtención de una sesión como Patrick y posterior
+                        escalada de privilegios hasta root.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================== RESULTADOS ==================== -->
+
+        <section id="resultados" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-chart-line"></i>
+                Resultados y análisis
+            </h2>
+
+            <p>
+                La auditoría permitió demostrar el compromiso completo de la
+                máquina SNAKEOIL dentro del entorno controlado del laboratorio.
+            </p>
+
+            <div class="tech-grid">
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-globe"></i>
+
+                    <strong>SSRF</strong>
+
+                    <p>
+                        Se confirmó que el servidor podía realizar solicitudes
+                        hacia un sistema controlado por el atacante.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-code"></i>
+
+                    <strong>RCE</strong>
+
+                    <p>
+                        Se comprobó la ejecución remota de comandos mediante
+                        el comportamiento vulnerable del endpoint /run.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <strong>Acceso inicial</strong>
+
+                    <p>
+                        Se obtuvo una sesión interactiva en la máquina objetivo
+                        como el usuario Patrick.
+                    </p>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-crown"></i>
+
+                    <strong>Root</strong>
+
+                    <p>
+                        Finalmente se consiguió acceso con privilegios
+                        administrativos sobre la máquina.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================== CONCLUSIONES ==================== -->
+
+        <section class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-flag-checkered"></i>
+                Conclusiones
+            </h2>
+
+            <p>
+                La práctica permitió comprobar cómo la combinación de
+                diferentes vulnerabilidades puede conducir al compromiso
+                completo de un sistema.
+            </p>
+
+            <p>
+                La exposición de información sensible, la validación
+                insuficiente de entradas, la ejecución remota de comandos
+                y la gestión insegura de credenciales representaron los
+                principales factores que hicieron posible la explotación.
+            </p>
+
+            <p>
+                La actividad también permitió aplicar de manera práctica
+                técnicas de reconocimiento, enumeración, explotación y
+                escalada de privilegios dentro de un entorno controlado.
+            </p>
+
+        </section>
+
+
+        <!-- ==================== RECURSOS ==================== -->
+
+        <section id="recursos" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-folder-open"></i>
+                Recursos de la actividad
+            </h2>
+
+            <p>
+                Se incluyen los materiales utilizados para documentar y
+                demostrar el desarrollo completo de la práctica.
+            </p>
+
+
+            <div class="tech-grid">
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-file-pdf"></i>
+
+                    <strong>Informe completo</strong>
+
+                    <p>
+                        Documento PDF con el procedimiento, comandos,
+                        evidencias, resultados y análisis de la actividad.
+                    </p>
+
+                    <a href="Evidencias/ProyectoP1WAP-175325.pdf"
+                        class="activity-button"
+                        target="_blank">
+
+                            <i class="fa-solid fa-file-pdf"></i>
+                            Ver informe PDF
+
+                    </a>
+
+                </div>
+
+
+                <div class="tech-item">
+
+                    <i class="fa-solid fa-video"></i>
+
+                    <strong>Video de la práctica</strong>
+
+                    <p>
+                        Demostración del proceso de reconocimiento,
+                        explotación y escalada de privilegios realizado
+                        durante la actividad.
+                    </p>
+
+                    <a href="Evidencias/Video%20Project%201.mp4"
+                        class="activity-button"
+                        target="_blank">
+
+                            <i class="fa-solid fa-play"></i>
+                            Ver video
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ==================== VOLVER ARRIBA ==================== -->
+
+    <a href="#inicio"
+       class="back-to-top"
+       title="Volver arriba">
+
+        <i class="fa-solid fa-arrow-up"></i>
+
+    </a>
+
+
+    <!-- ==================== FOOTER ==================== -->
+
+    <footer class="footer">
+
+        <p>
+            &copy; 2026 Jesús Israel Martínez Escobedo.
+            Todos los derechos reservados.
+        </p>
+
+        <p>
+            <i class="fa-solid fa-lock"></i>
+            Conexión Segura mediante Protocolo HTTPS / SSL
+        </p>
+
+    </footer>
+
+</body>
+</html>
+```
