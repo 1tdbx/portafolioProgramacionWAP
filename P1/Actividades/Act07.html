@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Actividad 07 | File Path Traversal</title>
+
+<link rel="stylesheet" href="../../styles.css">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+```
+
+</head>
+
+<body>
+
+```
+<!-- ==================== HEADER ==================== -->
+
+<header class="header">
+
+    <div class="header-container">
+
+        <div class="student-info">
+
+            <h1 class="student-name">
+                Jesús Israel Martínez Escobedo
+            </h1>
+
+            <p class="course-badge">
+                <i class="fa-solid fa-shield-halved"></i>
+                CNO IV - Seguridad Informática
+            </p>
+
+            <p class="academic-details">
+                <span>
+                    <i class="fa-solid fa-university"></i>
+                    Universidad Politécnica de San Luis Potosí
+                </span>
+                |
+                <span>
+                    <i class="fa-solid fa-calendar"></i>
+                    Semestre 2026
+                </span>
+            </p>
+
+        </div>
+
+        <nav class="navbar">
+
+            <ul>
+
+                <li>
+                    <a href="../../index.html">
+                        Inicio
+                    </a>
+                </li>
+
+                <li>
+                    <a href="HallOfFame.html">
+                        Road to Hall of Fame
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#procedimiento">
+                        Procedimiento
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#evidencias">
+                        Evidencias
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- ==================== CONTENIDO ==================== -->
+
+<main class="main-content" id="inicio">
+
+
+    <!-- ==================== PORTADA ==================== -->
+
+    <div class="dedsec-manifesto">
+
+        <div class="glitch-wrapper">
+
+            <h2 class="glitch-text"
+                data-text="/// LAB_07_FILE_PATH_TRAVERSAL">
+                /// LAB_07_FILE_PATH_TRAVERSAL
+            </h2>
+
+        </div>
+
+        <p class="typewriter-text">
+            &gt; CNO_IV // PORTSWIGGER // SIMPLE_CASE... [PATH_TRAVERSAL_DETECTED]
+        </p>
+
+    </div>
+
+
+    <!-- ==================== PRESENTACIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-flask-vial"></i>
+            Actividad 07 — Simple Case
+        </h2>
+
+        <p>
+            <strong>File Path Traversal, simple case</strong>
+        </p>
+
+        <p>
+            Laboratorio práctico de PortSwigger Web Security Academy
+            enfocado en la identificación y explotación de una
+            vulnerabilidad de File Path Traversal.
+        </p>
+
+        <p>
+            El laboratorio permite analizar cómo un parámetro controlado
+            por el usuario puede influir en la ruta de un archivo
+            solicitado por el servidor y, cuando no existen controles
+            adecuados, permitir el acceso a recursos ubicados fuera del
+            directorio esperado.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== INTRODUCCIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-book-open"></i>
+            Introducción
+        </h2>
+
+        <p>
+            El presente documento describe la realización del laboratorio
+            <strong>File Path Traversal, simple case</strong>,
+            correspondiente a la plataforma PortSwigger Web Security Academy.
+        </p>
+
+        <p>
+            El laboratorio tiene como finalidad identificar una
+            vulnerabilidad de Path Traversal en una aplicación web que
+            utiliza un parámetro controlado por el usuario para recuperar
+            imágenes de productos.
+        </p>
+
+        <p>
+            Mediante la modificación de dicho parámetro se analiza si es
+            posible acceder a archivos ubicados fuera del directorio
+            destinado originalmente para las imágenes.
+        </p>
+
+        <p>
+            Para realizar el análisis se utilizó
+            <strong>Burp Suite</strong>, específicamente la herramienta
+            <strong>Repeater</strong>, con la finalidad de modificar y
+            reenviar manualmente la solicitud HTTP.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== OBJETIVO ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-bullseye"></i>
+            Objetivo
+        </h2>
+
+        <p>
+            El objetivo del laboratorio es identificar y explotar una
+            vulnerabilidad de Path Traversal que permita acceder a un
+            archivo fuera del directorio esperado por la aplicación.
+        </p>
+
+        <p>
+            La finalidad específica del laboratorio consiste en recuperar
+            el contenido del archivo:
+        </p>
+
+        <div class="evidence-item">
+
+            <h3>
+                <i class="fa-solid fa-file-code"></i>
+                Archivo objetivo
+            </h3>
+
+            <p>
+                <strong>/etc/passwd</strong>
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== HERRAMIENTAS ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-toolbox"></i>
+            Herramientas utilizadas
+        </h2>
+
+        <div class="evidence-item">
+
+            <h3>
+                01 // Burp Suite
+            </h3>
+
+            <p>
+                Se utilizó Burp Suite para analizar y modificar las
+                solicitudes HTTP generadas por la aplicación.
+                La herramienta <strong>Repeater</strong> permitió
+                reenviar manualmente las solicitudes después de modificar
+                el parámetro vulnerable.
+            </p>
+
+        </div>
+
+        <div class="evidence-item">
+
+            <h3>
+                02 // PortSwigger Web Security Academy
+            </h3>
+
+            <p>
+                Se utilizó el entorno de laboratorio proporcionado por
+                PortSwigger Web Security Academy para realizar la práctica
+                en un entorno controlado y verificar posteriormente su
+                resolución.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== PROCEDIMIENTO ==================== -->
+
+    <section id="procedimiento" class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-list-ol"></i>
+            Procedimiento
+        </h2>
+
+
+        <!-- OBJETIVO -->
+
+        <div class="evidence-item">
+
+            <h3>
+                01 // Objetivo del procedimiento
+            </h3>
+
+            <p>
+                El objetivo del procedimiento consiste en identificar el
+                parámetro utilizado por la aplicación para recuperar
+                imágenes y comprobar si puede ser manipulado para acceder
+                a un archivo ubicado fuera del directorio esperado.
+            </p>
+
+        </div>
+
+
+        <!-- CONTEXTO TÉCNICO -->
+
+        <div class="evidence-item">
+
+            <h3>
+                02 // Contexto técnico
+            </h3>
+
+            <p>
+                La aplicación utiliza el endpoint
+                <strong>/image</strong> para recuperar las imágenes
+                asociadas a los productos.
+            </p>
+
+            <p>
+                La solicitud HTTP observada durante el funcionamiento
+                normal de la aplicación utiliza el parámetro
+                <strong>filename</strong> para indicar el nombre del
+                archivo que debe ser recuperado.
+            </p>
+
+            <p>
+                La solicitud original identificada fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=16.jpg HTTP/2
+                </strong>
+            </p>
+
+            <p>
+                El valor <strong>16.jpg</strong> corresponde a una imagen
+                almacenada en el directorio destinado por la aplicación
+                para este tipo de recursos.
+            </p>
+
+            <p>
+                El punto de interés de seguridad se encuentra en que el
+                nombre del archivo es proporcionado mediante un parámetro
+                controlado por el cliente. Si el servidor utiliza
+                directamente dicho valor para construir una ruta en el
+                sistema de archivos y no aplica una validación o
+                restricción adecuada, un atacante puede intentar
+                manipular dicha ruta mediante secuencias de navegación
+                de directorios.
+            </p>
+
+        </div>
+
+
+        <!-- PASOS -->
+
+        <div class="evidence-item">
+
+            <h3>
+                03 // Secuencia de ejecución
+            </h3>
+
+            <ol>
+
+                <li>
+                    Se accedió al laboratorio correspondiente de
+                    PortSwigger Web Security Academy.
+                </li>
+
+                <li>
+                    Se ingresó a una página de producto para identificar
+                    la solicitud utilizada para recuperar su imagen.
+                </li>
+
+                <li>
+                    Se identificó el endpoint
+                    <strong>/image</strong> y el parámetro
+                    <strong>filename</strong>.
+                </li>
+
+                <li>
+                    Se observó que la solicitud original utilizaba el
+                    archivo <strong>16.jpg</strong>.
+                </li>
+
+                <li>
+                    La solicitud fue enviada a Burp Suite Repeater para
+                    poder modificarla.
+                </li>
+
+                <li>
+                    Se sustituyó el valor de
+                    <strong>filename</strong> por una secuencia de
+                    Path Traversal:
+                    <strong>../../../etc/passwd</strong>
+                </li>
+
+                <li>
+                    Se envió la solicitud modificada al servidor.
+                </li>
+
+                <li>
+                    Se analizó la respuesta HTTP obtenida.
+                </li>
+
+                <li>
+                    La respuesta devolvió el contenido del archivo
+                    <strong>/etc/passwd</strong>.
+                </li>
+
+                <li>
+                    Finalmente, se verificó en Web Security Academy que
+                    el laboratorio había sido marcado como
+                    <strong>Lab Solved</strong>.
+                </li>
+
+            </ol>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 1 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                04 // Solicitud original
+            </h3>
+
+            <p>
+                Antes de realizar cualquier modificación se identificó
+                la solicitud HTTP utilizada normalmente por la aplicación
+                para recuperar una imagen.
+            </p>
+
+            <p>
+                La solicitud observada fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=16.jpg HTTP/2
+                </strong>
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB07_Fig01_Request_Original.png"
+                    alt="Solicitud HTTP original del laboratorio 07"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 1. Solicitud HTTP original de una imagen.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                Se observa la solicitud HTTP generada por la aplicación
+                para recuperar una imagen de producto mediante el endpoint
+                <strong>/image</strong>. La petición utiliza el parámetro
+                <strong>filename</strong>, cuyo valor original es
+                <strong>16.jpg</strong>. Este parámetro determina el
+                recurso que será solicitado por el servidor y constituye
+                el punto de entrada que será analizado para comprobar la
+                existencia de una vulnerabilidad de Path Traversal.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 2 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                05 // Alteración de la solicitud
+            </h3>
+
+            <p>
+                Para comprobar si el parámetro podía ser manipulado, se
+                modificó únicamente su valor, sustituyendo el nombre de
+                la imagen por:
+            </p>
+
+            <p>
+                <strong>
+                    ../../../etc/passwd
+                </strong>
+            </p>
+
+            <p>
+                La solicitud resultante fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=../../../etc/passwd HTTP/2
+                </strong>
+            </p>
+
+            <p>
+                La modificación aprovecha la secuencia
+                <strong>../</strong>, utilizada para representar el
+                desplazamiento hacia el directorio padre dentro de una
+                ruta de archivos.
+            </p>
+
+            <p>
+                En este caso, las tres secuencias
+                <strong>../</strong> intentan salir progresivamente del
+                directorio en el que la aplicación espera encontrar las
+                imágenes y posteriormente acceder a
+                <strong>/etc/passwd</strong>.
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB07_Fig02_Path_Traversal.png"
+                    alt="Solicitud HTTP modificada mediante Path Traversal"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 2. Solicitud HTTP modificada mediante Burp Suite.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                Se modifica el parámetro
+                <strong>filename</strong> de la solicitud original,
+                sustituyendo el nombre de la imagen por la secuencia
+                <strong>../../../etc/passwd</strong>. El payload utiliza
+                tres secuencias de retroceso de directorio
+                (<strong>../</strong>) para intentar salir del directorio
+                destinado al almacenamiento de imágenes y acceder al
+                archivo <strong>/etc/passwd</strong>. La modificación
+                permite comprobar si el servidor procesa directamente la
+                ruta proporcionada por el usuario.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== ANÁLISIS DEL PAYLOAD ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                06 // Análisis del payload
+            </h3>
+
+            <p>
+                El payload utilizado fue:
+            </p>
+
+            <p>
+                <strong>
+                    ../../../etc/passwd
+                </strong>
+            </p>
+
+            <p>
+                Su funcionamiento se basa en la interpretación de
+                <strong>..</strong> como el directorio padre dentro de una
+                ruta del sistema de archivos.
+            </p>
+
+            <p>
+                Cada secuencia <strong>../</strong> permite desplazarse
+                un nivel hacia arriba en la estructura de directorios.
+                Por lo tanto:
+            </p>
+
+            <ul>
+
+                <li>
+                    <strong>../</strong> representa un nivel superior.
+                </li>
+
+                <li>
+                    <strong>../../</strong> representa dos niveles.
+                </li>
+
+                <li>
+                    <strong>../../../</strong> representa tres niveles
+                    superiores.
+                </li>
+
+            </ul>
+
+            <p>
+                Después de realizar estos desplazamientos, la ruta
+                continúa con:
+            </p>
+
+            <p>
+                <strong>
+                    /etc/passwd
+                </strong>
+            </p>
+
+            <p>
+                El resultado esperado es que la aplicación deje de utilizar
+                el directorio destinado originalmente para las imágenes y
+                termine resolviendo una ruta que apunta al archivo
+                <strong>/etc/passwd</strong>.
+            </p>
+
+            <p>
+                El hecho de que el servidor haya devuelto el contenido de
+                dicho archivo demuestra que el valor controlado por el
+                usuario fue utilizado para acceder al sistema de archivos
+                sin una restricción efectiva del directorio permitido.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 3 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                07 // Análisis de la respuesta
+            </h3>
+
+            <p>
+                La respuesta obtenida después de enviar la solicitud
+                modificada fue:
+            </p>
+
+            <p>
+                <strong>
+                    HTTP/2 200 OK
+                </strong>
+            </p>
+
+            <p>
+                <strong>
+                    Content-Type: image/jpeg
+                </strong>
+            </p>
+
+            <p>
+                Sin embargo, el cuerpo de la respuesta contenía
+                información correspondiente al archivo
+                <strong>/etc/passwd</strong>, incluyendo entradas como:
+            </p>
+
+            <p>
+                <strong>
+                    root:x:0:0:root:/root:/bin/bash
+                </strong>
+            </p>
+
+            <p>
+                <strong>
+                    daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+                </strong>
+            </p>
+
+            <p>
+                Este comportamiento demuestra que el servidor procesó
+                exitosamente la ruta manipulada y devolvió el contenido
+                del archivo solicitado.
+            </p>
+
+            <p>
+                Resulta especialmente relevante que la respuesta
+                mantuviera el tipo de contenido asociado originalmente a
+                una imagen mientras el cuerpo contenía texto perteneciente
+                a un archivo del sistema. Esto evidencia que el endpoint
+                no restringió adecuadamente el recurso al directorio
+                esperado de imágenes.
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB07_Fig03_Response_EtcPasswd.png"
+                    alt="Respuesta HTTP con contenido de etc passwd"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 3. Respuesta obtenida después de modificar la ruta.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                La respuesta HTTP contiene el contenido del archivo
+                <strong>/etc/passwd</strong>, incluyendo las entradas
+                correspondientes a las cuentas existentes en el sistema.
+                El acceso a este archivo confirma que la aplicación
+                procesó la ruta proporcionada en el parámetro
+                <strong>filename</strong> sin restringir adecuadamente
+                el acceso al directorio destinado a las imágenes.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== RESULTADO ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                08 // Resultado del laboratorio
+            </h3>
+
+            <p>
+                La explotación permitió recuperar correctamente el
+                contenido de <strong>/etc/passwd</strong> mediante la
+                manipulación del parámetro
+                <strong>filename</strong>.
+            </p>
+
+            <p>
+                Posteriormente, la plataforma PortSwigger Web Security
+                Academy confirmó que el laboratorio había sido completado
+                correctamente mediante el indicador
+                <strong>Lab Solved</strong>.
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB07_Fig04_LabSolved.png"
+                    alt="Confirmación de laboratorio resuelto"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 4. Confirmación de resolución del laboratorio.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                La plataforma Web Security Academy confirma que el
+                laboratorio fue resuelto correctamente. La resolución se
+                obtuvo mediante la explotación de la vulnerabilidad de
+                Path Traversal, utilizando el parámetro
+                <strong>filename</strong> para acceder al archivo
+                <strong>/etc/passwd</strong> fuera del directorio
+                destinado al almacenamiento de imágenes.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== CONCLUSIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-flag-checkered"></i>
+            Conclusión
+        </h2>
+
+        <p>
+            El laboratorio permitió comprobar de manera práctica el
+            funcionamiento de una vulnerabilidad de
+            <strong>File Path Traversal</strong>. El problema se originó
+            porque un parámetro controlado por el cliente permitió influir
+            directamente en la ubicación del archivo que debía ser
+            recuperado.
+        </p>
+
+        <p>
+            Mediante la secuencia
+            <strong>../../../</strong> fue posible desplazarse fuera del
+            directorio destinado a las imágenes y solicitar el archivo
+            <strong>/etc/passwd</strong>. La respuesta obtenida confirmó
+            que el servidor procesó la ruta manipulada y permitió acceder
+            al contenido del archivo.
+        </p>
+
+        <p>
+            Este ejercicio demuestra la importancia de validar y
+            restringir las rutas de archivos proporcionadas por el
+            usuario. Una aplicación segura debe evitar que los parámetros
+            controlados por el cliente puedan modificar arbitrariamente la
+            ubicación de los recursos que serán procesados por el servidor.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== DOCUMENTO PDF ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-file-pdf"></i>
+            Documento de la actividad
+        </h2>
+
+        <p>
+            Consulta el documento completo de la Actividad 07,
+            correspondiente al laboratorio
+            <strong>File Path Traversal, simple case</strong>,
+            donde se presenta la documentación técnica y las evidencias
+            del procedimiento realizado.
+        </p>
+
+        <a href="evidencias/Act07_SimpleCase.pdf"
+           class="activity-button"
+           target="_blank">
+
+            <i class="fa-solid fa-file-pdf"></i>
+            Ver documento PDF
+
+        </a>
+
+    </section>
+
+
+    <!-- ==================== NAVEGACIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-route"></i>
+            Road to Hall of Fame
+        </h2>
+
+        <p>
+            Regresa al recorrido principal para consultar los demás
+            laboratorios del módulo.
+        </p>
+
+        <a href="HallOfFame.html"
+           class="activity-button">
+
+            <i class="fa-solid fa-arrow-left"></i>
+            Volver al Road to Hall of Fame
+
+        </a>
+
+    </section>
+
+
+</main>
+
+
+<!-- ==================== VOLVER ARRIBA ==================== -->
+
+<a href="#inicio"
+   class="back-to-top"
+   title="Volver arriba">
+
+    <i class="fa-solid fa-arrow-up"></i>
+
+</a>
+
+
+<!-- ==================== FOOTER ==================== -->
+
+<footer class="footer">
+
+    <p>
+        &copy; 2026 Jesús Israel Martínez Escobedo.
+        Todos los derechos reservados.
+    </p>
+
+    <p>
+        <i class="fa-solid fa-lock"></i>
+        Conexión Segura mediante Protocolo HTTPS / SSL
+    </p>
+
+</footer>
+```
+
+</body>
+</html>
