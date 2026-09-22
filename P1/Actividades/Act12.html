@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Actividad 12 | Validation Of File Extension With Null Byte Bypass</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- ==================== HEADER ==================== -->
+
+<header class="header">
+
+    <div class="header-container">
+
+        <div class="student-info">
+
+            <h1 class="student-name">
+                Jesús Israel Martínez Escobedo
+            </h1>
+
+            <p class="course-badge">
+                <i class="fa-solid fa-shield-halved"></i>
+                CNO IV - Seguridad Informática
+            </p>
+
+            <p class="academic-details">
+                <span>
+                    <i class="fa-solid fa-university"></i>
+                    Universidad Politécnica de San Luis Potosí
+                </span>
+                |
+                <span>
+                    <i class="fa-solid fa-calendar"></i>
+                    Semestre 2026
+                </span>
+            </p>
+
+        </div>
+
+        <nav class="navbar">
+
+            <ul>
+
+                <li>
+                    <a href="../../index.html">
+                        Inicio
+                    </a>
+                </li>
+
+                <li>
+                    <a href="HallOfFame.html">
+                        Road to Hall of Fame
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#procedimiento">
+                        Procedimiento
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#evidencias">
+                        Evidencias
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- ==================== CONTENIDO ==================== -->
+
+<main class="main-content" id="inicio">
+
+
+    <!-- ==================== PORTADA ==================== -->
+
+    <div class="dedsec-manifesto">
+
+        <div class="glitch-wrapper">
+
+            <h2 class="glitch-text"
+                data-text="/// LAB_12_VALIDATION_OF_FILE_EXTENSION">
+                /// LAB_12_VALIDATION_OF_FILE_EXTENSION
+            </h2>
+
+        </div>
+
+        <p class="typewriter-text">
+            &gt; CNO_IV // PORTSWIGGER // VALIDATION_OF_FILE_EXTENSION... [NULL_BYTE_BYPASS]
+        </p>
+
+    </div>
+
+
+    <!-- ==================== PRESENTACIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-flask-vial"></i>
+            Actividad 12 — Validation Of File Extension With Null Byte Bypass
+        </h2>
+
+        <p>
+            <strong>
+                File path traversal, validation of file extension with null byte bypass
+            </strong>
+        </p>
+
+        <p>
+            Laboratorio práctico de PortSwigger Web Security Academy
+            enfocado en la identificación y explotación de una
+            vulnerabilidad de File Path Traversal mediante el bypass de
+            una validación de extensión utilizando un byte nulo codificado.
+        </p>
+
+        <p>
+            El laboratorio permite analizar cómo una aplicación puede
+            validar que el nombre de un archivo termine con una extensión
+            permitida, pero procesar posteriormente el byte nulo de manera
+            que sea posible acceder a un archivo diferente al esperado.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== NIVEL ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-layer-group"></i>
+            Nivel
+        </h2>
+
+        <div class="evidence-item">
+
+            <h3>
+                Practitioner
+            </h3>
+
+            <p>
+                El laboratorio corresponde al nivel
+                <strong>Practitioner</strong> de PortSwigger Web Security
+                Academy.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== TIPO DE EXPLOTACIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-bug"></i>
+            Tipo de explotación
+        </h2>
+
+        <div class="evidence-item">
+
+            <h3>
+                File Path Traversal — Validation Of File Extension With Null Byte Bypass
+            </h3>
+
+            <p>
+                Explotación de una vulnerabilidad de File Path Traversal
+                mediante el bypass de una validación de extensión utilizando
+                un byte nulo codificado antes de una extensión válida.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== OBJETIVO ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-bullseye"></i>
+            Objetivo
+        </h2>
+
+        <p>
+            El objetivo del laboratorio es identificar y explotar una
+            vulnerabilidad de File Path Traversal presente en la
+            funcionalidad encargada de mostrar las imágenes de los
+            productos.
+        </p>
+
+        <p>
+            La aplicación valida que el nombre del archivo proporcionado
+            mediante el parámetro <strong>filename</strong> termine con
+            una extensión de imagen válida.
+        </p>
+
+        <div class="evidence-item">
+
+            <h3>
+                <i class="fa-solid fa-file-image"></i>
+                Extensión esperada
+            </h3>
+
+            <p>
+                <strong>.png</strong>
+            </p>
+
+        </div>
+
+        <p>
+            La finalidad específica consiste en evadir esta validación
+            mediante un byte nulo codificado y acceder al contenido del
+            archivo:
+        </p>
+
+        <div class="evidence-item">
+
+            <h3>
+                <i class="fa-solid fa-file-code"></i>
+                Archivo objetivo
+            </h3>
+
+            <p>
+                <strong>/etc/passwd</strong>
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== EXPLICACIÓN TÉCNICA ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-book-open"></i>
+            Explicación técnica de la vulnerabilidad
+        </h2>
+
+        <p>
+            La vulnerabilidad de File Path Traversal ocurre cuando una
+            aplicación permite que datos controlados por el usuario
+            influyan directamente en la ubicación de un archivo que será
+            procesado o recuperado por el servidor.
+        </p>
+
+        <p>
+            En este laboratorio, la aplicación utiliza el endpoint
+            <strong>/image</strong> para recuperar las imágenes asociadas
+            a los productos. El archivo solicitado se determina mediante
+            el parámetro <strong>filename</strong>.
+        </p>
+
+        <p>
+            La solicitud original identificada fue:
+        </p>
+
+        <p>
+            <strong>
+                GET /image?filename=39.jpg HTTP/2
+            </strong>
+        </p>
+
+        <p>
+            La aplicación implementa una validación que comprueba que el
+            nombre del archivo proporcionado termine con una extensión
+            de imagen válida.
+        </p>
+
+        <p>
+            El problema consiste en que la validación de la extensión y
+            el procesamiento posterior de la ruta no manejan de forma
+            segura el <strong>byte nulo</strong>.
+        </p>
+
+        <p>
+            El payload utilizado fue:
+        </p>
+
+        <p>
+            <strong>
+                ../../../etc/passwd%00.png
+            </strong>
+        </p>
+
+        <p>
+            La secuencia <strong>../../../</strong> permite realizar
+            un recorrido hacia directorios superiores hasta alcanzar
+            la ubicación del archivo <strong>/etc/passwd</strong>.
+        </p>
+
+        <p>
+            Posteriormente, la secuencia <strong>%00</strong> representa
+            un byte nulo codificado. Este elemento permite colocar una
+            extensión válida después de la ruta del archivo objetivo.
+        </p>
+
+        <p>
+            La extensión <strong>.png</strong> permite que el valor
+            proporcionado cumpla con la validación implementada por
+            la aplicación.
+        </p>
+
+        <p>
+            En determinados mecanismos de procesamiento de archivos, el
+            byte nulo puede actuar como terminador de una cadena. Esto
+            puede provocar una diferencia entre la representación utilizada
+            durante la validación y la forma en que posteriormente se
+            procesa la ruta.
+        </p>
+
+        <p>
+            De esta manera, la aplicación puede aceptar el valor debido
+            a que termina en <strong>.png</strong>, mientras que el
+            procesamiento posterior permite acceder al archivo
+            <strong>/etc/passwd</strong>.
+        </p>
+
+        <p>
+            Esto demuestra que validar únicamente la extensión de un
+            archivo no es suficiente para proteger una aplicación contra
+            vulnerabilidades de Path Traversal.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== PROCEDIMIENTO ==================== -->
+
+    <section id="procedimiento" class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-list-ol"></i>
+            Procedimiento
+        </h2>
+
+
+        <!-- OBJETIVO DEL PROCEDIMIENTO -->
+
+        <div class="evidence-item">
+
+            <h3>
+                01 // Objetivo del procedimiento
+            </h3>
+
+            <p>
+                El objetivo consiste en identificar el parámetro utilizado
+                por la aplicación para recuperar las imágenes y comprobar
+                si puede ser manipulado para evadir la validación de
+                extensión mediante un byte nulo codificado.
+            </p>
+
+        </div>
+
+
+        <!-- CONTEXTO TÉCNICO -->
+
+        <div class="evidence-item">
+
+            <h3>
+                02 // Contexto técnico
+            </h3>
+
+            <p>
+                La aplicación utiliza el endpoint
+                <strong>/image</strong> para recuperar las imágenes
+                asociadas a los productos.
+            </p>
+
+            <p>
+                La solicitud utiliza el parámetro
+                <strong>filename</strong> para indicar el recurso que
+                debe ser recuperado por el servidor.
+            </p>
+
+            <p>
+                La solicitud original identificada fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=39.jpg HTTP/2
+                </strong>
+            </p>
+
+            <p>
+                El valor proporcionado corresponde inicialmente al nombre
+                de una imagen válida y contiene la extensión
+                <strong>.jpg</strong>.
+            </p>
+
+        </div>
+
+
+        <!-- PASOS -->
+
+        <div class="evidence-item">
+
+            <h3>
+                03 // Secuencia de ejecución
+            </h3>
+
+            <ol>
+
+                <li>
+                    Se accedió al laboratorio correspondiente de
+                    PortSwigger Web Security Academy.
+                </li>
+
+                <li>
+                    Se ingresó a una página de producto para identificar
+                    la solicitud utilizada para recuperar su imagen.
+                </li>
+
+                <li>
+                    Mediante Burp Suite, específicamente en
+                    <strong>Proxy → HTTP history</strong>, se identificó
+                    la solicitud correspondiente a la imagen.
+                </li>
+
+                <li>
+                    Se identificó el endpoint
+                    <strong>/image</strong> y el parámetro
+                    <strong>filename</strong>.
+                </li>
+
+                <li>
+                    Se observó que la solicitud original utilizaba el
+                    nombre de archivo:
+                    <strong>39.jpg</strong>.
+                </li>
+
+                <li>
+                    La solicitud fue enviada a
+                    <strong>Burp Suite Repeater</strong> para poder
+                    modificar manualmente el parámetro.
+                </li>
+
+                <li>
+                    Se sustituyó el valor original del parámetro
+                    <strong>filename</strong> por:
+                    <strong>../../../etc/passwd%00.png</strong>
+                </li>
+
+                <li>
+                    La solicitud modificada quedó de la siguiente manera:
+                    <strong>
+                        GET /image?filename=../../../etc/passwd%00.png HTTP/2
+                    </strong>
+                </li>
+
+                <li>
+                    El payload incorporó las secuencias de
+                    <strong>Path Traversal</strong> para acceder al
+                    archivo objetivo.
+                </li>
+
+                <li>
+                    Se agregó el byte nulo codificado
+                    <strong>%00</strong> seguido de la extensión
+                    <strong>.png</strong> para evadir la validación.
+                </li>
+
+                <li>
+                    Se envió la solicitud modificada desde Burp Suite
+                    Repeater mediante la opción <strong>Send</strong>.
+                </li>
+
+                <li>
+                    Se analizó la respuesta HTTP obtenida.
+                </li>
+
+                <li>
+                    La respuesta devolvió el contenido del archivo
+                    <strong>/etc/passwd</strong>.
+                </li>
+
+                <li>
+                    Finalmente, se regresó al laboratorio en Web Security
+                    Academy y se verificó que apareciera
+                    <strong>Lab Solved</strong>.
+                </li>
+
+            </ol>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 1 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                04 // Solicitud HTTP original
+            </h3>
+
+            <p>
+                Mediante Burp Suite se identificó en
+                <strong>Proxy → HTTP history</strong> la solicitud
+                correspondiente a la imagen del producto.
+            </p>
+
+            <p>
+                La solicitud observada fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=39.jpg HTTP/2
+                </strong>
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB12_Fig01_Request_Original.png"
+                    alt="Solicitud HTTP original del laboratorio 12"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 1. Solicitud HTTP original de una imagen.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                La solicitud utiliza el parámetro
+                <strong>filename</strong>, cuyo valor corresponde al
+                archivo <strong>39.jpg</strong>. Este parámetro constituye
+                el punto de entrada analizado para comprobar la existencia
+                de una vulnerabilidad de Path Traversal.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 2 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                05 // Payload utilizado
+            </h3>
+
+            <p>
+                La solicitud fue enviada a Burp Suite Repeater para
+                modificar manualmente el valor del parámetro
+                <strong>filename</strong>.
+            </p>
+
+            <p>
+                El valor original:
+            </p>
+
+            <p>
+                <strong>
+                    filename=39.jpg
+                </strong>
+            </p>
+
+            <p>
+                fue sustituido por:
+            </p>
+
+            <p>
+                <strong>
+                    filename=../../../etc/passwd%00.png
+                </strong>
+            </p>
+
+            <p>
+                La solicitud resultante fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=../../../etc/passwd%00.png HTTP/2
+                </strong>
+            </p>
+
+            <p>
+                El payload combina una secuencia de
+                <strong>Path Traversal</strong>, el archivo objetivo,
+                un byte nulo codificado y una extensión válida.
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB12_Fig02_Null_Byte_Bypass.png"
+                    alt="Payload utilizado para evadir la validación de extensión mediante byte nulo"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 2. Solicitud HTTP modificada mediante bypass de validación de extensión con byte nulo.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                La modificación permite que el valor proporcionado
+                conserve una extensión válida para superar la comprobación
+                implementada por la aplicación.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== EXPLICACIÓN DEL PAYLOAD ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                06 // Explicación del payload
+            </h3>
+
+            <p>
+                El payload utilizado fue:
+            </p>
+
+            <p>
+                <strong>
+                    ../../../etc/passwd%00.png
+                </strong>
+            </p>
+
+            <p>
+                El payload puede dividirse en tres elementos principales:
+            </p>
+
+            <p>
+                <strong>
+                    ../../../
+                </strong>
+            </p>
+
+            <p>
+                Estas secuencias representan movimientos hacia directorios
+                superiores. Permiten salir del directorio destinado a las
+                imágenes y avanzar hacia una ubicación diferente dentro
+                del sistema de archivos.
+            </p>
+
+            <p>
+                <strong>
+                    /etc/passwd
+                </strong>
+            </p>
+
+            <p>
+                Corresponde al archivo que se intenta recuperar mediante
+                la ruta manipulada. Este archivo contiene información de
+                las cuentas de usuario del sistema Linux.
+            </p>
+
+            <p>
+                <strong>
+                    %00
+                </strong>
+            </p>
+
+            <p>
+                La secuencia %00 representa un
+                <strong>byte nulo codificado</strong>.
+            </p>
+
+            <p>
+                En este laboratorio, el byte nulo permite separar la ruta
+                del archivo objetivo de la extensión que se agrega
+                posteriormente. Esto resulta importante debido a que la
+                aplicación valida que el nombre del archivo termine con
+                una extensión permitida.
+            </p>
+
+            <p>
+                <strong>
+                    .png
+                </strong>
+            </p>
+
+            <p>
+                Finalmente se agrega la extensión
+                <strong>.png</strong>, permitiendo que el valor enviado
+                cumpla con la condición de validación establecida por la
+                aplicación.
+            </p>
+
+            <p>
+                El proceso puede representarse conceptualmente de la
+                siguiente manera:
+            </p>
+
+            <p>
+                <strong>
+                    ../../../
+                </strong>
+            </p>
+
+            <p>
+                +
+            </p>
+
+            <p>
+                <strong>
+                    /etc/passwd
+                </strong>
+            </p>
+
+            <p>
+                +
+            </p>
+
+            <p>
+                <strong>
+                    %00.png
+                </strong>
+            </p>
+
+            <p>
+                =
+            </p>
+
+            <p>
+                <strong>
+                    ../../../etc/passwd%00.png
+                </strong>
+            </p>
+
+            <p>
+                La vulnerabilidad ocurre porque la aplicación realiza la
+                validación sobre una representación de la entrada que no
+                coincide correctamente con la forma en que posteriormente
+                se procesa la ruta.
+            </p>
+
+            <p>
+                Como resultado, la validación acepta el valor debido a la
+                presencia de <strong>.png</strong>, mientras que el
+                procesamiento permite acceder al archivo
+                <strong>/etc/passwd</strong>.
+            </p>
+
+            <p>
+                Por lo tanto, el payload consigue superar la validación de
+                extensión y recuperar un archivo ubicado fuera del
+                directorio destinado originalmente a las imágenes.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 3 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                07 // Respuesta vulnerable
+            </h3>
+
+            <p>
+                Después de enviar la solicitud modificada mediante
+                Burp Suite Repeater, el servidor respondió:
+            </p>
+
+            <p>
+                <strong>
+                    HTTP/2 200 OK
+                </strong>
+            </p>
+
+            <p>
+                La respuesta también indicó:
+            </p>
+
+            <p>
+                <strong>
+                    Content-Type: image/png
+                </strong>
+            </p>
+
+            <p>
+                <strong>
+                    Content-Length: 2316
+                </strong>
+            </p>
+
+            <p>
+                Aunque la respuesta indica un tipo de contenido
+                <strong>image/png</strong>, el cuerpo contiene el contenido
+                del archivo <strong>/etc/passwd</strong>.
+            </p>
+
+            <p>
+                Entre las entradas observadas se encontró:
+            </p>
+
+            <p>
+                <strong>
+                    root:x:0:0:root:/root:/bin/bash
+                </strong>
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB12_Fig03_Response_EtcPasswd.png"
+                    alt="Respuesta HTTP con contenido de etc passwd del laboratorio 12"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 3. Respuesta HTTP obtenida mediante el bypass de validación de extensión.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                El contenido obtenido confirma que el servidor procesó
+                la ruta manipulada y devolvió el recurso solicitado.
+            </p>
+
+            <p>
+                La presencia de la entrada
+                <strong>root:x:0:0:root:/root:/bin/bash</strong>
+                confirma que fue posible recuperar el contenido de
+                <strong>/etc/passwd</strong>.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== RESULTADO ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                08 // Confirmación de Lab Solved
+            </h3>
+
+            <p>
+                Después de comprobar la respuesta vulnerable, se regresó
+                al laboratorio de PortSwigger Web Security Academy.
+            </p>
+
+            <p>
+                La plataforma mostró la confirmación:
+                <strong>Lab Solved</strong>.
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB12_Fig04_LabSolved.png"
+                    alt="Confirmación de laboratorio 12 resuelto"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 4. Confirmación de resolución del laboratorio.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                Se muestra la confirmación proporcionada por PortSwigger
+                Web Security Academy después de ejecutar correctamente la
+                explotación. El estado <strong>Lab Solved</strong> confirma
+                que el acceso al archivo <strong>/etc/passwd</strong> fue
+                reconocido por la plataforma y que el objetivo establecido
+                para el laboratorio fue alcanzado.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== MITIGACIÓN ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                09 // Mitigación recomendada
+            </h3>
+
+            <p>
+                Para prevenir este tipo de vulnerabilidad, la aplicación
+                debe evitar confiar directamente en nombres o rutas
+                proporcionados por el usuario y debe validar correctamente
+                la ubicación final del archivo solicitado.
+            </p>
+
+            <p>
+                Cuando sea necesario trabajar con rutas proporcionadas por
+                el cliente, estas deben normalizarse y decodificarse antes
+                de realizar las comprobaciones de seguridad. La validación
+                debe considerar correctamente representaciones codificadas
+                como <strong>%00</strong>.
+            </p>
+
+            <p>
+                Se recomienda rechazar bytes nulos y caracteres de control
+                que puedan modificar la interpretación de una ruta durante
+                su procesamiento.
+            </p>
+
+            <p>
+                También es recomendable utilizar identificadores internos
+                o una lista controlada de nombres de archivos en lugar de
+                aceptar directamente rutas proporcionadas por el cliente.
+            </p>
+
+            <p>
+                Cuando sea necesario trabajar con rutas, el servidor debe
+                comprobar que el resultado final y normalizado permanezca
+                dentro del directorio autorizado. La validación de la
+                extensión debe considerarse únicamente como una medida
+                complementaria y no como el mecanismo principal de
+                protección.
+            </p>
+
+            <p>
+                También debe utilizarse el principio de mínimo privilegio
+                para limitar el impacto en caso de que una vulnerabilidad
+                de acceso a archivos sea explotada.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== CONCLUSIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-flag-checkered"></i>
+            Conclusión
+        </h2>
+
+        <p>
+            El laboratorio permitió comprobar de manera práctica cómo
+            una vulnerabilidad de <strong>File Path Traversal</strong>
+            puede combinarse con una validación insegura de la extensión
+            de los archivos.
+        </p>
+
+        <p>
+            La aplicación verificaba que el nombre proporcionado terminara
+            con una extensión válida, pero esta validación podía ser
+            evadida mediante el uso de un <strong>byte nulo
+            codificado</strong>.
+        </p>
+
+        <p>
+            El payload utilizado fue:
+        </p>
+
+        <p>
+            <strong>
+                ../../../etc/passwd%00.png
+            </strong>
+        </p>
+
+        <p>
+            Mediante las secuencias <strong>../</strong> fue posible
+            realizar el recorrido hacia directorios superiores hasta llegar
+            al archivo <strong>/etc/passwd</strong>. Posteriormente,
+            <strong>%00</strong> permitió colocar la extensión
+            <strong>.png</strong> después de la ruta del archivo objetivo,
+            logrando que la entrada cumpliera con la validación implementada
+            por la aplicación.
+        </p>
+
+        <p>
+            La respuesta obtenida fue
+            <strong>HTTP/2 200 OK</strong> y, aunque el servidor indicó un
+            <strong>Content-Type: image/png</strong>, el cuerpo de la
+            respuesta contenía el contenido real de
+            <strong>/etc/passwd</strong>. Esto confirmó que la validación
+            había sido evadida correctamente.
+        </p>
+
+        <p>
+            Finalmente, la plataforma
+            <strong>PortSwigger Web Security Academy</strong> confirmó la
+            resolución del laboratorio mediante el indicador
+            <strong>Lab Solved</strong>.
+        </p>
+
+        <p>
+            Este ejercicio demuestra que las validaciones basadas
+            únicamente en extensiones son insuficientes para proteger una
+            aplicación contra ataques de Path Traversal. Una implementación
+            segura debe normalizar y validar la ruta completa, controlar
+            adecuadamente caracteres especiales y garantizar que el recurso
+            solicitado permanezca dentro del directorio autorizado.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== DOCUMENTO PDF ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-file-pdf"></i>
+            Documento de la actividad
+        </h2>
+
+        <p>
+            Consulta el documento completo de la Actividad 12,
+            correspondiente al laboratorio
+            <strong>
+                File path traversal, validation of file extension with null byte bypass
+            </strong>,
+            donde se presenta la documentación técnica y las evidencias
+            del procedimiento realizado.
+        </p>
+
+        <a href="evidencias/Act12-NullByte.pdf"
+           class="activity-button"
+           target="_blank">
+
+            <i class="fa-solid fa-file-pdf"></i>
+            Ver documento PDF
+
+        </a>
+
+    </section>
+
+
+    <!-- ==================== NAVEGACIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-route"></i>
+            Road to Hall of Fame
+        </h2>
+
+        <p>
+            Regresa al recorrido principal para consultar los demás
+            laboratorios del módulo.
+        </p>
+
+        <a href="HallOfFame.html"
+           class="activity-button">
+
+            <i class="fa-solid fa-arrow-left"></i>
+            Volver al Road to Hall of Fame
+
+        </a>
+
+    </section>
+
+
+</main>
+
+
+<!-- ==================== VOLVER ARRIBA ==================== -->
+
+<a href="#inicio"
+   class="back-to-top"
+   title="Volver arriba">
+
+    <i class="fa-solid fa-arrow-up"></i>
+
+</a>
+
+
+<!-- ==================== FOOTER ==================== -->
+
+<footer class="footer">
+
+    <p>
+        &copy; 2026 Jesús Israel Martínez Escobedo.
+        Todos los derechos reservados.
+    </p>
+
+    <p>
+        <i class="fa-solid fa-lock"></i>
+        Conexión Segura mediante Protocolo HTTPS / SSL
+    </p>
+
+</footer>
+
+</body>
+</html>
