@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>Actividad 09 | Non-Recursive Path Traversal</title>
+
+<link rel="stylesheet" href="../../styles.css">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+</head>
+
+<body>
+
+<!-- ==================== HEADER ==================== -->
+
+<header class="header">
+
+
+<div class="header-container">
+
+    <div class="student-info">
+
+        <h1 class="student-name">
+            Jesús Israel Martínez Escobedo
+        </h1>
+
+        <p class="course-badge">
+            <i class="fa-solid fa-shield-halved"></i>
+            CNO IV - Seguridad Informática
+        </p>
+
+        <p class="academic-details">
+            <span>
+                <i class="fa-solid fa-university"></i>
+                Universidad Politécnica de San Luis Potosí
+            </span>
+            |
+            <span>
+                <i class="fa-solid fa-calendar"></i>
+                Semestre 2026
+            </span>
+        </p>
+
+    </div>
+
+    <nav class="navbar">
+
+        <ul>
+
+            <li>
+                <a href="../../index.html">
+                    Inicio
+                </a>
+            </li>
+
+            <li>
+                <a href="HallOfFame.html">
+                    Road to Hall of Fame
+                </a>
+            </li>
+
+            <li>
+                <a href="#procedimiento">
+                    Procedimiento
+                </a>
+            </li>
+
+            <li>
+                <a href="#evidencias">
+                    Evidencias
+                </a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+</div>
+
+
+</header>
+
+<!-- ==================== CONTENIDO ==================== -->
+
+<main class="main-content" id="inicio">
+
+
+<!-- ==================== PORTADA ==================== -->
+
+<div class="dedsec-manifesto">
+
+    <div class="glitch-wrapper">
+
+        <h2 class="glitch-text"
+            data-text="/// LAB_09_NON_RECURSIVE_PATH_TRAVERSAL">
+            /// LAB_09_NON_RECURSIVE_PATH_TRAVERSAL
+        </h2>
+
+    </div>
+
+    <p class="typewriter-text">
+        &gt; CNO_IV // PORTSWIGGER // NON_RECURSIVE_FILTER_BYPASSED... [TRAVERSAL_RESTORED]
+    </p>
+
+</div>
+
+
+<!-- ==================== PRESENTACIÓN ==================== -->
+
+<section class="section-card">
+
+    <h2>
+        <i class="fa-solid fa-flask-vial"></i>
+        Actividad 09 — Non-Recursive Path Traversal
+    </h2>
+
+    <p>
+        <strong>
+            File path traversal, traversal sequences stripped non-recursively
+        </strong>
+    </p>
+
+    <p>
+        Laboratorio práctico de PortSwigger Web Security Academy
+        enfocado en la identificación y explotación de una
+        vulnerabilidad de File Path Traversal mediante la evasión de
+        un filtro no recursivo.
+    </p>
+
+    <p>
+        El laboratorio permite analizar cómo una aplicación puede
+        intentar eliminar las secuencias de recorrido de directorios
+        proporcionadas por el usuario, pero continuar siendo vulnerable
+        cuando el proceso de filtrado se realiza una sola vez.
+    </p>
+
+</section>
+
+
+<!-- ==================== NIVEL ==================== -->
+
+<section class="section-card">
+
+    <h2>
+        <i class="fa-solid fa-layer-group"></i>
+        Nivel
+    </h2>
+
+    <div class="evidence-item">
+
+        <h3>
+            Practitioner
+        </h3>
+
+        <p>
+            El laboratorio corresponde al nivel
+            <strong>Practitioner</strong> de PortSwigger Web Security
+            Academy.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ==================== TIPO DE EXPLOTACIÓN ==================== -->
+
+<section class="section-card">
+
+    <h2>
+        <i class="fa-solid fa-bug"></i>
+        Tipo de explotación
+    </h2>
+
+    <div class="evidence-item">
+
+        <h3>
+            File Path Traversal — Non-Recursive Filter Bypass
+        </h3>
+
+        <p>
+            Explotación de una vulnerabilidad de File Path Traversal
+            mediante la evasión de un filtro que elimina las secuencias
+            de recorrido de directorios de forma no recursiva.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ==================== OBJETIVO ==================== -->
+
+<section class="section-card">
+
+    <h2>
+        <i class="fa-solid fa-bullseye"></i>
+        Objetivo
+    </h2>
+
+    <p>
+        El objetivo del laboratorio es identificar y explotar una
+        vulnerabilidad de File Path Traversal presente en la
+        funcionalidad encargada de mostrar las imágenes de los
+        productos.
+    </p>
+
+    <p>
+        La aplicación elimina las secuencias tradicionales de
+        recorrido de directorios, como
+        <strong>../</strong>, del nombre de archivo proporcionado por
+        el usuario.
+    </p>
+
+    <p>
+        Sin embargo, el proceso de filtrado no se realiza de manera
+        recursiva. Esto permite construir una entrada que, después de
+        ser procesada por el filtro, vuelva a contener una secuencia
+        válida de Path Traversal.
+    </p>
+
+    <p>
+        La finalidad específica consiste en utilizar esta técnica para
+        recuperar el contenido del archivo:
+    </p>
+
+    <div class="evidence-item">
+
+        <h3>
+            <i class="fa-solid fa-file-code"></i>
+            Archivo objetivo
+        </h3>
+
+        <p>
+            <strong>/etc/passwd</strong>
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ==================== EXPLICACIÓN TÉCNICA ==================== -->
+
+<section class="section-card">
+
+    <h2>
+        <i class="fa-solid fa-book-open"></i>
+        Explicación técnica de la vulnerabilidad
+    </h2>
+
+    <p>
+        La vulnerabilidad de File Path Traversal ocurre cuando una
+        aplicación permite que datos controlados por el usuario
+        influyan directamente en la ubicación de un archivo que será
+        procesado o recuperado por el servidor.
+    </p>
+
+    <p>
+        En este laboratorio, la aplicación utiliza el endpoint
+        <strong>/image</strong> para recuperar las imágenes asociadas
+        a los productos. El archivo solicitado se determina mediante
+        el parámetro <strong>filename</strong>.
+    </p>
+
+    <p>
+        La solicitud original identificada fue:
+    </p>
+
+    <p>
+        <strong>
+            GET /image?filename=8.jpg HTTP/2
+        </strong>
+    </p>
+
+    <p>
+        El valor <strong>8.jpg</strong> corresponde a una imagen
+        solicitada normalmente por la aplicación.
+    </p>
+
+    <p>
+        La aplicación intenta protegerse eliminando las secuencias
+        <strong>../</strong> del valor proporcionado por el usuario.
+        El problema es que esta eliminación se realiza únicamente una
+        vez y no vuelve a analizar el resultado obtenido.
+    </p>
+
+    <p>
+        Para evadir este mecanismo se utilizó el payload:
+    </p>
+
+    <p>
+        <strong>
+            ....//....//....//etc/passwd
+        </strong>
+    </p>
+
+    <p>
+        Cada segmento <strong>....//</strong> contiene en su interior
+        una secuencia <strong>../</strong>. Cuando el filtro elimina
+        dicha secuencia durante el primer procesamiento, queda
+        nuevamente una secuencia válida de recorrido de directorios.
+    </p>
+
+    <p>
+        Conceptualmente, el procesamiento puede representarse como:
+    </p>
+
+    <p>
+        <strong>
+            ....//....//....//etc/passwd
+        </strong>
+    </p>
+
+    <p>
+        después del filtrado:
+    </p>
+
+    <p>
+        <strong>
+            ../../../etc/passwd
+        </strong>
+    </p>
+
+    <p>
+        Debido a que el filtro no vuelve a procesar el resultado,
+        las nuevas secuencias de traversal permanecen en la ruta y
+        permiten acceder al archivo ubicado fuera del directorio
+        esperado.
+    </p>
+
+    <p>
+        El problema principal no consiste únicamente en la existencia
+        de una cadena concreta, sino en que la aplicación intenta
+        proteger el acceso mediante sustitución de texto en lugar de
+        validar de forma segura la ruta final normalizada.
+    </p>
+
+</section>
+
+
+<!-- ==================== PROCEDIMIENTO ==================== -->
+
+<section id="procedimiento" class="section-card">
+
+    <h2>
+        <i class="fa-solid fa-list-ol"></i>
+        Procedimiento
+    </h2>
+
+
+    <!-- OBJETIVO DEL PROCEDIMIENTO -->
+
+    <div class="evidence-item">
+
+        <h3>
+            01 // Objetivo del procedimiento
+        </h3>
+
+        <p>
+            El objetivo consiste en identificar el parámetro utilizado
+            por la aplicación para recuperar las imágenes y comprobar
+            si puede ser manipulado para acceder a un archivo ubicado
+            fuera del directorio esperado mediante la evasión del
+            filtro no recursivo.
+        </p>
+
+    </div>
+
+
+    <!-- CONTEXTO TÉCNICO -->
+
+    <div class="evidence-item">
+
+        <h3>
+            02 // Contexto técnico
+        </h3>
+
+        <p>
+            La aplicación utiliza el endpoint
+            <strong>/image</strong> para recuperar las imágenes
+            asociadas a los productos.
+        </p>
+
+        <p>
+            La solicitud utiliza el parámetro
+            <strong>filename</strong> para indicar el recurso que
+            debe ser recuperado por el servidor.
+        </p>
+
+        <p>
+            La solicitud original identificada fue:
+        </p>
+
+        <p>
+            <strong>
+                GET /image?filename=8.jpg HTTP/2
+            </strong>
+        </p>
+
+        <p>
+            El valor <strong>8.jpg</strong> corresponde a la imagen
+            solicitada normalmente por la aplicación.
+        </p>
+
+    </div>
+
+
+    <!-- PASOS -->
+
+    <div class="evidence-item">
+
+        <h3>
+            03 // Secuencia de ejecución
+        </h3>
+
+        <ol>
+
+            <li>
+                Se accedió al laboratorio correspondiente de
+                PortSwigger Web Security Academy.
+            </li>
+
+            <li>
+                Se ingresó a una página de producto para identificar
+                la solicitud utilizada para recuperar su imagen.
+            </li>
+
+            <li>
+                Mediante Burp Suite, específicamente en
+                <strong>Proxy → HTTP history</strong>, se identificó
+                la solicitud correspondiente a la imagen.
+            </li>
+
+            <li>
+                Se identificó el endpoint
+                <strong>/image</strong> y el parámetro
+                <strong>filename</strong>.
+            </li>
+
+            <li>
+                La solicitud original utilizaba el archivo
+                <strong>8.jpg</strong>.
+            </li>
+
+            <li>
+                La solicitud fue enviada a
+                <strong>Burp Suite Repeater</strong> para poder
+                modificar manualmente el parámetro.
+            </li>
+
+            <li>
+                Se sustituyó el valor
+                <strong>filename=8.jpg</strong> por:
+                <strong>filename=....//....//....//etc/passwd</strong>
+            </li>
+
+            <li>
+                La solicitud modificada quedó de la siguiente manera:
+                <strong>
+                    GET /image?filename=....//....//....//etc/passwd HTTP/2
+                </strong>
+            </li>
+
+            <li>
+                El payload fue diseñado para evadir el filtro mediante
+                la utilización de secuencias de traversal ocultas
+                dentro de segmentos que inicialmente no coinciden con
+                el patrón <strong>../</strong> completo.
+            </li>
+
+            <li>
+                Se envió la solicitud modificada desde Burp Suite
+                Repeater mediante la opción <strong>Send</strong>.
+            </li>
+
+            <li>
+                Se analizó la respuesta HTTP obtenida.
+            </li>
+
+            <li>
+                La respuesta devolvió el contenido del archivo
+                <strong>/etc/passwd</strong>.
+            </li>
+
+            <li>
+                Finalmente, se regresó al laboratorio en Web Security
+                Academy y se verificó que apareciera
+                <strong>Lab Solved</strong>.
+            </li>
+
+        </ol>
+
+    </div>
+
+
+    <!-- ==================== EVIDENCIA 1 ==================== -->
+
+    <div class="evidence-item">
+
+        <h3>
+            04 // Solicitud HTTP original
+        </h3>
+
+        <p>
+            Mediante Burp Suite se identificó en
+            <strong>Proxy → HTTP history</strong> la solicitud
+            correspondiente a la imagen del producto.
+        </p>
+
+        <p>
+            La solicitud observada fue:
+        </p>
+
+        <p>
+            <strong>
+                GET /image?filename=8.jpg HTTP/2
+            </strong>
+        </p>
+
+        <figure>
+
+            <img
+                src="evidencias/LAB09_Fig01_Request_Original.png"
+                alt="Solicitud HTTP original del laboratorio 09"
+                class="evidence-image"
+            >
+
+            <figcaption>
+                Figura 1. Solicitud HTTP original de una imagen.
+            </figcaption>
+
+        </figure>
+
+        <p>
+            La solicitud utiliza el parámetro
+            <strong>filename</strong>, cuyo valor original es
+            <strong>8.jpg</strong>. Este parámetro determina el
+            recurso que será solicitado por el servidor y constituye
+            el punto de entrada analizado para comprobar la existencia
+            de una vulnerabilidad de Path Traversal.
+        </p>
+
+    </div>
+
+
+    <!-- ==================== EVIDENCIA 2 ==================== -->
+
+    <div class="evidence-item">
+
+        <h3>
+            05 // Payload utilizado
+        </h3>
+
+        <p>
+            La solicitud fue enviada a Burp Suite Repeater para
+            modificar manualmente el valor del parámetro
+            <strong>filename</strong>.
+        </p>
+
+        <p>
+            El valor original:
+        </p>
+
+        <p>
+            <strong>
+                filename=8.jpg
+            </strong>
+        </p>
+
+        <p>
+            fue sustituido por:
+        </p>
+
+        <p>
+            <strong>
+                filename=....//....//....//etc/passwd
+            </strong>
+        </p>
+
+        <p>
+            La solicitud resultante fue:
+        </p>
+
+        <p>
+            <strong>
+                GET /image?filename=....//....//....//etc/passwd HTTP/2
+            </strong>
+        </p>
+
+        <p>
+            El payload utiliza segmentos que contienen internamente
+            la secuencia <strong>../</strong>. Al ser procesados por un
+            filtro no recursivo, las secuencias de traversal reaparecen
+            después de la primera sustitución.
+        </p>
+
+        <figure>
+
+            <img
+                src="evidencias/LAB09_Fig02_NonRecursive_Bypass.png"
+                alt="Payload de bypass mediante filtro no recursivo del laboratorio 09"
+                class="evidence-image"
+            >
+
+            <figcaption>
+                Figura 2. Solicitud HTTP modificada mediante evasión del filtro no recursivo.
+            </figcaption>
+
+        </figure>
+
+        <p>
+            La modificación demuestra que el mecanismo de protección
+            implementado por la aplicación no vuelve a procesar el
+            resultado después de eliminar las secuencias detectadas.
+            Por esta razón, el valor final puede volver a contener
+            secuencias válidas de Path Traversal.
+        </p>
+
+    </div>
+
+
+    <!-- ==================== EXPLICACIÓN DEL PAYLOAD ==================== -->
+
+    <div class="evidence-item">
+
+        <h3>
+            06 // Explicación del payload
+        </h3>
+
+        <p>
+            El payload utilizado fue:
+        </p>
+
+        <p>
+            <strong>
+                ....//....//....//etc/passwd
+            </strong>
+        </p>
+
+        <p>
+            La técnica aprovecha que el filtro elimina las secuencias
+            <strong>../</strong> de forma no recursiva.
+        </p>
+
+        <p>
+            Cada segmento <strong>....//</strong> contiene una
+            secuencia <strong>../</strong>. Durante la primera pasada
+            del filtro, estas secuencias son eliminadas, dejando:
+        </p>
+
+        <p>
+            <strong>
+                ../../../etc/passwd
+            </strong>
+        </p>
+
+        <p>
+            El punto importante es que el filtro no vuelve a analizar
+            el resultado después de realizar la sustitución. Por lo
+            tanto, las nuevas secuencias <strong>../</strong> permanecen
+            en la cadena procesada.
+        </p>
+
+        <p>
+            De manera conceptual, el proceso puede representarse como:
+        </p>
+
+        <p>
+            <strong>
+                ....//....//....//etc/passwd
+            </strong>
+        </p>
+
+        <p>
+            <strong>
+                ↓
+            </strong>
+        </p>
+
+        <p>
+            <strong>
+                ../../../etc/passwd
+            </strong>
+        </p>
+
+        <p>
+            <strong>
+                ↓
+            </strong>
+        </p>
+
+        <p>
+            <strong>
+                /etc/passwd
+            </strong>
+        </p>
+
+        <p>
+            El éxito del payload demuestra que eliminar determinadas
+            cadenas mediante sustitución de texto no garantiza que la
+            ruta final sea segura. La aplicación debería validar la
+            ruta final normalizada y comprobar que permanezca dentro
+            del directorio autorizado.
+        </p>
+
+    </div>
+
+
+    <!-- ==================== EVIDENCIA 3 ==================== -->
+
+    <div class="evidence-item">
+
+        <h3>
+            07 // Respuesta vulnerable
+        </h3>
+
+        <p>
+            Después de enviar la solicitud modificada mediante
+            Burp Suite Repeater, el servidor respondió:
+        </p>
+
+        <p>
+            <strong>
+                HTTP/2 200 OK
+            </strong>
+        </p>
+
+        <p>
+            La respuesta contenía el contenido del archivo
+            <strong>/etc/passwd</strong>.
+        </p>
+
+        <p>
+            Entre las entradas observadas se encontraron:
+        </p>
+
+        <p>
+            <strong>
+                root:x:0:0:root:/root:/bin/bash
+            </strong>
+        </p>
+
+        <p>
+            <strong>
+                peter:x:12001:12001::/home/peter:/bin/bash
+            </strong>
+        </p>
+
+        <figure>
+
+            <img
+                src="evidencias/LAB09_Fig03_Response_EtcPasswd.png"
+                alt="Respuesta HTTP con contenido de etc passwd del laboratorio 09"
+                class="evidence-image"
+            >
+
+            <figcaption>
+                Figura 3. Respuesta HTTP obtenida mediante el bypass del filtro no recursivo.
+            </figcaption>
+
+        </figure>
+
+        <p>
+            El contenido obtenido confirma que el servidor procesó
+            la ruta resultante y devolvió el recurso solicitado.
+        </p>
+
+        <p>
+            La respuesta demuestra que el bloqueo inicial de las
+            secuencias de traversal no fue suficiente para impedir
+            el acceso al archivo ubicado fuera del directorio
+            esperado.
+        </p>
+
+    </div>
+
+
+    <!-- ==================== RESULTADO ==================== -->
+
+    <div class="evidence-item">
+
+        <h3>
+            08 // Confirmación de Lab Solved
+        </h3>
+
+        <p>
+            Después de comprobar la respuesta vulnerable, se regresó
+            al laboratorio de PortSwigger Web Security Academy.
+        </p>
+
+        <p>
+            La plataforma mostró la confirmación:
+            <strong>Lab Solved</strong>.
+        </p>
+
+        <figure>
+
+            <img
+                src="evidencias/LAB09_Fig04_LabSolved.png"
+                alt="Confirmación de laboratorio 09 resuelto"
+                class="evidence-image"
+            >
+
+            <figcaption>
+                Figura 4. Confirmación de resolución del laboratorio.
+            </figcaption>
+
+        </figure>
+
+        <p>
+            La confirmación demuestra que el objetivo del laboratorio
+            fue alcanzado correctamente mediante la evasión del
+            filtro no recursivo utilizado por la aplicación.
+        </p>
+
+    </div>
+
+
+    <!-- ==================== MITIGACIÓN ==================== -->
+
+    <div class="evidence-item">
+
+        <h3>
+            09 // Mitigación recomendada
+        </h3>
+
+        <p>
+            Para prevenir este tipo de vulnerabilidad, la aplicación
+            no debe permitir que los datos proporcionados directamente
+            por el usuario determinen de forma arbitraria la ubicación
+            de un archivo dentro del sistema.
+        </p>
+
+        <p>
+            Se recomienda utilizar identificadores internos o una
+            lista controlada de nombres de archivos en lugar de aceptar
+            rutas proporcionadas por el cliente.
+        </p>
+
+        <p>
+            Cuando sea necesario trabajar con rutas, el servidor debe
+            normalizar y validar el resultado final y comprobar que el
+            archivo solicitado permanezca dentro del directorio
+            autorizado.
+        </p>
+
+        <p>
+            No se debe depender únicamente de la eliminación de
+            cadenas como <strong>../</strong>, ya que pueden existir
+            diferentes representaciones capaces de producir una ruta
+            equivalente después del procesamiento.
+        </p>
+
+        <p>
+            También se recomienda aplicar controles de acceso y
+            principio de mínimo privilegio, de manera que el proceso
+            de la aplicación no tenga permisos innecesarios sobre
+            archivos del sistema.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ==================== CONCLUSIÓN ==================== -->
+
+<section class="section-card">
+
+    <h2>
+        <i class="fa-solid fa-flag-checkered"></i>
+        Conclusión
+    </h2>
+
+    <p>
+        El laboratorio permitió comprobar de manera práctica una
+        vulnerabilidad de <strong>File Path Traversal</strong>
+        provocada por el uso de un filtro no recursivo.
+    </p>
+
+    <p>
+        Aunque la aplicación eliminaba las secuencias tradicionales
+        de recorrido de directorios, el proceso de filtrado se
+        realizaba únicamente una vez. Esto permitió utilizar una
+        representación alternativa capaz de generar nuevamente
+        secuencias válidas de traversal después del filtrado.
+    </p>
+
+    <p>
+        Mediante la modificación:
+    </p>
+
+    <p>
+        <strong>
+            GET /image?filename=8.jpg HTTP/2
+        </strong>
+    </p>
+
+    <p>
+        a:
+    </p>
+
+    <p>
+        <strong>
+            GET /image?filename=....//....//....//etc/passwd HTTP/2
+        </strong>
+    </p>
+
+    <p>
+        fue posible obtener el contenido de
+        <strong>/etc/passwd</strong>.
+    </p>
+
+    <p>
+        Finalmente, la plataforma confirmó la explotación mediante
+        <strong>Lab Solved</strong>.
+    </p>
+
+    <p>
+        Este ejercicio demuestra que una protección basada únicamente
+        en la eliminación de determinadas cadenas no es suficiente.
+        La aplicación debe validar la ruta final normalizada y
+        garantizar que los recursos solicitados permanezcan dentro de
+        los directorios autorizados.
+    </p>
+
+</section>
+
+
+<!-- ==================== DOCUMENTO PDF ==================== -->
+
+<section class="section-card">
+
+    <h2>
+        <i class="fa-solid fa-file-pdf"></i>
+        Documento de la actividad
+    </h2>
+
+    <p>
+        Consulta el documento completo de la Actividad 09,
+        correspondiente al laboratorio
+        <strong>
+            File path traversal, traversal sequences stripped non-recursively
+        </strong>,
+        donde se presenta la documentación técnica y las evidencias
+        del procedimiento realizado.
+    </p>
+
+    <a href="evidencias/Act09-NonRecursively.pdf"
+       class="activity-button"
+       target="_blank">
+
+        <i class="fa-solid fa-file-pdf"></i>
+        Ver documento PDF
+
+    </a>
+
+</section>
+
+
+<!-- ==================== NAVEGACIÓN ==================== -->
+
+<section class="section-card">
+
+    <h2>
+        <i class="fa-solid fa-route"></i>
+        Road to Hall of Fame
+    </h2>
+
+    <p>
+        Regresa al recorrido principal para consultar los demás
+        laboratorios del módulo.
+    </p>
+
+    <a href="HallOfFame.html"
+       class="activity-button">
+
+        <i class="fa-solid fa-arrow-left"></i>
+        Volver al Road to Hall of Fame
+
+    </a>
+
+</section>
+
+
+</main>
+
+<!-- ==================== VOLVER ARRIBA ==================== -->
+
+<a href="#inicio"
+class="back-to-top"
+title="Volver arriba">
+
+
+<i class="fa-solid fa-arrow-up"></i>
+
+
+</a>
+
+<!-- ==================== FOOTER ==================== -->
+
+<footer class="footer">
+
+
+<p>
+    &copy; 2026 Jesús Israel Martínez Escobedo.
+    Todos los derechos reservados.
+</p>
+
+<p>
+    <i class="fa-solid fa-lock"></i>
+    Conexión Segura mediante Protocolo HTTPS / SSL
+</p>
+
+
+</footer>
+
+</body>
+</html>
