@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Actividad 08 | Absolute Path Bypass</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- ==================== HEADER ==================== -->
+
+<header class="header">
+
+    <div class="header-container">
+
+        <div class="student-info">
+
+            <h1 class="student-name">
+                Jesús Israel Martínez Escobedo
+            </h1>
+
+            <p class="course-badge">
+                <i class="fa-solid fa-shield-halved"></i>
+                CNO IV - Seguridad Informática
+            </p>
+
+            <p class="academic-details">
+                <span>
+                    <i class="fa-solid fa-university"></i>
+                    Universidad Politécnica de San Luis Potosí
+                </span>
+                |
+                <span>
+                    <i class="fa-solid fa-calendar"></i>
+                    Semestre 2026
+                </span>
+            </p>
+
+        </div>
+
+        <nav class="navbar">
+
+            <ul>
+
+                <li>
+                    <a href="../../index.html">
+                        Inicio
+                    </a>
+                </li>
+
+                <li>
+                    <a href="HallOfFame.html">
+                        Road to Hall of Fame
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#procedimiento">
+                        Procedimiento
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#evidencias">
+                        Evidencias
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- ==================== CONTENIDO ==================== -->
+
+<main class="main-content" id="inicio">
+
+
+    <!-- ==================== PORTADA ==================== -->
+
+    <div class="dedsec-manifesto">
+
+        <div class="glitch-wrapper">
+
+            <h2 class="glitch-text"
+                data-text="/// LAB_08_ABSOLUTE_PATH_BYPASS">
+                /// LAB_08_ABSOLUTE_PATH_BYPASS
+            </h2>
+
+        </div>
+
+        <p class="typewriter-text">
+            &gt; CNO_IV // PORTSWIGGER // ABSOLUTE_PATH_BYPASS... [TRAVERSAL_BLOCK_BYPASSED]
+        </p>
+
+    </div>
+
+
+    <!-- ==================== PRESENTACIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-flask-vial"></i>
+            Actividad 08 — Absolute Path Bypass
+        </h2>
+
+        <p>
+            <strong>
+                File path traversal, traversal sequences blocked with absolute path bypass
+            </strong>
+        </p>
+
+        <p>
+            Laboratorio práctico de PortSwigger Web Security Academy
+            enfocado en la identificación y explotación de una
+            vulnerabilidad de File Path Traversal mediante una ruta
+            absoluta.
+        </p>
+
+        <p>
+            El laboratorio permite analizar cómo una aplicación puede
+            implementar un filtro que bloquea las secuencias tradicionales
+            de recorrido de directorios, pero continuar siendo vulnerable
+            cuando permite que el usuario proporcione directamente una
+            ruta absoluta.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== NIVEL ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-layer-group"></i>
+            Nivel
+        </h2>
+
+        <div class="evidence-item">
+
+            <h3>
+                Practitioner
+            </h3>
+
+            <p>
+                El laboratorio corresponde al nivel
+                <strong>Practitioner</strong> de PortSwigger Web Security
+                Academy.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== TIPO DE EXPLOTACIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-bug"></i>
+            Tipo de explotación
+        </h2>
+
+        <div class="evidence-item">
+
+            <h3>
+                File Path Traversal — Absolute Path Bypass
+            </h3>
+
+            <p>
+                Explotación de una vulnerabilidad de File Path Traversal
+                mediante el uso de una ruta absoluta como mecanismo para
+                evadir el bloqueo de las secuencias tradicionales de
+                recorrido de directorios.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== OBJETIVO ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-bullseye"></i>
+            Objetivo
+        </h2>
+
+        <p>
+            El objetivo del laboratorio es identificar y explotar una
+            vulnerabilidad de File Path Traversal presente en la
+            funcionalidad encargada de mostrar las imágenes de los
+            productos.
+        </p>
+
+        <p>
+            La aplicación bloquea las secuencias tradicionales de
+            recorrido de directorios, como
+            <strong>../</strong>. Sin embargo, el valor proporcionado
+            mediante el parámetro <strong>filename</strong> continúa
+            siendo procesado como una ruta de archivo.
+        </p>
+
+        <p>
+            La finalidad específica consiste en utilizar una ruta absoluta
+            para evadir la restricción existente y recuperar el contenido
+            del archivo:
+        </p>
+
+        <div class="evidence-item">
+
+            <h3>
+                <i class="fa-solid fa-file-code"></i>
+                Archivo objetivo
+            </h3>
+
+            <p>
+                <strong>/etc/passwd</strong>
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== EXPLICACIÓN TÉCNICA ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-book-open"></i>
+            Explicación técnica de la vulnerabilidad
+        </h2>
+
+        <p>
+            La vulnerabilidad de File Path Traversal ocurre cuando una
+            aplicación permite que datos controlados por el usuario
+            influyan directamente en la ubicación de un archivo que será
+            procesado o recuperado por el servidor.
+        </p>
+
+        <p>
+            En este laboratorio, la aplicación utiliza el endpoint
+            <strong>/image</strong> para recuperar las imágenes asociadas
+            a los productos. El archivo solicitado se determina mediante
+            el parámetro <strong>filename</strong>.
+        </p>
+
+        <p>
+            La solicitud original identificada fue:
+        </p>
+
+        <p>
+            <strong>
+                GET /image?filename=36.jpg HTTP/2
+            </strong>
+        </p>
+
+        <p>
+            El valor <strong>36.jpg</strong> corresponde a una imagen
+            solicitada normalmente por la aplicación.
+        </p>
+
+        <p>
+            En este laboratorio, las secuencias tradicionales de
+            Path Traversal son bloqueadas. Por lo tanto, un payload como
+            <strong>../../../etc/passwd</strong> no constituye el método
+            de explotación esperado.
+        </p>
+
+        <p>
+            Sin embargo, la aplicación continúa aceptando una ruta
+            absoluta proporcionada directamente mediante el parámetro
+            <strong>filename</strong>. Debido a esto, fue posible
+            sustituir el nombre de la imagen por:
+        </p>
+
+        <p>
+            <strong>
+                /etc/passwd
+            </strong>
+        </p>
+
+        <p>
+            La aplicación procesó esta ruta y devolvió el contenido del
+            archivo solicitado. Esto demuestra que el mecanismo de
+            protección únicamente bloquea determinadas secuencias de
+            traversal, pero no restringe correctamente el destino final
+            del archivo solicitado.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== PROCEDIMIENTO ==================== -->
+
+    <section id="procedimiento" class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-list-ol"></i>
+            Procedimiento
+        </h2>
+
+
+        <!-- OBJETIVO DEL PROCEDIMIENTO -->
+
+        <div class="evidence-item">
+
+            <h3>
+                01 // Objetivo del procedimiento
+            </h3>
+
+            <p>
+                El objetivo consiste en identificar el parámetro utilizado
+                por la aplicación para recuperar las imágenes y comprobar
+                si puede ser manipulado para acceder a un archivo ubicado
+                fuera del directorio esperado.
+            </p>
+
+        </div>
+
+
+        <!-- CONTEXTO TÉCNICO -->
+
+        <div class="evidence-item">
+
+            <h3>
+                02 // Contexto técnico
+            </h3>
+
+            <p>
+                La aplicación utiliza el endpoint
+                <strong>/image</strong> para recuperar las imágenes
+                asociadas a los productos.
+            </p>
+
+            <p>
+                La solicitud utiliza el parámetro
+                <strong>filename</strong> para indicar el recurso que
+                debe ser recuperado por el servidor.
+            </p>
+
+            <p>
+                La solicitud original identificada fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=36.jpg HTTP/2
+                </strong>
+            </p>
+
+            <p>
+                El valor <strong>36.jpg</strong> corresponde a la imagen
+                solicitada normalmente por la aplicación.
+            </p>
+
+        </div>
+
+
+        <!-- PASOS -->
+
+        <div class="evidence-item">
+
+            <h3>
+                03 // Secuencia de ejecución
+            </h3>
+
+            <ol>
+
+                <li>
+                    Se accedió al laboratorio correspondiente de
+                    PortSwigger Web Security Academy.
+                </li>
+
+                <li>
+                    Se ingresó a una página de producto para identificar
+                    la solicitud utilizada para recuperar su imagen.
+                </li>
+
+                <li>
+                    Mediante Burp Suite, específicamente en
+                    <strong>Proxy → HTTP history</strong>, se identificó
+                    la solicitud correspondiente a la imagen.
+                </li>
+
+                <li>
+                    Se identificó el endpoint
+                    <strong>/image</strong> y el parámetro
+                    <strong>filename</strong>.
+                </li>
+
+                <li>
+                    La solicitud original utilizaba el archivo
+                    <strong>36.jpg</strong>.
+                </li>
+
+                <li>
+                    La solicitud fue enviada a
+                    <strong>Burp Suite Repeater</strong> para poder
+                    modificar manualmente el parámetro.
+                </li>
+
+                <li>
+                    Se sustituyó el valor
+                    <strong>filename=36.jpg</strong> por:
+                    <strong>filename=/etc/passwd</strong>
+                </li>
+
+                <li>
+                    La solicitud modificada quedó de la siguiente manera:
+                    <strong>GET /image?filename=/etc/passwd HTTP/2</strong>
+                </li>
+
+                <li>
+                    No fue necesario utilizar secuencias
+                    <strong>../</strong>, ya que el objetivo consiste en
+                    evadir esta restricción mediante el uso de una ruta
+                    absoluta.
+                </li>
+
+                <li>
+                    Se envió la solicitud modificada desde Burp Suite
+                    Repeater mediante la opción <strong>Send</strong>.
+                </li>
+
+                <li>
+                    Se analizó la respuesta HTTP obtenida.
+                </li>
+
+                <li>
+                    La respuesta devolvió el contenido del archivo
+                    <strong>/etc/passwd</strong>.
+                </li>
+
+                <li>
+                    Finalmente, se regresó al laboratorio en Web Security
+                    Academy y se verificó que apareciera
+                    <strong>Lab Solved</strong>.
+                </li>
+
+            </ol>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 1 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                04 // Solicitud HTTP original
+            </h3>
+
+            <p>
+                Mediante Burp Suite se identificó en
+                <strong>Proxy → HTTP history</strong> la solicitud
+                correspondiente a la imagen del producto.
+            </p>
+
+            <p>
+                La solicitud observada fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=36.jpg HTTP/2
+                </strong>
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB08_Fig01_Request_Original.png"
+                    alt="Solicitud HTTP original del laboratorio 08"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 1. Solicitud HTTP original de una imagen.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                La solicitud utiliza el parámetro
+                <strong>filename</strong>, cuyo valor original es
+                <strong>36.jpg</strong>. Este parámetro determina el
+                recurso que será solicitado por el servidor y constituye
+                el punto de entrada analizado para comprobar la existencia
+                de una vulnerabilidad de Path Traversal.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 2 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                05 // Payload utilizado
+            </h3>
+
+            <p>
+                La solicitud fue enviada a Burp Suite Repeater para
+                modificar manualmente el valor del parámetro
+                <strong>filename</strong>.
+            </p>
+
+            <p>
+                El valor original:
+            </p>
+
+            <p>
+                <strong>
+                    filename=36.jpg
+                </strong>
+            </p>
+
+            <p>
+                fue sustituido por:
+            </p>
+
+            <p>
+                <strong>
+                    filename=/etc/passwd
+                </strong>
+            </p>
+
+            <p>
+                La solicitud resultante fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=/etc/passwd HTTP/2
+                </strong>
+            </p>
+
+            <p>
+                No fue necesario utilizar secuencias
+                <strong>../</strong>. En su lugar, se proporcionó
+                directamente una ruta absoluta correspondiente al archivo
+                objetivo.
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB08_Fig02_Absolute_Path_Bypass.png"
+                    alt="Payload de ruta absoluta utilizado en el laboratorio 08"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 2. Solicitud HTTP modificada mediante una ruta absoluta.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                La modificación demuestra que el mecanismo de protección
+                implementado por la aplicación no impide el uso de rutas
+                absolutas. El parámetro <strong>filename</strong> continúa
+                siendo interpretado por el servidor como una ubicación de
+                archivo.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== EXPLICACIÓN DEL PAYLOAD ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                06 // Explicación del payload
+            </h3>
+
+            <p>
+                El payload utilizado fue:
+            </p>
+
+            <p>
+                <strong>
+                    /etc/passwd
+                </strong>
+            </p>
+
+            <p>
+                A diferencia de un ataque de Path Traversal tradicional,
+                este payload no utiliza secuencias
+                <strong>../</strong>.
+            </p>
+
+            <p>
+                <strong>/etc/passwd</strong> es una ruta absoluta de
+                sistemas Linux y Unix. La ruta comienza desde la raíz
+                del sistema de archivos mediante el carácter
+                <strong>/</strong>.
+            </p>
+
+            <p>
+                El laboratorio bloquea las secuencias tradicionales de
+                recorrido de directorios, pero no impide que el usuario
+                proporcione directamente una ruta absoluta.
+            </p>
+
+            <p>
+                Por esta razón, al sustituir
+                <strong>36.jpg</strong> por
+                <strong>/etc/passwd</strong>, el servidor procesó
+                directamente la ubicación indicada y devolvió el contenido
+                del archivo.
+            </p>
+
+            <p>
+                El éxito del payload demuestra que la protección existente
+                no valida de manera adecuada que el archivo solicitado
+                permanezca dentro del directorio autorizado para las
+                imágenes.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 3 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                07 // Respuesta vulnerable
+            </h3>
+
+            <p>
+                Después de enviar la solicitud modificada mediante
+                Burp Suite Repeater, el servidor respondió:
+            </p>
+
+            <p>
+                <strong>
+                    HTTP/2 200 OK
+                </strong>
+            </p>
+
+            <p>
+                La respuesta contenía el contenido del archivo
+                <strong>/etc/passwd</strong>.
+            </p>
+
+            <p>
+                Entre las entradas observadas se encontraron:
+            </p>
+
+            <p>
+                <strong>
+                    root:x:0:0:root:/root:/bin/bash
+                </strong>
+            </p>
+
+            <p>
+                <strong>
+                    peter:x:12001:12001::/home/peter:/bin/bash
+                </strong>
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB08_Fig03_Response_EtcPasswd.png"
+                    alt="Respuesta HTTP con contenido de etc passwd del laboratorio 08"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 3. Respuesta HTTP obtenida mediante el bypass de ruta absoluta.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                El contenido obtenido confirma que el servidor procesó
+                la ruta absoluta proporcionada mediante
+                <strong>filename</strong> y devolvió el recurso solicitado.
+            </p>
+
+            <p>
+                La respuesta demuestra que el bloqueo de las secuencias
+                de traversal no fue suficiente para impedir el acceso a
+                archivos ubicados fuera del directorio esperado.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== RESULTADO ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                08 // Confirmación de Lab Solved
+            </h3>
+
+            <p>
+                Después de comprobar la respuesta vulnerable, se regresó
+                al laboratorio de PortSwigger Web Security Academy.
+            </p>
+
+            <p>
+                La plataforma mostró la confirmación:
+                <strong>Lab Solved</strong>.
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB08_Fig04_LabSolved.png"
+                    alt="Confirmación de laboratorio 08 resuelto"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 4. Confirmación de resolución del laboratorio.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                La confirmación demuestra que el objetivo del laboratorio
+                fue alcanzado correctamente mediante el uso de una ruta
+                absoluta para evadir el bloqueo de las secuencias
+                tradicionales de Path Traversal.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== MITIGACIÓN ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                09 // Mitigación recomendada
+            </h3>
+
+            <p>
+                Para prevenir este tipo de vulnerabilidad, la aplicación
+                no debe permitir que los datos proporcionados directamente
+                por el usuario determinen de forma arbitraria la ubicación
+                de un archivo dentro del sistema.
+            </p>
+
+            <p>
+                Se recomienda utilizar identificadores internos o una
+                lista controlada de nombres de archivos en lugar de aceptar
+                rutas proporcionadas por el cliente.
+            </p>
+
+            <p>
+                Cuando sea necesario trabajar con rutas, el servidor debe
+                validar el resultado final y comprobar que el archivo
+                solicitado permanezca dentro del directorio autorizado.
+                Esta validación debe considerar tanto secuencias de
+                recorrido como rutas absolutas y otras formas de
+                manipulación de rutas.
+            </p>
+
+            <p>
+                Una estrategia adicional consiste en separar los
+                identificadores utilizados por el cliente de las rutas
+                reales del sistema de archivos, evitando exponer
+                directamente la estructura interna del servidor.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== CONCLUSIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-flag-checkered"></i>
+            Conclusión
+        </h2>
+
+        <p>
+            El laboratorio permitió comprobar de manera práctica una
+            vulnerabilidad de <strong>File Path Traversal</strong> mediante
+            un bypass basado en una ruta absoluta.
+        </p>
+
+        <p>
+            Aunque la aplicación bloqueaba las secuencias tradicionales
+            de recorrido de directorios, el parámetro
+            <strong>filename</strong> continuaba permitiendo especificar
+            directamente una ruta absoluta.
+        </p>
+
+        <p>
+            Mediante la modificación:
+        </p>
+
+        <p>
+            <strong>
+                GET /image?filename=36.jpg HTTP/2
+            </strong>
+        </p>
+
+        <p>
+            a:
+        </p>
+
+        <p>
+            <strong>
+                GET /image?filename=/etc/passwd HTTP/2
+            </strong>
+        </p>
+
+        <p>
+            fue posible obtener el contenido de
+            <strong>/etc/passwd</strong>.
+        </p>
+
+        <p>
+            Finalmente, la plataforma confirmó la explotación mediante
+            <strong>Lab Solved</strong>.
+        </p>
+
+        <p>
+            Este ejercicio demuestra que una protección basada únicamente
+            en el bloqueo de determinadas secuencias de traversal no es
+            suficiente. La aplicación debe controlar de manera integral
+            las rutas de archivo y garantizar que los recursos solicitados
+            permanezcan dentro de los directorios autorizados.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== DOCUMENTO PDF ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-file-pdf"></i>
+            Documento de la actividad
+        </h2>
+
+        <p>
+            Consulta el documento completo de la Actividad 08,
+            correspondiente al laboratorio
+            <strong>
+                File path traversal, traversal sequences blocked with absolute path bypass
+            </strong>,
+            donde se presenta la documentación técnica y las evidencias
+            del procedimiento realizado.
+        </p>
+
+        <a href="evidencias/Act08-PathBypass.pdf"
+           class="activity-button"
+           target="_blank">
+
+            <i class="fa-solid fa-file-pdf"></i>
+            Ver documento PDF
+
+        </a>
+
+    </section>
+
+
+    <!-- ==================== NAVEGACIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-route"></i>
+            Road to Hall of Fame
+        </h2>
+
+        <p>
+            Regresa al recorrido principal para consultar los demás
+            laboratorios del módulo.
+        </p>
+
+        <a href="HallOfFame.html"
+           class="activity-button">
+
+            <i class="fa-solid fa-arrow-left"></i>
+            Volver al Road to Hall of Fame
+
+        </a>
+
+    </section>
+
+
+</main>
+
+
+<!-- ==================== VOLVER ARRIBA ==================== -->
+
+<a href="#inicio"
+   class="back-to-top"
+   title="Volver arriba">
+
+    <i class="fa-solid fa-arrow-up"></i>
+
+</a>
+
+
+<!-- ==================== FOOTER ==================== -->
+
+<footer class="footer">
+
+    <p>
+        &copy; 2026 Jesús Israel Martínez Escobedo.
+        Todos los derechos reservados.
+    </p>
+
+    <p>
+        <i class="fa-solid fa-lock"></i>
+        Conexión Segura mediante Protocolo HTTPS / SSL
+    </p>
+
+</footer>
+
+</body>
+</html>
