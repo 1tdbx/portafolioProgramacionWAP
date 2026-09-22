@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Actividad 11 | Validation Of Start Of Path</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- ==================== HEADER ==================== -->
+
+<header class="header">
+
+    <div class="header-container">
+
+        <div class="student-info">
+
+            <h1 class="student-name">
+                Jesús Israel Martínez Escobedo
+            </h1>
+
+            <p class="course-badge">
+                <i class="fa-solid fa-shield-halved"></i>
+                CNO IV - Seguridad Informática
+            </p>
+
+            <p class="academic-details">
+                <span>
+                    <i class="fa-solid fa-university"></i>
+                    Universidad Politécnica de San Luis Potosí
+                </span>
+                |
+                <span>
+                    <i class="fa-solid fa-calendar"></i>
+                    Semestre 2026
+                </span>
+            </p>
+
+        </div>
+
+        <nav class="navbar">
+
+            <ul>
+
+                <li>
+                    <a href="../../index.html">
+                        Inicio
+                    </a>
+                </li>
+
+                <li>
+                    <a href="HallOfFame.html">
+                        Road to Hall of Fame
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#procedimiento">
+                        Procedimiento
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#evidencias">
+                        Evidencias
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- ==================== CONTENIDO ==================== -->
+
+<main class="main-content" id="inicio">
+
+
+    <!-- ==================== PORTADA ==================== -->
+
+    <div class="dedsec-manifesto">
+
+        <div class="glitch-wrapper">
+
+            <h2 class="glitch-text"
+                data-text="/// LAB_11_VALIDATION_OF_START_OF_PATH">
+                /// LAB_11_VALIDATION_OF_START_OF_PATH
+            </h2>
+
+        </div>
+
+        <p class="typewriter-text">
+            &gt; CNO_IV // PORTSWIGGER // VALIDATION_OF_START_OF_PATH... [PATH_PREFIX_BYPASS]
+        </p>
+
+    </div>
+
+
+    <!-- ==================== PRESENTACIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-flask-vial"></i>
+            Actividad 11 — Validation Of Start Of Path
+        </h2>
+
+        <p>
+            <strong>
+                File path traversal, validation of start of path
+            </strong>
+        </p>
+
+        <p>
+            Laboratorio práctico de PortSwigger Web Security Academy
+            enfocado en la identificación y explotación de una
+            vulnerabilidad de File Path Traversal mediante el bypass de
+            una validación que comprueba únicamente el inicio de la ruta.
+        </p>
+
+        <p>
+            El laboratorio permite analizar cómo una aplicación puede
+            validar que una ruta comience con un directorio permitido,
+            pero no comprobar correctamente la ubicación final del archivo
+            después de procesar las secuencias de recorrido de directorios.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== NIVEL ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-layer-group"></i>
+            Nivel
+        </h2>
+
+        <div class="evidence-item">
+
+            <h3>
+                Practitioner
+            </h3>
+
+            <p>
+                El laboratorio corresponde al nivel
+                <strong>Practitioner</strong> de PortSwigger Web Security
+                Academy.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== TIPO DE EXPLOTACIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-bug"></i>
+            Tipo de explotación
+        </h2>
+
+        <div class="evidence-item">
+
+            <h3>
+                File Path Traversal — Validation Of Start Of Path
+            </h3>
+
+            <p>
+                Explotación de una vulnerabilidad de File Path Traversal
+                mediante el bypass de una validación que comprueba
+                únicamente el inicio de la ruta proporcionada.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== OBJETIVO ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-bullseye"></i>
+            Objetivo
+        </h2>
+
+        <p>
+            El objetivo del laboratorio es identificar y explotar una
+            vulnerabilidad de File Path Traversal presente en la
+            funcionalidad encargada de mostrar las imágenes de los
+            productos.
+        </p>
+
+        <p>
+            La aplicación valida que la ruta proporcionada mediante el
+            parámetro <strong>filename</strong> comience con el directorio
+            esperado:
+        </p>
+
+        <div class="evidence-item">
+
+            <h3>
+                <i class="fa-solid fa-folder-open"></i>
+                Directorio esperado
+            </h3>
+
+            <p>
+                <strong>/var/www/images/</strong>
+            </p>
+
+        </div>
+
+        <p>
+            La finalidad específica consiste en evadir esta validación
+            manteniendo el prefijo permitido y utilizando secuencias de
+            recorrido para acceder al contenido del archivo:
+        </p>
+
+        <div class="evidence-item">
+
+            <h3>
+                <i class="fa-solid fa-file-code"></i>
+                Archivo objetivo
+            </h3>
+
+            <p>
+                <strong>/etc/passwd</strong>
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== EXPLICACIÓN TÉCNICA ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-book-open"></i>
+            Explicación técnica de la vulnerabilidad
+        </h2>
+
+        <p>
+            La vulnerabilidad de File Path Traversal ocurre cuando una
+            aplicación permite que datos controlados por el usuario
+            influyan directamente en la ubicación de un archivo que será
+            procesado o recuperado por el servidor.
+        </p>
+
+        <p>
+            En este laboratorio, la aplicación utiliza el endpoint
+            <strong>/image</strong> para recuperar las imágenes asociadas
+            a los productos. El archivo solicitado se determina mediante
+            el parámetro <strong>filename</strong>.
+        </p>
+
+        <p>
+            La solicitud original identificada fue:
+        </p>
+
+        <p>
+            <strong>
+                GET /image?filename=/var/www/images/61.jpg HTTP/2
+            </strong>
+        </p>
+
+        <p>
+            A diferencia de otros laboratorios de File Path Traversal,
+            en este caso la aplicación permite que el valor proporcionado
+            por el usuario contenga una ruta completa.
+        </p>
+
+        <p>
+            La aplicación comprueba que la ruta proporcionada comience con
+            el directorio autorizado:
+        </p>
+
+        <p>
+            <strong>
+                /var/www/images/
+            </strong>
+        </p>
+
+        <p>
+            El problema consiste en que esta validación comprueba
+            únicamente el inicio de la cadena, sin verificar cuál será la
+            ubicación final del archivo después de resolver las secuencias
+            de recorrido <strong>../</strong>.
+        </p>
+
+        <p>
+            Por esta razón, es posible construir una ruta que inicialmente
+            cumpla con el prefijo esperado y posteriormente abandone el
+            directorio autorizado.
+        </p>
+
+        <p>
+            El payload utilizado fue:
+        </p>
+
+        <p>
+            <strong>
+                /var/www/images/../../../etc/passwd
+            </strong>
+        </p>
+
+        <p>
+            La ruta comienza correctamente con
+            <strong>/var/www/images/</strong>, por lo que puede superar la
+            validación inicial.
+        </p>
+
+        <p>
+            Posteriormente, las tres secuencias
+            <strong>../</strong> permiten desplazarse hacia directorios
+            superiores hasta alcanzar la ubicación de
+            <strong>/etc/passwd</strong>.
+        </p>
+
+        <p>
+            Esto demuestra que validar únicamente el inicio de una ruta
+            no es suficiente para proteger una aplicación contra Path
+            Traversal. La ruta debe ser normalizada y posteriormente se
+            debe comprobar que el resultado final permanezca dentro del
+            directorio autorizado.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== PROCEDIMIENTO ==================== -->
+
+    <section id="procedimiento" class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-list-ol"></i>
+            Procedimiento
+        </h2>
+
+
+        <!-- OBJETIVO DEL PROCEDIMIENTO -->
+
+        <div class="evidence-item">
+
+            <h3>
+                01 // Objetivo del procedimiento
+            </h3>
+
+            <p>
+                El objetivo consiste en identificar el parámetro utilizado
+                por la aplicación para recuperar las imágenes y comprobar
+                si puede ser manipulado para evadir la validación del
+                inicio de la ruta.
+            </p>
+
+        </div>
+
+
+        <!-- CONTEXTO TÉCNICO -->
+
+        <div class="evidence-item">
+
+            <h3>
+                02 // Contexto técnico
+            </h3>
+
+            <p>
+                La aplicación utiliza el endpoint
+                <strong>/image</strong> para recuperar las imágenes
+                asociadas a los productos.
+            </p>
+
+            <p>
+                La solicitud utiliza el parámetro
+                <strong>filename</strong> para indicar el recurso que
+                debe ser recuperado por el servidor.
+            </p>
+
+            <p>
+                La solicitud original identificada fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=/var/www/images/61.jpg HTTP/2
+                </strong>
+            </p>
+
+            <p>
+                El valor proporcionado contiene el directorio
+                <strong>/var/www/images/</strong>, que corresponde al
+                prefijo esperado por la aplicación.
+            </p>
+
+        </div>
+
+
+        <!-- PASOS -->
+
+        <div class="evidence-item">
+
+            <h3>
+                03 // Secuencia de ejecución
+            </h3>
+
+            <ol>
+
+                <li>
+                    Se accedió al laboratorio correspondiente de
+                    PortSwigger Web Security Academy.
+                </li>
+
+                <li>
+                    Se ingresó a una página de producto para identificar
+                    la solicitud utilizada para recuperar su imagen.
+                </li>
+
+                <li>
+                    Mediante Burp Suite, específicamente en
+                    <strong>Proxy → HTTP history</strong>, se identificó
+                    la solicitud correspondiente a la imagen.
+                </li>
+
+                <li>
+                    Se identificó el endpoint
+                    <strong>/image</strong> y el parámetro
+                    <strong>filename</strong>.
+                </li>
+
+                <li>
+                    Se observó que la solicitud original utilizaba la ruta:
+                    <strong>/var/www/images/61.jpg</strong>.
+                </li>
+
+                <li>
+                    La solicitud fue enviada a
+                    <strong>Burp Suite Repeater</strong> para poder
+                    modificar manualmente el parámetro.
+                </li>
+
+                <li>
+                    Se sustituyó el valor original del parámetro
+                    <strong>filename</strong> por:
+                    <strong>/var/www/images/../../../etc/passwd</strong>
+                </li>
+
+                <li>
+                    La solicitud modificada quedó de la siguiente manera:
+                    <strong>
+                        GET /image?filename=/var/www/images/../../../etc/passwd HTTP/2
+                    </strong>
+                </li>
+
+                <li>
+                    El payload conservó el prefijo
+                    <strong>/var/www/images/</strong> para satisfacer la
+                    validación inicial.
+                </li>
+
+                <li>
+                    Las secuencias <strong>../../../</strong> permitieron
+                    realizar el recorrido hacia directorios superiores.
+                </li>
+
+                <li>
+                    Se envió la solicitud modificada desde Burp Suite
+                    Repeater mediante la opción <strong>Send</strong>.
+                </li>
+
+                <li>
+                    Se analizó la respuesta HTTP obtenida.
+                </li>
+
+                <li>
+                    La respuesta devolvió el contenido del archivo
+                    <strong>/etc/passwd</strong>.
+                </li>
+
+                <li>
+                    Finalmente, se regresó al laboratorio en Web Security
+                    Academy y se verificó que apareciera
+                    <strong>Lab Solved</strong>.
+                </li>
+
+            </ol>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 1 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                04 // Solicitud HTTP original
+            </h3>
+
+            <p>
+                Mediante Burp Suite se identificó en
+                <strong>Proxy → HTTP history</strong> la solicitud
+                correspondiente a la imagen del producto.
+            </p>
+
+            <p>
+                La solicitud observada fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=/var/www/images/61.jpg HTTP/2
+                </strong>
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB11_Fig01_Request_Original.png"
+                    alt="Solicitud HTTP original del laboratorio 11"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 1. Solicitud HTTP original de una imagen.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                La solicitud utiliza el parámetro
+                <strong>filename</strong>, cuyo valor corresponde a la ruta
+                <strong>/var/www/images/61.jpg</strong>. Esta ruta contiene
+                el directorio esperado por la aplicación y constituye el
+                punto de entrada analizado para comprobar la existencia de
+                una vulnerabilidad de Path Traversal.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 2 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                05 // Payload utilizado
+            </h3>
+
+            <p>
+                La solicitud fue enviada a Burp Suite Repeater para
+                modificar manualmente el valor del parámetro
+                <strong>filename</strong>.
+            </p>
+
+            <p>
+                El valor original:
+            </p>
+
+            <p>
+                <strong>
+                    filename=/var/www/images/61.jpg
+                </strong>
+            </p>
+
+            <p>
+                fue sustituido por:
+            </p>
+
+            <p>
+                <strong>
+                    filename=/var/www/images/../../../etc/passwd
+                </strong>
+            </p>
+
+            <p>
+                La solicitud resultante fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=/var/www/images/../../../etc/passwd HTTP/2
+                </strong>
+            </p>
+
+            <p>
+                El payload mantiene el prefijo
+                <strong>/var/www/images/</strong> y posteriormente agrega
+                las secuencias de recorrido necesarias para salir del
+                directorio autorizado.
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB11_Fig02_Start_Of_Path_Bypass.png"
+                    alt="Payload utilizado para evadir la validación del inicio de la ruta"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 2. Solicitud HTTP modificada mediante bypass de validación del inicio de la ruta.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                La modificación demuestra que la validación puede ser
+                evadida cuando únicamente se comprueba el prefijo inicial
+                de la ruta y no se analiza la ubicación final del archivo.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== EXPLICACIÓN DEL PAYLOAD ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                06 // Explicación del payload
+            </h3>
+
+            <p>
+                El payload utilizado fue:
+            </p>
+
+            <p>
+                <strong>
+                    /var/www/images/../../../etc/passwd
+                </strong>
+            </p>
+
+            <p>
+                El payload puede dividirse en tres elementos principales:
+            </p>
+
+            <p>
+                <strong>
+                    /var/www/images/
+                </strong>
+            </p>
+
+            <p>
+                Este es el directorio esperado por la aplicación y permite
+                que la ruta cumpla inicialmente con la validación del
+                prefijo.
+            </p>
+
+            <p>
+                <strong>
+                    ../../../
+                </strong>
+            </p>
+
+            <p>
+                Estas secuencias representan movimientos hacia directorios
+                superiores. Al utilizarse después del prefijo permitido,
+                permiten abandonar el directorio destinado a las imágenes.
+            </p>
+
+            <p>
+                <strong>
+                    /etc/passwd
+                </strong>
+            </p>
+
+            <p>
+                Finalmente, corresponde al archivo que se intenta recuperar
+                mediante la ruta manipulada.
+            </p>
+
+            <p>
+                El proceso puede representarse conceptualmente de la
+                siguiente manera:
+            </p>
+
+            <p>
+                <strong>
+                    /var/www/images/
+                </strong>
+            </p>
+
+            <p>
+                +
+            </p>
+
+            <p>
+                <strong>
+                    ../../../
+                </strong>
+            </p>
+
+            <p>
+                +
+            </p>
+
+            <p>
+                <strong>
+                    etc/passwd
+                </strong>
+            </p>
+
+            <p>
+                =
+            </p>
+
+            <p>
+                <strong>
+                    /var/www/images/../../../etc/passwd
+                </strong>
+            </p>
+
+            <p>
+                El bypass funciona porque la validación inicial únicamente
+                comprueba que la cadena comience con
+                <strong>/var/www/images/</strong>. Después, las secuencias
+                de recorrido modifican la ubicación final de la ruta.
+            </p>
+
+            <p>
+                Esto demuestra que una validación basada únicamente en el
+                inicio de una cadena no garantiza que el archivo final se
+                encuentre dentro del directorio autorizado.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 3 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                07 // Respuesta vulnerable
+            </h3>
+
+            <p>
+                Después de enviar la solicitud modificada mediante
+                Burp Suite Repeater, el servidor respondió:
+            </p>
+
+            <p>
+                <strong>
+                    HTTP/2 200 OK
+                </strong>
+            </p>
+
+            <p>
+                La respuesta también indicó:
+            </p>
+
+            <p>
+                <strong>
+                    Content-Type: image/jpeg
+                </strong>
+            </p>
+
+            <p>
+                <strong>
+                    Content-Length: 2316
+                </strong>
+            </p>
+
+            <p>
+                El cuerpo de la respuesta contenía el contenido del archivo
+                <strong>/etc/passwd</strong>.
+            </p>
+
+            <p>
+                Entre las entradas observadas se encontró:
+            </p>
+
+            <p>
+                <strong>
+                    root:x:0:0:root:/root:/bin/bash
+                </strong>
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB11_Fig03_Response_EtcPasswd.png"
+                    alt="Respuesta HTTP con contenido de etc passwd del laboratorio 11"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 3. Respuesta HTTP obtenida mediante el bypass de validación del inicio de la ruta.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                El contenido obtenido confirma que el servidor procesó
+                la ruta manipulada y devolvió el recurso solicitado.
+            </p>
+
+            <p>
+                La presencia de la entrada
+                <strong>root:x:0:0:root:/root:/bin/bash</strong>
+                confirma que fue posible recuperar el contenido de
+                <strong>/etc/passwd</strong>.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== RESULTADO ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                08 // Confirmación de Lab Solved
+            </h3>
+
+            <p>
+                Después de comprobar la respuesta vulnerable, se regresó
+                al laboratorio de PortSwigger Web Security Academy.
+            </p>
+
+            <p>
+                La plataforma mostró la confirmación:
+                <strong>Lab Solved</strong>.
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB11_Fig04_LabSolved.png"
+                    alt="Confirmación de laboratorio 11 resuelto"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 4. Confirmación de resolución del laboratorio.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                Se muestra la confirmación proporcionada por PortSwigger
+                Web Security Academy después de ejecutar correctamente la
+                explotación. El estado <strong>Lab Solved</strong> confirma
+                que el acceso al archivo <strong>/etc/passwd</strong> fue
+                reconocido por la plataforma y que el objetivo establecido
+                para el laboratorio fue alcanzado.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== MITIGACIÓN ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                09 // Mitigación recomendada
+            </h3>
+
+            <p>
+                Para prevenir este tipo de vulnerabilidad, la aplicación
+                debe evitar confiar directamente en rutas proporcionadas
+                por el usuario y debe validar correctamente la ubicación
+                final del archivo solicitado.
+            </p>
+
+            <p>
+                Cuando sea necesario trabajar con rutas proporcionadas por
+                el cliente, estas deben normalizarse antes de realizar las
+                comprobaciones de seguridad. La validación debe efectuarse
+                sobre la ruta final resultante y no únicamente sobre el
+                texto inicial proporcionado por el usuario.
+            </p>
+
+            <p>
+                Se recomienda utilizar identificadores internos o una
+                lista controlada de nombres de archivos en lugar de aceptar
+                rutas completas proporcionadas por el cliente.
+            </p>
+
+            <p>
+                Cuando sea necesario trabajar con rutas, el servidor debe
+                comprobar que el resultado final y normalizado permanezca
+                dentro del directorio autorizado. Esta validación debe
+                considerar secuencias de recorrido, rutas absolutas y otras
+                formas de manipulación de rutas.
+            </p>
+
+            <p>
+                También debe utilizarse el principio de mínimo privilegio
+                para limitar el impacto en caso de que una vulnerabilidad
+                de acceso a archivos sea explotada.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== CONCLUSIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-flag-checkered"></i>
+            Conclusión
+        </h2>
+
+        <p>
+            El laboratorio permitió comprobar de manera práctica una
+            vulnerabilidad de <strong>File Path Traversal</strong> mediante
+            un bypass de una validación que comprobaba únicamente el inicio
+            de la ruta proporcionada.
+        </p>
+
+        <p>
+            Mediante la modificación:
+        </p>
+
+        <p>
+            <strong>
+                GET /image?filename=/var/www/images/61.jpg HTTP/2
+            </strong>
+        </p>
+
+        <p>
+            a:
+        </p>
+
+        <p>
+            <strong>
+                GET /image?filename=/var/www/images/../../../etc/passwd HTTP/2
+            </strong>
+        </p>
+
+        <p>
+            fue posible conservar el prefijo esperado por la aplicación y
+            posteriormente utilizar las secuencias de recorrido para salir
+            del directorio autorizado y obtener el contenido de
+            <strong>/etc/passwd</strong>.
+        </p>
+
+        <p>
+            Finalmente, la plataforma confirmó la explotación mediante
+            <strong>Lab Solved</strong>.
+        </p>
+
+        <p>
+            Este ejercicio demuestra que una protección basada únicamente
+            en comprobar el inicio de una ruta no es suficiente para evitar
+            Path Traversal. Las rutas deben normalizarse y validarse antes
+            de permitir el acceso al recurso, garantizando que la ubicación
+            final permanezca dentro de los directorios autorizados.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== DOCUMENTO PDF ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-file-pdf"></i>
+            Documento de la actividad
+        </h2>
+
+        <p>
+            Consulta el documento completo de la Actividad 11,
+            correspondiente al laboratorio
+            <strong>
+                File path traversal, validation of start of path
+            </strong>,
+            donde se presenta la documentación técnica y las evidencias
+            del procedimiento realizado.
+        </p>
+
+        <a href="evidencias/Act11-Validation.pdf"
+           class="activity-button"
+           target="_blank">
+
+            <i class="fa-solid fa-file-pdf"></i>
+            Ver documento PDF
+
+        </a>
+
+    </section>
+
+
+    <!-- ==================== NAVEGACIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-route"></i>
+            Road to Hall of Fame
+        </h2>
+
+        <p>
+            Regresa al recorrido principal para consultar los demás
+            laboratorios del módulo.
+        </p>
+
+        <a href="HallOfFame.html"
+           class="activity-button">
+
+            <i class="fa-solid fa-arrow-left"></i>
+            Volver al Road to Hall of Fame
+
+        </a>
+
+    </section>
+
+
+</main>
+
+
+<!-- ==================== VOLVER ARRIBA ==================== -->
+
+<a href="#inicio"
+   class="back-to-top"
+   title="Volver arriba">
+
+    <i class="fa-solid fa-arrow-up"></i>
+
+</a>
+
+
+<!-- ==================== FOOTER ==================== -->
+
+<footer class="footer">
+
+    <p>
+        &copy; 2026 Jesús Israel Martínez Escobedo.
+        Todos los derechos reservados.
+    </p>
+
+    <p>
+        <i class="fa-solid fa-lock"></i>
+        Conexión Segura mediante Protocolo HTTPS / SSL
+    </p>
+
+</footer>
+
+</body>
+</html>
