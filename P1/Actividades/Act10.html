@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Actividad 10 | Superfluous URL-Decode</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- ==================== HEADER ==================== -->
+
+<header class="header">
+
+    <div class="header-container">
+
+        <div class="student-info">
+
+            <h1 class="student-name">
+                Jesús Israel Martínez Escobedo
+            </h1>
+
+            <p class="course-badge">
+                <i class="fa-solid fa-shield-halved"></i>
+                CNO IV - Seguridad Informática
+            </p>
+
+            <p class="academic-details">
+                <span>
+                    <i class="fa-solid fa-university"></i>
+                    Universidad Politécnica de San Luis Potosí
+                </span>
+                |
+                <span>
+                    <i class="fa-solid fa-calendar"></i>
+                    Semestre 2026
+                </span>
+            </p>
+
+        </div>
+
+        <nav class="navbar">
+
+            <ul>
+
+                <li>
+                    <a href="../../index.html">
+                        Inicio
+                    </a>
+                </li>
+
+                <li>
+                    <a href="HallOfFame.html">
+                        Road to Hall of Fame
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#procedimiento">
+                        Procedimiento
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#evidencias">
+                        Evidencias
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- ==================== CONTENIDO ==================== -->
+
+<main class="main-content" id="inicio">
+
+
+    <!-- ==================== PORTADA ==================== -->
+
+    <div class="dedsec-manifesto">
+
+        <div class="glitch-wrapper">
+
+            <h2 class="glitch-text"
+                data-text="/// LAB_10_SUPERFLUOUS_URL_DECODE">
+                /// LAB_10_SUPERFLUOUS_URL_DECODE
+            </h2>
+
+        </div>
+
+        <p class="typewriter-text">
+            &gt; CNO_IV // PORTSWIGGER // SUPERFLUOUS_URL_DECODE... [DOUBLE_URL_ENCODING]
+        </p>
+
+    </div>
+
+
+    <!-- ==================== PRESENTACIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-flask-vial"></i>
+            Actividad 10 — Superfluous URL-Decode
+        </h2>
+
+        <p>
+            <strong>
+                File path traversal, traversal sequences stripped with superfluous URL-decode
+            </strong>
+        </p>
+
+        <p>
+            Laboratorio práctico de PortSwigger Web Security Academy
+            enfocado en la identificación y explotación de una
+            vulnerabilidad de File Path Traversal mediante una técnica de
+            doble URL encoding.
+        </p>
+
+        <p>
+            El laboratorio permite analizar cómo una aplicación puede
+            implementar un filtro que bloquea las secuencias tradicionales
+            de recorrido de directorios, pero posteriormente realizar una
+            decodificación adicional de la entrada, permitiendo evadir la
+            restricción mediante una representación codificada del payload.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== NIVEL ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-layer-group"></i>
+            Nivel
+        </h2>
+
+        <div class="evidence-item">
+
+            <h3>
+                Practitioner
+            </h3>
+
+            <p>
+                El laboratorio corresponde al nivel
+                <strong>Practitioner</strong> de PortSwigger Web Security
+                Academy.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== TIPO DE EXPLOTACIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-bug"></i>
+            Tipo de explotación
+        </h2>
+
+        <div class="evidence-item">
+
+            <h3>
+                File Path Traversal — Superfluous URL-Decode
+            </h3>
+
+            <p>
+                Explotación de una vulnerabilidad de File Path Traversal
+                mediante la evasión de un filtro utilizando una representación
+                doblemente codificada de las secuencias de recorrido.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== OBJETIVO ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-bullseye"></i>
+            Objetivo
+        </h2>
+
+        <p>
+            El objetivo del laboratorio es identificar y explotar una
+            vulnerabilidad de File Path Traversal presente en la
+            funcionalidad encargada de mostrar las imágenes de los
+            productos.
+        </p>
+
+        <p>
+            La aplicación bloquea las secuencias tradicionales de
+            recorrido de directorios. Sin embargo, posteriormente realiza
+            una decodificación URL adicional sobre la entrada proporcionada
+            por el usuario.
+        </p>
+
+        <p>
+            La finalidad específica consiste en utilizar un payload con
+            doble URL encoding para evadir el filtro y recuperar el
+            contenido del archivo:
+        </p>
+
+        <div class="evidence-item">
+
+            <h3>
+                <i class="fa-solid fa-file-code"></i>
+                Archivo objetivo
+            </h3>
+
+            <p>
+                <strong>/etc/passwd</strong>
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== EXPLICACIÓN TÉCNICA ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-book-open"></i>
+            Explicación técnica de la vulnerabilidad
+        </h2>
+
+        <p>
+            La vulnerabilidad de File Path Traversal ocurre cuando una
+            aplicación permite que datos controlados por el usuario
+            influyan directamente en la ubicación de un archivo que será
+            procesado o recuperado por el servidor.
+        </p>
+
+        <p>
+            En este laboratorio, la aplicación utiliza el endpoint
+            <strong>/image</strong> para recuperar las imágenes asociadas
+            a los productos. El archivo solicitado se determina mediante
+            el parámetro <strong>filename</strong>.
+        </p>
+
+        <p>
+            La solicitud original identificada fue:
+        </p>
+
+        <p>
+            <strong>
+                GET /image?filename=5.jpg HTTP/2
+            </strong>
+        </p>
+
+        <p>
+            El valor <strong>5.jpg</strong> corresponde a una imagen
+            solicitada normalmente por la aplicación.
+        </p>
+
+        <p>
+            En este laboratorio, las secuencias tradicionales de
+            Path Traversal son bloqueadas. Por lo tanto, un payload como
+            <strong>../../../etc/passwd</strong> no constituye el método
+            de explotación esperado.
+        </p>
+
+        <p>
+            Sin embargo, la aplicación realiza posteriormente una
+            decodificación URL de la entrada. Esta característica permite
+            utilizar una representación doblemente codificada del carácter
+            <strong>/</strong>.
+        </p>
+
+        <p>
+            El payload utilizado fue:
+        </p>
+
+        <p>
+            <strong>
+                ..%252f..%252f..%252fetc/passwd
+            </strong>
+        </p>
+
+        <p>
+            La secuencia <strong>%252f</strong> puede transformarse
+            mediante una primera decodificación en
+            <strong>%2f</strong> y posteriormente en
+            <strong>/</strong>. De esta manera, la entrada termina
+            adquiriendo una representación equivalente a:
+        </p>
+
+        <p>
+            <strong>
+                ../../../etc/passwd
+            </strong>
+        </p>
+
+        <p>
+            Esto demuestra que el filtro puede analizar una representación
+            de la entrada antes de que se complete el proceso de
+            decodificación, permitiendo que el payload alcance una forma
+            válida de Path Traversal después del procesamiento.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== PROCEDIMIENTO ==================== -->
+
+    <section id="procedimiento" class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-list-ol"></i>
+            Procedimiento
+        </h2>
+
+
+        <!-- OBJETIVO DEL PROCEDIMIENTO -->
+
+        <div class="evidence-item">
+
+            <h3>
+                01 // Objetivo del procedimiento
+            </h3>
+
+            <p>
+                El objetivo consiste en identificar el parámetro utilizado
+                por la aplicación para recuperar las imágenes y comprobar
+                si puede ser manipulado para evadir el filtro de
+                Path Traversal mediante una representación doblemente
+                codificada.
+            </p>
+
+        </div>
+
+
+        <!-- CONTEXTO TÉCNICO -->
+
+        <div class="evidence-item">
+
+            <h3>
+                02 // Contexto técnico
+            </h3>
+
+            <p>
+                La aplicación utiliza el endpoint
+                <strong>/image</strong> para recuperar las imágenes
+                asociadas a los productos.
+            </p>
+
+            <p>
+                La solicitud utiliza el parámetro
+                <strong>filename</strong> para indicar el recurso que
+                debe ser recuperado por el servidor.
+            </p>
+
+            <p>
+                La solicitud original identificada fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=5.jpg HTTP/2
+                </strong>
+            </p>
+
+            <p>
+                El valor <strong>5.jpg</strong> corresponde a la imagen
+                solicitada normalmente por la aplicación.
+            </p>
+
+        </div>
+
+
+        <!-- PASOS -->
+
+        <div class="evidence-item">
+
+            <h3>
+                03 // Secuencia de ejecución
+            </h3>
+
+            <ol>
+
+                <li>
+                    Se accedió al laboratorio correspondiente de
+                    PortSwigger Web Security Academy.
+                </li>
+
+                <li>
+                    Se ingresó a una página de producto para identificar
+                    la solicitud utilizada para recuperar su imagen.
+                </li>
+
+                <li>
+                    Mediante Burp Suite, específicamente en
+                    <strong>Proxy → HTTP history</strong>, se identificó
+                    la solicitud correspondiente a la imagen.
+                </li>
+
+                <li>
+                    Se identificó el endpoint
+                    <strong>/image</strong> y el parámetro
+                    <strong>filename</strong>.
+                </li>
+
+                <li>
+                    La solicitud original utilizaba el archivo
+                    <strong>5.jpg</strong>.
+                </li>
+
+                <li>
+                    La solicitud fue enviada a
+                    <strong>Burp Suite Repeater</strong> para poder
+                    modificar manualmente el parámetro.
+                </li>
+
+                <li>
+                    Se sustituyó el valor
+                    <strong>filename=5.jpg</strong> por:
+                    <strong>filename=..%252f..%252f..%252fetc/passwd</strong>
+                </li>
+
+                <li>
+                    La solicitud modificada quedó de la siguiente manera:
+                    <strong>
+                        GET /image?filename=..%252f..%252f..%252fetc/passwd HTTP/2
+                    </strong>
+                </li>
+
+                <li>
+                    El payload utilizó una doble codificación del carácter
+                    <strong>/</strong> mediante la secuencia
+                    <strong>%252f</strong>.
+                </li>
+
+                <li>
+                    Se envió la solicitud modificada desde Burp Suite
+                    Repeater mediante la opción <strong>Send</strong>.
+                </li>
+
+                <li>
+                    Se analizó la respuesta HTTP obtenida.
+                </li>
+
+                <li>
+                    La respuesta devolvió el contenido del archivo
+                    <strong>/etc/passwd</strong>.
+                </li>
+
+                <li>
+                    Finalmente, se regresó al laboratorio en Web Security
+                    Academy y se verificó que apareciera
+                    <strong>Lab Solved</strong>.
+                </li>
+
+            </ol>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 1 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                04 // Solicitud HTTP original
+            </h3>
+
+            <p>
+                Mediante Burp Suite se identificó en
+                <strong>Proxy → HTTP history</strong> la solicitud
+                correspondiente a la imagen del producto.
+            </p>
+
+            <p>
+                La solicitud observada fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=5.jpg HTTP/2
+                </strong>
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB10_Fig01_Request_Original.png"
+                    alt="Solicitud HTTP original del laboratorio 10"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 1. Solicitud HTTP original de una imagen.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                La solicitud utiliza el parámetro
+                <strong>filename</strong>, cuyo valor original es
+                <strong>5.jpg</strong>. Este parámetro determina el
+                recurso que será solicitado por el servidor y constituye
+                el punto de entrada analizado para comprobar la existencia
+                de una vulnerabilidad de Path Traversal.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 2 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                05 // Payload utilizado
+            </h3>
+
+            <p>
+                La solicitud fue enviada a Burp Suite Repeater para
+                modificar manualmente el valor del parámetro
+                <strong>filename</strong>.
+            </p>
+
+            <p>
+                El valor original:
+            </p>
+
+            <p>
+                <strong>
+                    filename=5.jpg
+                </strong>
+            </p>
+
+            <p>
+                fue sustituido por:
+            </p>
+
+            <p>
+                <strong>
+                    filename=..%252f..%252f..%252fetc/passwd
+                </strong>
+            </p>
+
+            <p>
+                La solicitud resultante fue:
+            </p>
+
+            <p>
+                <strong>
+                    GET /image?filename=..%252f..%252f..%252fetc/passwd HTTP/2
+                </strong>
+            </p>
+
+            <p>
+                El payload utiliza una representación doblemente codificada
+                de las secuencias de recorrido para evadir el filtro
+                implementado por la aplicación.
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB10_Fig02_Superfluous_URL_Decode.png"
+                    alt="Payload con doble URL encoding utilizado en el laboratorio 10"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 2. Solicitud HTTP modificada mediante doble URL encoding.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                La modificación demuestra que el mecanismo de protección
+                implementado por la aplicación puede ser evadido cuando
+                la entrada se representa mediante una codificación que
+                posteriormente es procesada y decodificada por el servidor.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== EXPLICACIÓN DEL PAYLOAD ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                06 // Explicación del payload
+            </h3>
+
+            <p>
+                El payload utilizado fue:
+            </p>
+
+            <p>
+                <strong>
+                    ..%252f..%252f..%252fetc/passwd
+                </strong>
+            </p>
+
+            <p>
+                La secuencia utilizada aprovecha un proceso de
+                <strong>doble URL decoding</strong>.
+            </p>
+
+            <p>
+                La transformación del payload puede representarse de la
+                siguiente manera:
+            </p>
+
+            <p>
+                <strong>
+                    ..%252f..%252f..%252fetc/passwd
+                </strong>
+            </p>
+
+            <p>
+                ↓
+            </p>
+
+            <p>
+                <strong>
+                    Primera decodificación URL
+                </strong>
+            </p>
+
+            <p>
+                ↓
+            </p>
+
+            <p>
+                <strong>
+                    ..%2f..%2f..%2fetc/passwd
+                </strong>
+            </p>
+
+            <p>
+                ↓
+            </p>
+
+            <p>
+                <strong>
+                    Segunda decodificación URL
+                </strong>
+            </p>
+
+            <p>
+                ↓
+            </p>
+
+            <p>
+                <strong>
+                    ../../../etc/passwd
+                </strong>
+            </p>
+
+            <p>
+                La secuencia <strong>%252f</strong> representa una
+                codificación adicional del carácter <strong>/</strong>.
+                Después de la primera decodificación se obtiene
+                <strong>%2f</strong>, y después de la segunda se obtiene
+                el carácter <strong>/</strong>.
+            </p>
+
+            <p>
+                Esto confirmó que el proceso de decodificación permitió
+                que la entrada adquiriera una representación equivalente
+                a una ruta de Path Traversal hacia
+                <strong>/etc/passwd</strong>, haciendo posible recuperar
+                el contenido del archivo.
+            </p>
+
+            <p>
+                El éxito del payload demuestra que validar únicamente la
+                representación inicial de la entrada no es suficiente
+                cuando posteriormente se realizan transformaciones sobre
+                el valor proporcionado por el usuario.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== EVIDENCIA 3 ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                07 // Respuesta vulnerable
+            </h3>
+
+            <p>
+                Después de enviar la solicitud modificada mediante
+                Burp Suite Repeater, el servidor respondió:
+            </p>
+
+            <p>
+                <strong>
+                    HTTP/2 200 OK
+                </strong>
+            </p>
+
+            <p>
+                La respuesta contenía el contenido del archivo
+                <strong>/etc/passwd</strong>.
+            </p>
+
+            <p>
+                Entre las entradas observadas se encontró:
+            </p>
+
+            <p>
+                <strong>
+                    root:x:0:0:root:/root:/bin/bash
+                </strong>
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB10_Fig03_Response_EtcPasswd.png"
+                    alt="Respuesta HTTP con contenido de etc passwd del laboratorio 10"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 3. Respuesta HTTP obtenida mediante el bypass por doble URL encoding.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                El contenido obtenido confirma que el servidor procesó
+                la entrada después de las etapas de decodificación y
+                devolvió el recurso solicitado.
+            </p>
+
+            <p>
+                La presencia de la entrada
+                <strong>root:x:0:0:root:/root:/bin/bash</strong>
+                confirma que fue posible recuperar el contenido de
+                <strong>/etc/passwd</strong>.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== RESULTADO ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                08 // Confirmación de Lab Solved
+            </h3>
+
+            <p>
+                Después de comprobar la respuesta vulnerable, se regresó
+                al laboratorio de PortSwigger Web Security Academy.
+            </p>
+
+            <p>
+                La plataforma mostró la confirmación:
+                <strong>Lab Solved</strong>.
+            </p>
+
+            <figure>
+
+                <img
+                    src="evidencias/LAB10_Fig04_LabSolved.png"
+                    alt="Confirmación de laboratorio 10 resuelto"
+                    class="evidence-image"
+                >
+
+                <figcaption>
+                    Figura 4. Confirmación de resolución del laboratorio.
+                </figcaption>
+
+            </figure>
+
+            <p>
+                Se muestra la confirmación proporcionada por PortSwigger
+                Web Security Academy después de ejecutar correctamente la
+                explotación. El estado <strong>Lab Solved</strong> confirma
+                que el acceso al archivo <strong>/etc/passwd</strong> fue
+                reconocido por la plataforma y que el objetivo establecido
+                para el laboratorio fue alcanzado.
+            </p>
+
+        </div>
+
+
+        <!-- ==================== MITIGACIÓN ==================== -->
+
+        <div class="evidence-item">
+
+            <h3>
+                09 // Mitigación recomendada
+            </h3>
+
+            <p>
+                Para prevenir este tipo de vulnerabilidad, la aplicación
+                debe validar y normalizar correctamente las entradas antes
+                de utilizarlas para construir rutas de archivos.
+            </p>
+
+            <p>
+                Una medida importante consiste en realizar todas las
+                decodificaciones y transformaciones necesarias antes de
+                aplicar las validaciones de seguridad. De esta manera, el
+                servidor puede analizar la representación final de la
+                entrada y no únicamente una representación intermedia.
+            </p>
+
+            <p>
+                Se recomienda utilizar identificadores internos o una
+                lista controlada de nombres de archivos en lugar de aceptar
+                rutas proporcionadas por el cliente.
+            </p>
+
+            <p>
+                Cuando sea necesario trabajar con rutas, el servidor debe
+                comprobar que el resultado final y normalizado permanezca
+                dentro del directorio autorizado. Esta validación debe
+                considerar secuencias de recorrido, rutas absolutas,
+                codificaciones URL y otras formas de manipulación de rutas.
+            </p>
+
+            <p>
+                También debe utilizarse el principio de mínimo privilegio
+                para limitar el impacto en caso de que una vulnerabilidad
+                de acceso a archivos sea explotada.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== CONCLUSIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-flag-checkered"></i>
+            Conclusión
+        </h2>
+
+        <p>
+            El laboratorio permitió comprobar de manera práctica una
+            vulnerabilidad de <strong>File Path Traversal</strong> mediante
+            un bypass basado en una doble decodificación URL.
+        </p>
+
+        <p>
+            Aunque la aplicación bloqueaba las secuencias tradicionales
+            de recorrido de directorios, el proceso posterior de
+            decodificación permitió utilizar una representación alternativa
+            del payload.
+        </p>
+
+        <p>
+            Mediante la modificación:
+        </p>
+
+        <p>
+            <strong>
+                GET /image?filename=5.jpg HTTP/2
+            </strong>
+        </p>
+
+        <p>
+            a:
+        </p>
+
+        <p>
+            <strong>
+                GET /image?filename=..%252f..%252f..%252fetc/passwd HTTP/2
+            </strong>
+        </p>
+
+        <p>
+            fue posible obtener el contenido de
+            <strong>/etc/passwd</strong>.
+        </p>
+
+        <p>
+            Finalmente, la plataforma confirmó la explotación mediante
+            <strong>Lab Solved</strong>.
+        </p>
+
+        <p>
+            Este ejercicio demuestra que una protección basada únicamente
+            en el filtrado de determinadas secuencias no es suficiente
+            cuando la aplicación realiza posteriormente procesos de
+            decodificación. Las validaciones deben ejecutarse sobre la
+            representación final y normalizada de la entrada, garantizando
+            que los recursos solicitados permanezcan dentro de los
+            directorios autorizados.
+        </p>
+
+    </section>
+
+
+    <!-- ==================== DOCUMENTO PDF ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-file-pdf"></i>
+            Documento de la actividad
+        </h2>
+
+        <p>
+            Consulta el documento completo de la Actividad 10,
+            correspondiente al laboratorio
+            <strong>
+                File path traversal, traversal sequences stripped with superfluous URL-decode
+            </strong>,
+            donde se presenta la documentación técnica y las evidencias
+            del procedimiento realizado.
+        </p>
+
+        <a href="evidencias/Act10-UrlCode.pdf"
+           class="activity-button"
+           target="_blank">
+
+            <i class="fa-solid fa-file-pdf"></i>
+            Ver documento PDF
+
+        </a>
+
+    </section>
+
+
+    <!-- ==================== NAVEGACIÓN ==================== -->
+
+    <section class="section-card">
+
+        <h2>
+            <i class="fa-solid fa-route"></i>
+            Road to Hall of Fame
+        </h2>
+
+        <p>
+            Regresa al recorrido principal para consultar los demás
+            laboratorios del módulo.
+        </p>
+
+        <a href="HallOfFame.html"
+           class="activity-button">
+
+            <i class="fa-solid fa-arrow-left"></i>
+            Volver al Road to Hall of Fame
+
+        </a>
+
+    </section>
+
+
+</main>
+
+
+<!-- ==================== VOLVER ARRIBA ==================== -->
+
+<a href="#inicio"
+   class="back-to-top"
+   title="Volver arriba">
+
+    <i class="fa-solid fa-arrow-up"></i>
+
+</a>
+
+
+<!-- ==================== FOOTER ==================== -->
+
+<footer class="footer">
+
+    <p>
+        &copy; 2026 Jesús Israel Martínez Escobedo.
+        Todos los derechos reservados.
+    </p>
+
+    <p>
+        <i class="fa-solid fa-lock"></i>
+        Conexión Segura mediante Protocolo HTTPS / SSL
+    </p>
+
+</footer>
+
+</body>
+</html>
+
