@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Actividad 14 | Ciberseguridad en una mirada</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================================
+           VISUALIZADOR DE LA INFOGRAFÍA
+           ========================================================= */
+
+        .infografia-container {
+            width: 100%;
+            margin: 30px auto 20px;
+            text-align: center;
+        }
+
+        .infografia-viewer {
+            width: 100%;
+            height: 1100px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            overflow: hidden;
+            background: #111;
+        }
+
+        .infografia-viewer iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .infografia-description {
+            margin-bottom: 25px;
+        }
+
+        .download-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .download-container a {
+            text-decoration: none;
+        }
+
+
+        /* =========================================================
+           BLOQUE DEL TEMA
+           ========================================================= */
+
+        .topic-box {
+            margin-top: 25px;
+            padding: 25px;
+
+            border-left: 4px solid currentColor;
+
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .topic-box strong {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+
+        /* =========================================================
+           IMPRESIÓN
+           ========================================================= */
+
+        @media print {
+
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+
+            .header,
+            .navbar,
+            .back-to-top,
+            .footer,
+            .download-container,
+            .infografia-viewer {
+                display: none !important;
+            }
+
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                color: #111 !important;
+                font-family: Arial, sans-serif !important;
+            }
+
+            .main-content {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+            }
+
+            #pdf-content {
+                background: white !important;
+                color: #111 !important;
+            }
+
+            #pdf-content * {
+                color: #111 !important;
+                text-shadow: none !important;
+                box-shadow: none !important;
+            }
+
+            .dedsec-manifesto {
+                min-height: 240mm !important;
+
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+                align-items: center !important;
+
+                text-align: center !important;
+
+                page-break-after: always !important;
+                break-after: page !important;
+            }
+
+            .section-card {
+                background: white !important;
+                border: none !important;
+                border-radius: 0 !important;
+
+                margin: 0 0 15mm 0 !important;
+                padding: 0 !important;
+            }
+
+            .section-card h2 {
+                font-size: 18pt !important;
+                border-bottom: 2px solid #111 !important;
+                padding-bottom: 5px !important;
+                margin-bottom: 12px !important;
+            }
+
+            p,
+            li {
+                font-size: 10.5pt !important;
+                line-height: 1.55 !important;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <!-- =========================================================
+         BOTÓN VOLVER ARRIBA
+         ========================================================= -->
+
+    <a href="#" class="back-to-top" title="Volver arriba">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
+
+    <!-- =========================================================
+         ENCABEZADO
+         ========================================================= -->
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <div class="student-info">
+
+                <h1 class="student-name">
+                    Actividad 14
+                </h1>
+
+                <p class="course-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Ciberseguridad en una mirada
+                </p>
+
+                <p class="academic-details">
+
+                    <span>
+                        <i class="fa-solid fa-university"></i>
+                        Universidad Politécnica de San Luis Potosí
+                    </span>
+
+                    |
+
+                    <span>
+                        <i class="fa-solid fa-calendar"></i>
+                        CNO IV - Seguridad Informática
+                    </span>
+
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 NAVEGACIÓN
+                 ================================================= -->
+
+            <nav class="navbar">
+
+                <ul>
+
+                    <li>
+                        <a href="../../index.html">
+
+                            <i class="fa-solid fa-house"></i>
+
+                            Inicio
+
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#objetivo">
+                            Objetivo
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#tema">
+                            Tema
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#infografia">
+                            Infografía
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#conclusion">
+                            Conclusión
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         CONTENIDO
+         ========================================================= -->
+
+    <main class="main-content" id="pdf-content">
+
+
+        <!-- =====================================================
+             PORTADA
+             ===================================================== -->
+
+        <div class="dedsec-manifesto">
+
+            <div class="glitch-wrapper">
+
+                <h2 class="glitch-text"
+                    data-text="/// ACT14_CYBERSECURITY">
+
+                    /// ACT14_CYBERSECURITY
+
+                </h2>
+
+            </div>
+
+
+            <p class="typewriter-text">
+
+                &gt; CNO_IV // ACTIVIDAD_14 // CYBERSECURITY_OVERVIEW...
+
+            </p>
+
+
+            <div class="cover-info">
+
+                <p class="professor">
+                    Profesor: Servando López Contreras
+                </p>
+
+                <p class="student">
+                    Jesús Israel Martínez Escobedo - 175325
+                </p>
+
+                <p>
+                    Ciberseguridad en una mirada
+                </p>
+
+                <p>
+                    CNO IV - Seguridad Informática
+                </p>
+
+                <p>
+                    Ingeniería en Tecnologías de la Información
+                </p>
+
+                <p>
+                    Universidad Politécnica de San Luis Potosí
+                </p>
+
+                <p>
+                    25 de septiembre de 2026
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             OBJETIVO
+             ===================================================== -->
+
+        <section id="objetivo" class="section-card">
+
+            <h2>
+
+                <i class="fa-solid fa-crosshairs"></i>
+
+                Objetivo
+
+            </h2>
+
+
+            <p>
+
+                Diseñar una infografía profesional que explique de manera
+                visual, sintética y estratégica uno de los temas abordados
+                en el curso
+                <strong>Introducción a la Ciberseguridad de Cisco
+                Networking Academy</strong>,
+                demostrando comprensión técnica, capacidad de síntesis y
+                comunicación efectiva orientada a la concientización
+                organizacional.
+
+            </p>
+
+
+            <p>
+
+                La actividad busca representar información compleja de
+                manera clara mediante elementos visuales, identificando
+                conceptos fundamentales, riesgos y medidas de mitigación
+                relacionados con el tema seleccionado.
+
+            </p>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             TEMA SELECCIONADO
+             ===================================================== -->
+
+        <section id="tema" class="section-card">
+
+            <h2>
+
+                <i class="fa-solid fa-bug"></i>
+
+                Tema seleccionado
+
+            </h2>
+
+
+            <div class="topic-box">
+
+                <strong>
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    Módulo 02 — Ataques, conceptos y técnicas
+
+                </strong>
+
+
+                <p>
+
+                    El tema seleccionado aborda cómo opera un
+                    ciberdelincuente frente a una persona u organización,
+                    considerando los vectores de ataque que puede utilizar,
+                    las razones por las que estos funcionan y los controles
+                    que permiten reducir o neutralizar sus efectos.
+
+                </p>
+
+
+                <p>
+
+                    La infografía se enfoca en tres categorías principales:
+                    <strong>malware, ingeniería social y ataques de
+                    red</strong>, complementadas con diferentes medidas de
+                    mitigación orientadas a la protección de personas,
+                    redes y aplicaciones.
+
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             INFOGRAFÍA
+             ===================================================== -->
+
+        <section id="infografia" class="section-card">
+
+            <h2>
+
+                <i class="fa-solid fa-file-image"></i>
+
+                Infografía
+
+            </h2>
+
+
+            <div class="infografia-description">
+
+                <p>
+
+                    A continuación se presenta la infografía elaborada para
+                    la Actividad 14. El contenido corresponde al
+                    <strong>Módulo 02: Ataques, conceptos y técnicas</strong>
+                    del curso Introducción a la Ciberseguridad de Cisco
+                    Networking Academy.
+
+                </p>
+
+                <p>
+
+                    El material presenta los principales conceptos y
+                    técnicas de ataque, sus riesgos y las medidas de
+                    mitigación correspondientes, utilizando una estructura
+                    visual orientada a la concientización organizacional.
+
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 VISUALIZADOR DEL PDF
+                 ================================================= -->
+
+            <div class="infografia-container">
+
+                <div class="infografia-viewer">
+
+                    <iframe
+                        src="Evidencias/infografia.pdf"
+                        title="Infografía - Ataques, conceptos y técnicas">
+                    </iframe>
+
+                </div>
+
+
+                <!-- =============================================
+                     ÚNICO BOTÓN DE DESCARGA
+                     ============================================= -->
+
+                <div class="download-container">
+
+                    <a href="Evidencias/infografia.pdf" download class="btn-submit">
+                        <i class="fa-solid fa-download"></i> Descargar infografía PDF
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             CONCLUSIÓN
+             ===================================================== -->
+
+        <section id="conclusion" class="section-card">
+
+            <h2>
+
+                <i class="fa-solid fa-flag-checkered"></i>
+
+                Conclusión
+
+            </h2>
+
+
+            <p>
+
+                La elaboración de esta infografía permitió sintetizar los
+                conceptos fundamentales del Módulo 02, identificando
+                diferentes vectores de ataque y las técnicas utilizadas
+                para comprometer personas, redes y aplicaciones.
+
+            </p>
+
+
+            <p>
+
+                También permitió relacionar cada amenaza con medidas de
+                mitigación, destacando que la ciberseguridad requiere tanto
+                controles tecnológicos como la participación consciente de
+                las personas dentro de una organización.
+
+            </p>
+
+
+            <p>
+
+                Finalmente, la actividad permitió transformar información
+                técnica en un recurso visual orientado a la
+                <strong>concientización y divulgación de prácticas de
+                ciberseguridad</strong>.
+
+            </p>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+
+    <footer class="footer">
+
+        <p>
+
+            &copy; 2026 Jesús Israel Martínez Escobedo.
+
+        </p>
+
+
+        <p>
+
+            <i class="fa-solid fa-lock"></i>
+
+            Conexión Segura mediante HTTPS / SSL
+
+        </p>
+
+    </footer>
+
+</body>
+</html>
+
