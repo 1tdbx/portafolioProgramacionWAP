@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Actividad 13 | Red Team Pentest — My File Server 1</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+
+
+        /* =========================================================
+           ENTREGABLES — BOTONES DE DESCARGA
+           ========================================================= */
+
+        .download-container {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .download-container a {
+            text-decoration: none;
+        }
+
+
+        /* =========================================================
+           FASES — TARJETAS
+           ========================================================= */
+
+        .fases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .fase-card {
+            padding: 18px 16px;
+            border-radius: 8px;
+            border-left: 4px solid currentColor;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .fase-card .fase-num {
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .fase-card .fase-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .fase-card ul {
+            margin: 0;
+            padding-left: 16px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .fase-card ul li {
+            margin-bottom: 3px;
+        }
+
+        .color-blue  { color: #60a5fa; }
+        .color-purple{ color: #a78bfa; }
+        .color-red   { color: #f87171; }
+        .color-orange{ color: #fb923c; }
+
+
+        /* =========================================================
+           HALLAZGOS — TARJETAS
+           ========================================================= */
+
+        .hallazgos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .hallazgo-card {
+            padding: 16px 18px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hallazgo-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .sev-badge {
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .sev-critica { background: #ef4444; color: #fff; }
+        .sev-alta    { background: #f97316; color: #fff; }
+        .sev-media   { background: #eab308; color: #111; }
+        .sev-baja    { background: #22c55e; color: #fff; }
+
+        .hallazgo-id {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .hallazgo-card h3 {
+            font-size: 0.95rem;
+            margin: 0 0 6px;
+        }
+
+        .hallazgo-card p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.55);
+            margin: 0;
+        }
+
+
+        /* =========================================================
+           TOPIC BOX (reutilizado de Act14)
+           ========================================================= */
+
+        .topic-box {
+            margin-top: 25px;
+            padding: 25px;
+            border-left: 4px solid currentColor;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .topic-box strong {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+
+        /* =========================================================
+           IMPRESIÓN
+           ========================================================= */
+
+        @media print {
+
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+
+            .header,
+            .navbar,
+            .back-to-top,
+            .footer,
+            .viewer-tabs,
+            .viewer-frame,
+            .lightbox {
+                display: none !important;
+            }
+
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                color: #111 !important;
+                font-family: Arial, sans-serif !important;
+            }
+
+            .main-content {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+            }
+
+            .section-card {
+                background: white !important;
+                border: none !important;
+                border-radius: 0 !important;
+                margin: 0 0 15mm 0 !important;
+                padding: 0 !important;
+            }
+
+            .section-card h2 {
+                font-size: 18pt !important;
+                border-bottom: 2px solid #111 !important;
+                padding-bottom: 5px !important;
+                margin-bottom: 12px !important;
+            }
+
+            p, li {
+                font-size: 10.5pt !important;
+                line-height: 1.55 !important;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <!-- =========================================================
+         BOTÓN VOLVER ARRIBA
+         ========================================================= -->
+
+    <a href="#" class="back-to-top" title="Volver arriba">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
+
+    <!-- =========================================================
+         ENCABEZADO
+         ========================================================= -->
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <div class="student-info">
+
+                <h1 class="student-name">
+                    Actividad 13
+                </h1>
+
+                <p class="course-badge">
+                    <i class="fa-solid fa-terminal"></i>
+                    Red Team Pentest — My File Server 1
+                </p>
+
+                <p class="academic-details">
+
+                    <span>
+                        <i class="fa-solid fa-university"></i>
+                        Universidad Politécnica de San Luis Potosí
+                    </span>
+
+                    |
+
+                    <span>
+                        <i class="fa-solid fa-calendar"></i>
+                        CNO IV - Seguridad Informática
+                    </span>
+
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 NAVEGACIÓN
+                 ================================================= -->
+
+            <nav class="navbar">
+
+                <ul>
+
+                    <li>
+                        <a href="../../index.html">
+                            <i class="fa-solid fa-house"></i>
+                            Inicio
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#objetivo">Objetivo</a>
+                    </li>
+
+                    <li>
+                        <a href="#metodologia">Metodología</a>
+                    </li>
+
+                    <li>
+                        <a href="#hallazgos">Hallazgos</a>
+                    </li>
+
+                    <li>
+                        <a href="#evidencias">Evidencias</a>
+                    </li>
+
+                    <li>
+                        <a href="#entregables">Entregables</a>
+                    </li>
+
+                    <li>
+                        <a href="#conclusion">Conclusión</a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         CONTENIDO
+         ========================================================= -->
+
+    <main class="main-content" id="pdf-content">
+
+
+        <!-- =====================================================
+             PORTADA
+             ===================================================== -->
+
+        <div class="dedsec-manifesto">
+
+            <div class="glitch-wrapper">
+
+                <h2 class="glitch-text"
+                    data-text="/// ACT13_RED_TEAM">
+
+                    /// ACT13_RED_TEAM
+
+                </h2>
+
+            </div>
+
+
+            <p class="typewriter-text">
+
+                &gt; CNO_IV // ACTIVIDAD_13 // PENTEST_MY_FILE_SERVER_1...
+
+            </p>
+
+
+            <div class="cover-info">
+
+                <p class="professor">
+                    Profesor: Servando López Contreras
+                </p>
+
+                <p class="student">
+                    Jesús Israel Martínez Escobedo - 175325
+                </p>
+
+                <p>
+                    Red Team Pentest — My File Server 1
+                </p>
+
+                <p>
+                    CNO IV - Seguridad Informática
+                </p>
+
+                <p>
+                    Ingeniería en Tecnologías de la Información
+                </p>
+
+                <p>
+                    Universidad Politécnica de San Luis Potosí
+                </p>
+
+                <p>
+                    1 de octubre de 2026
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             OBJETIVO
+             ===================================================== -->
+
+        <section id="objetivo" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-crosshairs"></i>
+                Objetivo
+            </h2>
+
+            <p>
+                Realizar un ejercicio completo de <strong>pentesting ofensivo (Red Team)</strong>
+                sobre la máquina vulnerable <strong>My File Server 1</strong> de VulnHub,
+                simulando un ataque real de caja negra sobre un servidor de archivos expuesto
+                en red interna, con el fin de identificar, explotar y documentar todas las
+                vulnerabilidades encontradas.
+            </p>
+
+            <p>
+                La actividad integra las fases clásicas de un test de penetración —
+                reconocimiento, enumeración, explotación y escalada de privilegios —
+                y concluye con la elaboración de un reporte ejecutivo y una presentación
+                orientada a la toma de decisiones organizacional.
+            </p>
+
+            <div class="topic-box" style="color: #f87171;">
+
+                <strong>
+                    <i class="fa-solid fa-server"></i>
+                    Entorno del laboratorio
+                </strong>
+
+                <p>
+                    <strong>Máquina objetivo:</strong> My File Server 1 — VulnHub (Armour Infosec)<br>
+                    <strong>IP objetivo:</strong> 192.168.100.147<br>
+                    <strong>IP atacante:</strong> 192.168.100.117 (Kali Linux)<br>
+                    <strong>Modalidad:</strong> Caja negra (black box) — sin credenciales previas<br>
+                    <strong>Entorno:</strong> Red interna / laboratorio controlado
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             METODOLOGÍA
+             ===================================================== -->
+
+        <section id="metodologia" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-diagram-project"></i>
+                Metodología
+            </h2>
+
+            <p>
+                El ejercicio siguió la metodología <strong>PTES (Penetration Testing Execution Standard)</strong>,
+                ejecutando cuatro fases secuenciales sobre el objetivo:
+            </p>
+
+            <div class="fases-grid">
+
+                <div class="fase-card color-blue">
+                    <div class="fase-num">01</div>
+                    <div class="fase-name">Reconocimiento</div>
+                    <ul>
+                        <li>netdiscover</li>
+                        <li>nmap -p- -sV</li>
+                        <li>nmap -A</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-purple">
+                    <div class="fase-num">02</div>
+                    <div class="fase-name">Enumeración</div>
+                    <ul>
+                        <li>FTP anónimo</li>
+                        <li>smbmap</li>
+                        <li>nikto</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-red">
+                    <div class="fase-num">03</div>
+                    <div class="fase-name">Explotación</div>
+                    <ul>
+                        <li>SSH key injection</li>
+                        <li>Credenciales /readme.txt</li>
+                        <li>Acceso inicial</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-orange">
+                    <div class="fase-num">04</div>
+                    <div class="fase-name">Escalada</div>
+                    <ul>
+                        <li>uname -a</li>
+                        <li>DirtyCow exploit</li>
+                        <li>Shell root</li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             HALLAZGOS
+             ===================================================== -->
+
+        <section id="hallazgos" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-bug"></i>
+                Hallazgos
+            </h2>
+
+            <p>
+                Se identificaron <strong>8 vulnerabilidades</strong> en el sistema objetivo,
+                de las cuales <strong>3 son críticas</strong> y fueron encadenadas para lograr
+                acceso root sin ninguna autenticación previa.
+            </p>
+
+            <div class="hallazgos-grid">
+
+                <div class="hallazgo-card">
+                    <div class="hallazgo-header">
+                        <span class="sev-badge sev-critica">CRÍTICA</span>
+                        <span class="hallazgo-id">F-01</span>
+                    </div>
+                    <h3>Credenciales expuestas en /readme.txt</h3>
+                    <p>Archivo web público con usuario "smbuser" y contraseña "rootroot1" en texto claro.</p>
+                </div>
+
+                <div class="hallazgo-card">
+                    <div class="hallazgo-header">
+                        <span class="sev-badge sev-critica">CRÍTICA</span>
+                        <span class="hallazgo-id">F-02</span>
+                    </div>
+                    <h3>FTP anónimo con escritura en /pub</h3>
+                    <p>Login anónimo exitoso con permisos drwxrwxrwx. Permitió inyectar clave SSH sin autenticación.</p>
+                </div>
+
+                <div class="hallazgo-card">
+                    <div class="hallazgo-header">
+                        <span class="sev-badge sev-critica">CRÍTICA</span>
+                        <span class="hallazgo-id">F-03</span>
+                    </div>
+                    <h3>DirtyCow — CVE-2016-5195</h3>
+                    <p>Kernel 3.10.0-229 (marzo 2015) sin parche. Escalada de privilegios a root en segundos.</p>
+                </div>
+
+                <div class="hallazgo-card">
+                    <div class="hallazgo-header">
+                        <span class="sev-badge sev-alta">ALTA</span>
+                        <span class="hallazgo-id">F-04</span>
+                    </div>
+                    <h3>SMB con sesión nula READ/WRITE</h3>
+                    <p>Recurso "smbdata" accesible sin credenciales. Expone estructura interna del servidor.</p>
+                </div>
+
+                <div class="hallazgo-card">
+                    <div class="hallazgo-header">
+                        <span class="sev-badge sev-alta">ALTA</span>
+                        <span class="hallazgo-id">F-05</span>
+                    </div>
+                    <h3>SSH con usuario conocido</h3>
+                    <p>Acceso SSH posible con el usuario obtenido de SMB y credenciales del readme.</p>
+                </div>
+
+                <div class="hallazgo-card">
+                    <div class="hallazgo-header">
+                        <span class="sev-badge sev-media">MEDIA</span>
+                        <span class="hallazgo-id">F-06</span>
+                    </div>
+                    <h3>Versiones de servicios expuestas</h3>
+                    <p>nmap revela ProFTPD 1.3.5, Apache 2.4.6, Samba 4.9.1 y OpenSSH 7.4 con versiones exactas.</p>
+                </div>
+
+                <div class="hallazgo-card">
+                    <div class="hallazgo-header">
+                        <span class="sev-badge sev-media">MEDIA</span>
+                        <span class="hallazgo-id">F-07</span>
+                    </div>
+                    <h3>Sin cabeceras HTTP de seguridad</h3>
+                    <p>Ausencia de CSP, HSTS y X-Frame-Options en el servidor Apache.</p>
+                </div>
+
+                <div class="hallazgo-card">
+                    <div class="hallazgo-header">
+                        <span class="sev-badge sev-baja">BAJA</span>
+                        <span class="hallazgo-id">F-08</span>
+                    </div>
+                    <h3>HTTP TRACE activo</h3>
+                    <p>Método TRACE habilitado en Apache. Puede facilitar ataques XST en combinación con XSS.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             EVIDENCIAS
+             ===================================================== -->
+
+        <section id="evidencias" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-images"></i>
+                Evidencias
+            </h2>
+
+            <p>
+                Capturas de pantalla tomadas durante la ejecución del pentest,
+                organizadas por fase.
+            </p>
+
+
+            <!-- FASE 1: RECONOCIMIENTO -->
+
+            <div class="evidence-item">
+
+                <h3>01 // Reconocimiento de red — netdiscover</h3>
+
+                <p>
+                    Identificación del host objetivo en la red interna mediante
+                    <strong>netdiscover</strong>. Se obtuvo la dirección IP
+                    <strong>192.168.100.147</strong> correspondiente a My File Server 1.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i1.png"
+                         alt="Reconocimiento de red con netdiscover"
+                         class="evidence-image">
+                    <figcaption>Figura 1. Descubrimiento del host objetivo con netdiscover.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>02 // Escaneo de puertos — nmap -p- -sV</h3>
+
+                <p>
+                    Escaneo completo de puertos con detección de versiones.
+                    Se identificaron servicios activos: FTP (21), SSH (22),
+                    HTTP (80), SMB (139/445) y NFS (2049).
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i2.png"
+                         alt="Escaneo de puertos nmap -p- -sV"
+                         class="evidence-image">
+                    <figcaption>Figura 2. Resultado de nmap -p- -sV sobre el objetivo.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>03 // Enumeración agresiva — nmap -A (parte 1)</h3>
+
+                <p>
+                    Enumeración detallada con <strong>nmap -A</strong> para obtener
+                    sistema operativo, scripts NSE y traceroute. Primera parte del resultado.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i3.png"
+                         alt="nmap -A resultado parte 1"
+                         class="evidence-image">
+                    <figcaption>Figura 3. nmap -A — resultado parte 1.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>04 // Enumeración agresiva — nmap -A (parte 2)</h3>
+
+                <figure>
+                    <img src="Evidencias/a13i4.png"
+                         alt="nmap -A resultado parte 2"
+                         class="evidence-image">
+                    <figcaption>Figura 4. nmap -A — resultado parte 2.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>05 // Enumeración agresiva — nmap -A (parte 3)</h3>
+
+                <figure>
+                    <img src="Evidencias/a13i5.png"
+                         alt="nmap -A resultado parte 3"
+                         class="evidence-image">
+                    <figcaption>Figura 5. nmap -A — resultado parte 3.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>06 // Enumeración agresiva — nmap -A (parte 4)</h3>
+
+                <figure>
+                    <img src="Evidencias/a13i6.png"
+                         alt="nmap -A resultado parte 4"
+                         class="evidence-image">
+                    <figcaption>Figura 6. nmap -A — resultado parte 4.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <!-- FASE 2: ENUMERACIÓN -->
+
+            <div class="evidence-item">
+
+                <h3>07 // Login FTP anónimo</h3>
+
+                <p>
+                    Acceso exitoso al servicio FTP como usuario
+                    <strong>anonymous</strong> sin contraseña. Se identificó el
+                    directorio <strong>/pub</strong> con permisos
+                    <strong>drwxrwxrwx</strong>, lo que permitirá inyectar archivos.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i7.png"
+                         alt="Login FTP anónimo"
+                         class="evidence-image">
+                    <figcaption>Figura 7. Acceso FTP anónimo con permisos de escritura en /pub.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>08 // Enumeración SMB — smbmap</h3>
+
+                <p>
+                    Enumeración de recursos compartidos con <strong>smbmap</strong>.
+                    Se detectó el recurso <strong>smbdata</strong> accesible con
+                    sesión nula y permisos de lectura y escritura.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i8.png"
+                         alt="Enumeración SMB con smbmap"
+                         class="evidence-image">
+                    <figcaption>Figura 8. Recurso SMB accesible sin credenciales.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>09 // Escaneo web — nikto</h3>
+
+                <p>
+                    Análisis del servidor web con <strong>nikto</strong>. Se confirmó
+                    la ausencia de cabeceras de seguridad HTTP y la exposición del
+                    archivo <strong>/readme.txt</strong>.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i9.png"
+                         alt="Escaneo web con nikto"
+                         class="evidence-image">
+                    <figcaption>Figura 9. Resultado de nikto sobre el servidor Apache.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>10 // Credenciales en /readme.txt</h3>
+
+                <p>
+                    El archivo <strong>/readme.txt</strong> expuesto en el servidor
+                    web contenía las credenciales en texto claro:
+                    usuario <strong>smbuser</strong>, contraseña <strong>rootroot1</strong>.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i10.png"
+                         alt="Credenciales descubiertas en /readme.txt"
+                         class="evidence-image">
+                    <figcaption>Figura 10. Credenciales expuestas en archivo público.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <!-- FASE 3: EXPLOTACIÓN -->
+
+            <div class="evidence-item">
+
+                <h3>11 // Generación de clave SSH</h3>
+
+                <p>
+                    Generación del par de claves SSH en la máquina atacante con
+                    <strong>ssh-keygen</strong>. La clave pública será inyectada
+                    en el servidor mediante el acceso FTP anónimo.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i11.png"
+                         alt="Generación de clave SSH"
+                         class="evidence-image">
+                    <figcaption>Figura 11. Generación del par de claves SSH en Kali Linux.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>12 // Inyección de authorized_keys vía FTP</h3>
+
+                <p>
+                    Subida del archivo <strong>authorized_keys</strong> al directorio
+                    <strong>/pub</strong> del servidor FTP. Esto permitirá autenticarse
+                    por SSH sin contraseña usando la clave privada.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i12.png"
+                         alt="Subida de authorized_keys por FTP"
+                         class="evidence-image">
+                    <figcaption>Figura 12. Inyección de clave pública SSH mediante FTP anónimo.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>13 // Acceso SSH inicial</h3>
+
+                <p>
+                    Conexión SSH exitosa al servidor como usuario <strong>smbuser</strong>
+                    utilizando la clave privada. Se obtuvo shell interactiva sin
+                    necesidad de contraseña.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i13.png"
+                         alt="Acceso SSH inicial al servidor"
+                         class="evidence-image">
+                    <figcaption>Figura 13. Shell SSH obtenida como smbuser.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <!-- FASE 4: ESCALADA DE PRIVILEGIOS -->
+
+            <div class="evidence-item">
+
+                <h3>14 // Versión del kernel — uname -a</h3>
+
+                <p>
+                    Verificación de la versión del kernel del sistema objetivo.
+                    Se identificó <strong>Linux 3.10.0-229</strong> (marzo 2015),
+                    vulnerable a <strong>DirtyCow (CVE-2016-5195)</strong>.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i14.png"
+                         alt="Versión del kernel con uname -a"
+                         class="evidence-image">
+                    <figcaption>Figura 14. Kernel sin parche vulnerable a DirtyCow.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>15 // Descarga del exploit DirtyCow</h3>
+
+                <p>
+                    Descarga del exploit <strong>DirtyCow (CVE-2016-5195)</strong>
+                    desde la máquina atacante. El exploit aprovecha una condición
+                    de carrera en el subsistema de memoria del kernel Linux.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i15.png"
+                         alt="Descarga del exploit DirtyCow"
+                         class="evidence-image">
+                    <figcaption>Figura 15. Descarga del exploit para escalada de privilegios.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>16 // Verificación de IP — ip a</h3>
+
+                <p>
+                    Confirmación de la dirección IP del servidor objetivo desde
+                    la shell obtenida, verificando que se está operando sobre
+                    el sistema correcto.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i16.png"
+                         alt="Verificación de IP con ip a"
+                         class="evidence-image">
+                    <figcaption>Figura 16. Verificación de IP del objetivo desde la shell.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>17 // Servidor HTTP Python para transferir el exploit</h3>
+
+                <p>
+                    Servidor HTTP temporal levantado en la máquina atacante con
+                    <strong>python3 -m http.server</strong> para transferir el
+                    exploit compilado al sistema objetivo.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i17.png"
+                         alt="Servidor HTTP Python para transferencia"
+                         class="evidence-image">
+                    <figcaption>Figura 17. Servidor HTTP temporal para transferencia del exploit.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>18 // Compilación del exploit con gcc</h3>
+
+                <p>
+                    Compilación del exploit DirtyCow directamente en el sistema
+                    objetivo con <strong>gcc</strong>. El binario resultante se
+                    ejecutará para sobreescribir el archivo <strong>/etc/passwd</strong>.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i18.png"
+                         alt="Compilación del exploit con gcc"
+                         class="evidence-image">
+                    <figcaption>Figura 18. Compilación del exploit DirtyCow en el sistema objetivo.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>19 // DirtyCow ejecutado — acceso root</h3>
+
+                <p>
+                    Ejecución del exploit DirtyCow con éxito. Se obtuvo acceso
+                    como <strong>root</strong> y se verificó la escalada completa
+                    mediante la lectura del archivo <strong>proof.txt</strong>.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a13i19.png"
+                         alt="Ejecución DirtyCow — acceso root"
+                         class="evidence-image">
+                    <figcaption>Figura 19. Acceso root obtenido mediante DirtyCow — proof.txt leído.</figcaption>
+                </figure>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             ENTREGABLES
+             ===================================================== -->
+
+        <section id="entregables" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-folder-open"></i>
+                Entregables
+            </h2>
+
+            <p>
+                Documentos generados como resultado del ejercicio de pentesting.
+                Selecciona el botón correspondiente para visualizar cada entregable.
+            </p>
+
+            <div class="download-container">
+
+                <a href="Evidencias/ACTIVIDAD_13.pdf" download class="btn-submit">
+                    <i class="fa-solid fa-file-pdf"></i> Descargar reporte PDF
+                </a>
+
+                <a href="Evidencias/ACTIVIDAD_13_v2.pptx" download class="btn-submit">
+                    <i class="fa-solid fa-file-powerpoint"></i> Descargar presentación PPTX
+                </a>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             CONCLUSIÓN
+             ===================================================== -->
+
+        <section id="conclusion" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-flag-checkered"></i>
+                Conclusión
+            </h2>
+
+            <p>
+                La actividad demostró que <strong>My File Server 1</strong> presenta un perfil
+                de riesgo crítico: tres vulnerabilidades encadenadas permiten a un atacante sin
+                credenciales previas obtener acceso root completo en menos de 30 minutos,
+                utilizando únicamente herramientas de código abierto disponibles en Kali Linux.
+            </p>
+
+            <p>
+                Los hallazgos reflejan errores de configuración fundamentales — credenciales en
+                texto claro, FTP anónimo con escritura y un kernel sin parchear desde 2015 —
+                que podrían haberse evitado con prácticas básicas de hardening. La causa raíz
+                no es la sofisticación del atacante, sino la falta de controles mínimos de
+                seguridad en el servidor.
+            </p>
+
+            <p>
+                El ejercicio refuerza que la <strong>seguridad por capas</strong> es esencial:
+                ningún control aislado es suficiente, y la combinación de monitoreo, actualizaciones
+                oportunas y configuración segura de servicios reduce drásticamente la superficie
+                de ataque de cualquier sistema expuesto en red.
+            </p>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+
+    <footer class="footer">
+
+        <p>
+            &copy; 2026 Jesús Israel Martínez Escobedo.
+        </p>
+
+        <p>
+            <i class="fa-solid fa-lock"></i>
+            Conexión Segura mediante HTTPS / SSL
+        </p>
+
+    </footer>
+
+
+
+</body>
+</html>
