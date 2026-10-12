@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PROYECTO | Blindando la información: gobernanza y cumplimiento (PR02).</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- ===== ESTILOS PROPIOS DE ESTA PÁGINA (estructura nueva, mismo tema DedSec) ===== -->
+    <style>
+        /* ====== LÍNEA DE ESCANEO QUE RECORRE LA PANTALLA ====== */
+        .scanline-sweep {
+            position:fixed; left:0; right:0; top:0; height:120px; z-index:9998;
+            pointer-events:none;
+            background:linear-gradient(180deg, transparent, rgba(0,255,204,0.06) 50%, transparent);
+            animation:sweep 6s linear infinite;
+        }
+        @keyframes sweep { 0%{ transform:translateY(-130px);} 100%{ transform:translateY(100vh);} }
+
+        /* ====== REVELADO AL HACER SCROLL ====== */
+        .reveal { opacity:0; transform:translateY(26px); transition:opacity .6s ease, transform .6s ease; }
+        .reveal.in { opacity:1; transform:none; }
+
+        /* ====== ETIQUETAS / CHIPS CON MOVIMIENTO ====== */
+        .op-tags { display:flex; flex-wrap:wrap; gap:0.7rem; margin-top:1.2rem; }
+        .op-tag {
+            background:#000; color:var(--dedsec-cyan);
+            border:1px solid var(--dedsec-cyan);
+            padding:0.3rem 0.8rem; font-size:0.8rem; letter-spacing:1px;
+            text-transform:uppercase;
+            box-shadow:-2px 2px 0 var(--dedsec-pink);
+            transition:all .18s ease; cursor:default;
+        }
+        .op-tag:hover {
+            transform:translate(2px,-2px);
+            box-shadow:-4px 4px 0 var(--dedsec-yellow);
+            color:#000; background:var(--dedsec-cyan);
+        }
+
+        /* ====== DOSSIER ====== */
+        .dossier { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-top:1.4rem; }
+        .dossier-col {
+            background:#000; border:1px solid var(--border-tech);
+            border-top:2px solid var(--dedsec-pink); padding:1.4rem;
+            transition:transform .2s ease, border-color .2s ease;
+        }
+        .dossier-col:hover { transform:translateY(-4px); border-top-color:var(--dedsec-cyan); }
+        .dossier-label {
+            color:var(--dedsec-pink); font-size:0.75rem; letter-spacing:3px;
+            text-transform:uppercase; margin-bottom:0.5rem;
+        }
+        .dossier-col h3 {
+            font-family:var(--font-heading); color:var(--dedsec-cyan);
+            font-size:1.9rem; line-height:1; text-transform:uppercase; margin-bottom:0.7rem;
+            text-shadow:0 0 8px rgba(0,255,204,0.4);
+            animation:flicker 4s infinite;
+        }
+        @keyframes flicker {
+            0%,19%,21%,23%,80%,100% { opacity:1; }
+            20%,22% { opacity:.45; }
+            81% { opacity:.7; }
+        }
+        .dossier-col p { color:var(--text-main); margin-bottom:0.6rem; }
+        .dossier-col .muted { color:var(--text-muted); font-size:0.85rem; }
+
+        /* ====== INDICADORES ====== */
+        .stat-grid {
+            display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+            gap:1rem; margin-top:1.4rem;
+        }
+        .stat {
+            background:#0a0a0c; border:1px solid var(--border-tech);
+            border-left:3px solid var(--dedsec-yellow);
+            padding:1.1rem; text-align:center;
+            transition:transform .2s ease, box-shadow .2s ease;
+        }
+        .stat:hover { transform:translateY(-4px); box-shadow:-4px 4px 0 var(--dedsec-cyan); }
+        .stat .num {
+            font-family:var(--font-heading); font-size:2.3rem; line-height:1;
+            color:var(--dedsec-yellow); display:block;
+        }
+        .stat .cap {
+            color:var(--text-muted); font-size:0.75rem; letter-spacing:1px;
+            text-transform:uppercase; margin-top:0.4rem; display:block;
+        }
+
+        /* ====== NOTA ALTO NIVEL ====== */
+        .hl-note {
+            margin-top:1.4rem; padding:0.8rem 1rem; background:#000;
+            border-left:3px solid var(--dedsec-cyan);
+            color:var(--text-muted); font-size:0.82rem;
+        }
+        .hl-note i { color:var(--dedsec-cyan); margin-right:0.4rem; }
+
+        /* ====== BRIEFING ====== */
+        .briefing {
+            background:#000; border:1px solid var(--border-tech);
+            padding:1.5rem; margin-top:1rem; font-size:0.95rem;
+        }
+        .briefing .line { margin-bottom:0.8rem; }
+        .briefing .line::before { content:"> "; color:var(--dedsec-cyan); font-weight:bold; }
+        .briefing .accent { color:var(--dedsec-yellow); }
+
+        /* ====== TERMINAL DE DESCARGA ====== */
+        .download-terminal {
+            background:#000; border:2px solid var(--dedsec-cyan);
+            box-shadow:-6px 6px 0 var(--dedsec-pink);
+            padding:1.8rem; margin-top:1rem; text-align:center;
+            animation:term-pulse 2.6s ease-in-out infinite;
+        }
+        @keyframes term-pulse {
+            0%,100% { box-shadow:-6px 6px 0 var(--dedsec-pink); }
+            50%     { box-shadow:-6px 6px 18px rgba(0,255,204,0.45); }
+        }
+        .dl-prompt {
+            color:var(--dedsec-cyan); font-size:0.9rem; letter-spacing:1px;
+            margin-bottom:0.3rem; text-align:left;
+        }
+        .dl-prompt::after {
+            content:"_"; color:var(--dedsec-cyan);
+            animation:blink 0.9s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity:0; } }
+        .dl-file { color:var(--text-muted); font-size:0.82rem; margin-bottom:1.2rem; text-align:left; }
+
+        /* ====== BOTÓN CON BARRIDO DE LUZ ====== */
+        .fx-btn { position:relative; overflow:hidden; }
+        .fx-btn::before {
+            content:""; position:absolute; top:0; left:-120%; width:70%; height:100%;
+            background:linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent);
+            transform:skewX(-20deg);
+            animation:shine 3.2s ease-in-out infinite;
+        }
+        @keyframes shine { 0%{left:-120%;} 55%,100%{left:140%;} }
+        .download-terminal .activity-button { font-size:1.15rem; padding:0.9rem 1.6rem; }
+
+        /* ====== LISTA DE CONTENIDO ====== */
+        .pkg-list { list-style:none; margin-top:1.6rem; display:grid; gap:0.7rem; }
+        .pkg-item {
+            background:#0a0a0c; border:1px solid var(--border-tech);
+            border-left:3px solid var(--dedsec-cyan);
+            padding:0.8rem 1rem; display:flex; align-items:center; gap:0.8rem;
+            transition:transform .18s ease, border-left-color .18s ease, background .18s ease;
+        }
+        .pkg-item:hover {
+            transform:translateX(8px);
+            border-left-color:var(--dedsec-yellow);
+            background:#000;
+        }
+        .pkg-item i { color:var(--dedsec-yellow); font-size:1.2rem; }
+        .pkg-item .code { color:var(--dedsec-pink); font-size:0.75rem; letter-spacing:1px; margin-right:0.3rem; }
+
+        /* ====== GLITCH AL PASAR EL MOUSE EN TÍTULOS ====== */
+        .section-card h2 { transition:text-shadow .15s ease; cursor:default; }
+        .section-card h2:hover { animation:h-glitch .35s steps(2) 2; }
+        @keyframes h-glitch {
+            0%{ text-shadow:2px 0 var(--dedsec-pink), -2px 0 var(--dedsec-cyan); }
+            50%{ text-shadow:-2px 0 var(--dedsec-pink), 2px 0 var(--dedsec-cyan); }
+            100%{ text-shadow:none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation:none !important; transition:none !important; }
+            .reveal { opacity:1; transform:none; }
+        }
+
+        @media (max-width:700px){ .dossier { grid-template-columns:1fr; } }
+    </style>
+</head>
+
+<body>
+
+    <div class="scanline-sweep"></div>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="header">
+        <div class="header-container">
+
+            <div class="student-info">
+                <h1 class="student-name">Jesús Israel Martínez Escobedo</h1>
+                <p class="course-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    CNO IV - Seguridad Informática
+                </p>
+                <p class="academic-details">
+                    <span><i class="fa-solid fa-university"></i> Universidad Politécnica de San Luis Potosí</span>
+                    |
+                    <span><i class="fa-solid fa-calendar"></i> Semestre 2026</span>
+                </p>
+            </div>
+
+            <nav class="navbar">
+                <ul>
+                    <li><a href="../../index.html">Inicio</a></li>
+                    <li><a href="#contexto">Contexto</a></li>
+                    <li><a href="#operacion">Operación</a></li>
+                    <li><a href="#descarga" class="active">Descarga</a></li>
+                </ul>
+            </nav>
+
+        </div>
+    </header>
+
+
+    <!-- ==================== CONTENIDO ==================== -->
+    <main class="main-content" id="inicio">
+
+
+        <!-- ==================== HERO / PORTADA ==================== -->
+        <div class="dedsec-manifesto">
+            <div class="glitch-wrapper">
+                <h2 class="glitch-text" data-text="/// INTERAFAS_HARDENING_PROTOCOL" data-scramble>
+                    /// INTERAFAS_HARDENING_PROTOCOL
+                </h2>
+            </div>
+            <p class="typewriter-text">
+                > CNO_IV // PR02 // BLINDANDO_LA_INFORMACION.[SYSTEM_SECURED]
+            </p>
+        </div>
+
+
+        <!-- ==================== PROYECTO ==================== -->
+        <section class="section-card reveal">
+            <h2><i class="fa-solid fa-file-shield"></i> Proyecto</h2>
+            <p><strong>PR02 — Blindando la información: gobernanza y cumplimiento.</strong></p>
+            <p>
+                Si el proyecto del primer parcial consistió en irrumpir, este da el giro contrario:
+                tomar lo aprendido y <strong>blindar</strong> una infraestructura crítica. La operación se
+                centra en la gobernanza, el cumplimiento y la respuesta ante incidentes sobre un organismo
+                metropolitano de agua, usando como escenario el laboratorio INTERAFAS-LAB.
+            </p>
+
+            <div class="op-tags">
+                <span class="op-tag">Gobernanza</span>
+                <span class="op-tag">ISO/IEC 27001</span>
+                <span class="op-tag">Respuesta a incidentes</span>
+                <span class="op-tag">Comunicación de crisis</span>
+                <span class="op-tag">Infraestructura crítica</span>
+                <span class="op-tag">IT / OT</span>
+            </div>
+        </section>
+
+
+        <!-- ==================== CONTEXTO DEL LABORATORIO ==================== -->
+        <section id="contexto" class="section-card reveal">
+            <h2><i class="fa-solid fa-sitemap"></i> Contexto del laboratorio</h2>
+            <p>
+                INTERAFAS-LAB es un entorno controlado y aislado que replica la infraestructura
+                tecnológica y operacional de un organismo metropolitano de agua. Dentro de ese escenario
+                se desarrolla todo el proyecto: desde entender a la organización hasta proponer cómo
+                protegerla.
+            </p>
+
+            <div class="dossier">
+                <div class="dossier-col">
+                    <div class="dossier-label">// Objetivo</div>
+                    <h3>INTERAFAS</h3>
+                    <p>
+                        Organismo Intermunicipal Metropolitano de Agua Potable, Alcantarillado,
+                        Saneamiento y Servicios Conexos de los municipios de Cerro de San Pablo,
+                        Saint Louis y Soledade.
+                    </p>
+                    <p class="muted">
+                        Servicio esencial e infraestructura crítica: agua potable, alcantarillado y
+                        saneamiento con enfoque metropolitano.
+                    </p>
+                </div>
+
+                <div class="dossier-col">
+                    <div class="dossier-label">// Perfil operacional</div>
+                    <h3>Red física + digital</h3>
+                    <p>
+                        Una red que depende de instalaciones, energía, telecomunicaciones, personal y
+                        proveedores, coordinada desde un Centro de Operaciones.
+                    </p>
+                    <p class="muted">
+                        Convergen el entorno administrativo (TI) y el operacional (OT): portal ciudadano,
+                        sistemas de información y telemetría de instalaciones.
+                    </p>
+                </div>
+            </div>
+
+            <div class="stat-grid">
+                <div class="stat"><span class="num" data-target="1978">0</span><span class="cap">Inicio de operación</span></div>
+                <div class="stat"><span class="num" data-target="3">0</span><span class="cap">Municipios</span></div>
+                <div class="stat"><span class="num" data-target="486">0</span><span class="cap">Personas</span></div>
+                <div class="stat"><span class="num" data-target="42">0</span><span class="cap">Instalaciones telemetrizadas</span></div>
+                <div class="stat"><span class="num" data-target="99.2" data-decimals="1" data-suffix="%">0</span><span class="cap">Disponibilidad telemetría</span></div>
+                <div class="stat"><span class="num" data-target="219">0</span><span class="cap">Proveedores</span></div>
+            </div>
+
+            <div class="hl-note">
+                <i class="fa-solid fa-circle-info"></i>
+                Vista de alto nivel del contexto. No incluye procedimientos de explotación ni material
+                de los manuales del laboratorio.
+            </div>
+        </section>
+
+
+        <!-- ==================== NATURALEZA DE LA OPERACIÓN ==================== -->
+        <section id="operacion" class="section-card reveal">
+            <h2><i class="fa-solid fa-diagram-project"></i> Naturaleza de la operación</h2>
+
+            <div class="briefing">
+                <p class="line">
+                    <span class="accent">De la ofensiva a la gobernanza.</span>
+                    El proyecto parte del reconocimiento de que una debilidad aislada puede encadenarse
+                    hasta comprometer un servicio esencial.
+                </p>
+                <p class="line">
+                    A partir de ese escenario, el trabajo se enfoca en diseñar los controles, las
+                    responsabilidades y los procedimientos que permitirían <span class="accent">prevenir,
+                    detectar, contener y responder</span> ante un incidente.
+                </p>
+                <p class="line">
+                    El resultado es un marco de gobernanza y cumplimiento para la organización: un sistema
+                    de gestión de seguridad de la información, un plan de respuesta ante incidentes y un
+                    plan de comunicación de crisis.
+                </p>
+            </div>
+        </section>
+
+
+        <!-- ==================== DESCARGA ==================== -->
+        <section id="descarga" class="section-card reveal">
+            <h2><i class="fa-solid fa-box-archive"></i> Descarga del entregable</h2>
+            <p>
+                Paquete comprimido con los productos del proyecto PR02, listo para su revisión.
+            </p>
+
+            <div class="download-terminal">
+                <div class="dl-prompt">root@interafas:~# fetch PR03_package --secure</div>
+                <div class="dl-file">MartinezEscobedoJesus-PR03.zip</div>
+
+                <a href="Evidencias/MartinezEscobedoJesus-PR02.zip"
+                   class="activity-button fx-btn"
+                   download>
+                    <i class="fa-solid fa-download"></i>
+                    Descargar paquete (.zip)
+                </a>
+            </div>
+
+            <ul class="pkg-list">
+                <li class="pkg-item"><i class="fa-solid fa-file-zipper"></i><span><span class="code">01</span> Evidencias y logs del recorrido en INTERAFAS-LAB</span></li>
+                <li class="pkg-item"><i class="fa-solid fa-file-lines"></i><span><span class="code">02</span> Informe de Seguridad Ofensiva</span></li>
+                <li class="pkg-item"><i class="fa-solid fa-file-shield"></i><span><span class="code">03</span> Propuesta de SGSI basada en ISO/IEC 27001</span></li>
+                <li class="pkg-item"><i class="fa-solid fa-bullhorn"></i><span><span class="code">04</span> Plan de Comunicación de Crisis</span></li>
+                <li class="pkg-item"><i class="fa-solid fa-shield-halved"></i><span><span class="code">05</span> Plan de Respuesta ante Incidentes</span></li>
+            </ul>
+        </section>
+
+    </main>
+
+
+    <!-- ==================== VOLVER ARRIBA ==================== -->
+    <a href="#inicio" class="back-to-top" title="Volver arriba">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <p>&copy; 2026 Jesús Israel Martínez Escobedo. Todos los derechos reservados.</p>
+        <p><i class="fa-solid fa-lock"></i> Conexión Segura mediante Protocolo HTTPS / SSL</p>
+    </footer>
+
+
+    <!-- ==================== SCRIPTS: MOVIMIENTO ==================== -->
+    <script>
+    (function(){
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        /* 1) Revelado de secciones al entrar en viewport */
+        var reveals = document.querySelectorAll('.reveal');
+        if (reduce) { reveals.forEach(function(el){ el.classList.add('in'); }); }
+
+        /* 2) Contadores que suben solos */
+        function countUp(el){
+            var target = parseFloat(el.getAttribute('data-target')) || 0;
+            var dec = parseInt(el.getAttribute('data-decimals') || '0', 10);
+            var suffix = el.getAttribute('data-suffix') || '';
+            var dur = 1400, start = null;
+            function step(ts){
+                if(!start) start = ts;
+                var p = Math.min((ts - start)/dur, 1);
+                var eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+                var val = (target * eased).toFixed(dec);
+                el.textContent = val + suffix;
+                if(p < 1) requestAnimationFrame(step);
+                else el.textContent = target.toFixed(dec) + suffix;
+            }
+            requestAnimationFrame(step);
+        }
+
+        /* 3) Scramble / descifrado de texto */
+        var CH = "!<>-_\\/[]{}=+*^?#01ABCDEF";
+        function scramble(el, finalText, dur){
+            if(reduce){ el.textContent = finalText; return; }
+            var frame = 0, total = dur || 42;
+            var id = setInterval(function(){
+                var out = "";
+                for(var i=0;i<finalText.length;i++){
+                    if(finalText[i] === " "){ out += " "; continue; }
+                    if(i < (frame/total)*finalText.length){ out += finalText[i]; }
+                    else { out += CH[Math.floor(Math.random()*CH.length)]; }
+                }
+                el.textContent = out;
+                frame++;
+                if(frame > total){ clearInterval(id); el.textContent = finalText; }
+            }, 30);
+        }
+
+        /* Observer: dispara revelado + contadores + scramble de títulos */
+        if('IntersectionObserver' in window && !reduce){
+            var io = new IntersectionObserver(function(entries){
+                entries.forEach(function(e){
+                    if(!e.isIntersecting) return;
+                    var el = e.target;
+                    el.classList.add('in');
+                    el.querySelectorAll('.num[data-target]').forEach(countUp);
+                    var h = el.querySelector('h2');
+                    if(h && !h.dataset.done){
+                        h.dataset.done = "1";
+                        var icon = h.querySelector('i');
+                        var txt = h.textContent.trim();
+                        scramble(h, txt, 36);
+                        // re-inyecta el icono tras el scramble
+                        setTimeout(function(){
+                            if(icon){ h.textContent = ""; h.appendChild(icon); h.appendChild(document.createTextNode(" "+txt)); }
+                        }, 36*30 + 60);
+                    }
+                    io.unobserve(el);
+                });
+            }, { threshold: 0.2 });
+            reveals.forEach(function(el){ io.observe(el); });
+        } else {
+            reveals.forEach(function(el){
+                el.classList.add('in');
+                el.querySelectorAll('.num[data-target]').forEach(countUp);
+            });
+        }
+
+        /* 4) Scramble del título principal al cargar */
+        var hero = document.querySelector('[data-scramble]');
+        if(hero){
+            var finalHero = hero.getAttribute('data-text');
+            scramble(hero, finalHero, 50);
+        }
+    })();
+    </script>
+
+</body>
+</html>
