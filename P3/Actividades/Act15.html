@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Actividad 11 | La fotografía como testigo — Metadatos y geolocalización</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+
+
+        /* =========================================================
+           ENTREGABLES — BOTONES DE DESCARGA
+           ========================================================= */
+
+        .download-container {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .download-container a {
+            text-decoration: none;
+        }
+
+
+        /* =========================================================
+           FASES — TARJETAS (metodología)
+           ========================================================= */
+
+        .fases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .fase-card {
+            padding: 18px 16px;
+            border-radius: 8px;
+            border-left: 4px solid currentColor;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .fase-card .fase-num {
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .fase-card .fase-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .fase-card ul {
+            margin: 0;
+            padding-left: 16px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .fase-card ul li {
+            margin-bottom: 3px;
+        }
+
+        .color-blue  { color: #60a5fa; }
+        .color-purple{ color: #a78bfa; }
+        .color-red   { color: #f87171; }
+        .color-orange{ color: #fb923c; }
+        .color-green { color: #4ade80; }
+
+
+        /* =========================================================
+           RESPUESTAS — TARJETAS (metadato → valor)
+           ========================================================= */
+
+        .respuestas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .respuesta-card {
+            padding: 16px 18px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .respuesta-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag-badge {
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            font-family: monospace;
+        }
+
+        .tag-doc { background: #3b82f6; color: #fff; }
+        .tag-img { background: #a855f7; color: #fff; }
+        .tag-gps { background: #ef4444; color: #fff; }
+        .tag-ok  { background: #22c55e; color: #fff; }
+
+        .respuesta-id {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .respuesta-card h3 {
+            font-size: 0.95rem;
+            margin: 0 0 6px;
+        }
+
+        .respuesta-card .valor {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin: 0 0 6px;
+            word-break: break-word;
+        }
+
+        .respuesta-card p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.55);
+            margin: 0;
+        }
+
+
+        /* =========================================================
+           TOPIC BOX (reutilizado de Act14)
+           ========================================================= */
+
+        .topic-box {
+            margin-top: 25px;
+            padding: 25px;
+            border-left: 4px solid currentColor;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .topic-box strong {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .topic-box p strong {
+            display: inline;
+            margin: 0;
+        }
+
+        .cmd {
+            display: block;
+            margin-top: 12px;
+            padding: 12px 14px;
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #4ade80;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+
+        /* =========================================================
+           IMPRESIÓN
+           ========================================================= */
+
+        @media print {
+
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+
+            .header,
+            .navbar,
+            .back-to-top,
+            .footer,
+            .viewer-tabs,
+            .viewer-frame,
+            .lightbox {
+                display: none !important;
+            }
+
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                color: #111 !important;
+                font-family: Arial, sans-serif !important;
+            }
+
+            .main-content {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+            }
+
+            .section-card {
+                background: white !important;
+                border: none !important;
+                border-radius: 0 !important;
+                margin: 0 0 15mm 0 !important;
+                padding: 0 !important;
+            }
+
+            .section-card h2 {
+                font-size: 18pt !important;
+                border-bottom: 2px solid #111 !important;
+                padding-bottom: 5px !important;
+                margin-bottom: 12px !important;
+            }
+
+            p, li {
+                font-size: 10.5pt !important;
+                line-height: 1.55 !important;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <!-- =========================================================
+         BOTÓN VOLVER ARRIBA
+         ========================================================= -->
+
+    <a href="#" class="back-to-top" title="Volver arriba">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
+
+    <!-- =========================================================
+         ENCABEZADO
+         ========================================================= -->
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <div class="student-info">
+
+                <h1 class="student-name">
+                    Actividad 15
+                </h1>
+
+                <p class="course-badge">
+                    <i class="fa-solid fa-camera"></i>
+                    La fotografía como testigo — Metadatos GPS
+                </p>
+
+                <p class="academic-details">
+
+                    <span>
+                        <i class="fa-solid fa-university"></i>
+                        Universidad Politécnica de San Luis Potosí
+                    </span>
+
+                    |
+
+                    <span>
+                        <i class="fa-solid fa-calendar"></i>
+                        Informática Criminológica
+                    </span>
+
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 NAVEGACIÓN
+                 ================================================= -->
+
+            <nav class="navbar">
+
+                <ul>
+
+                    <li>
+                        <a href="../../index.html">
+                            <i class="fa-solid fa-house"></i>
+                            Inicio
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#objetivo">Objetivo</a>
+                    </li>
+
+                    <li>
+                        <a href="#metodologia">Metodología</a>
+                    </li>
+
+                    <li>
+                        <a href="#resultados">Resultados</a>
+                    </li>
+
+                    <li>
+                        <a href="#evidencias">Evidencias</a>
+                    </li>
+
+                    <li>
+                        <a href="#entregables">Entregables</a>
+                    </li>
+
+                    <li>
+                        <a href="#conclusion">Conclusión</a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         CONTENIDO
+         ========================================================= -->
+
+    <main class="main-content" id="pdf-content">
+
+
+        <!-- =====================================================
+             PORTADA
+             ===================================================== -->
+
+        <div class="dedsec-manifesto">
+
+            <div class="glitch-wrapper">
+
+                <h2 class="glitch-text"
+                    data-text="/// ACT11_EXIF_TRACE">
+
+                    /// ACT11_EXIF_TRACE
+
+                </h2>
+
+            </div>
+
+
+            <p class="typewriter-text">
+
+                &gt; INF_CRIM // ACTIVIDAD_11 // METADATA_GEOLOCATION...
+
+            </p>
+
+
+            <div class="cover-info">
+
+                <!-- TODO: escribe el nombre de tu profesor -->
+                <p class="professor">
+                    Profesor: Servando Lopez Contreras
+                </p>
+
+                <p class="student">
+                    Jesús Israel Martínez Escobedo - 175325
+                </p>
+
+                <p>
+                    La fotografía como testigo: extracción de metadatos GPS para geolocalización
+                </p>
+
+                <p>
+                    Informática Criminológica
+                </p>
+
+                <p>
+                    Ingeniería en Tecnologías de la Información
+                </p>
+
+                <p>
+                    Universidad Politécnica de San Luis Potosí
+                </p>
+
+                <p>
+                    28 de octubre de 2026
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             OBJETIVO
+             ===================================================== -->
+
+        <section id="objetivo" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-crosshairs"></i>
+                Objetivo
+            </h2>
+
+            <p>
+                Aplicar técnicas de <strong>análisis forense de metadatos</strong> con
+                <strong>ExifTool</strong> sobre dos muestras digitales: un documento de Word
+                elaborado por <strong>INTERPOL</strong> y una fotografía tomada con un
+                <strong>Xiaomi Mi A2 Lite</strong>. El fin es identificar autoría, fechas,
+                parámetros de captura y, sobre todo, la <strong>ubicación GPS exacta</strong>
+                donde se tomó la imagen.
+            </p>
+
+            <p>
+                La actividad muestra cómo un archivo aparentemente inofensivo funciona como
+                <strong>testigo digital</strong>: guarda información sobre quién lo creó, cuándo,
+                con qué equipo y desde dónde. Al final se eliminan todos los metadatos de la
+                muestra para comprobar la técnica contraria (sanitización / anti-forense).
+            </p>
+
+            <div class="topic-box" style="color: #60a5fa;">
+
+                <strong>
+                    <i class="fa-solid fa-folder-tree"></i>
+                    Muestras analizadas
+                </strong>
+
+                <p>
+                    <strong>Muestra 1:</strong> WOA database application form.docx — formulario de INTERPOL (85 KB)<br>
+                    <strong>Muestra 2:</strong> XiaomiMiA2Lite.jpg — fotografía con datos EXIF y GPS (15 KB)<br>
+                    <strong>Herramienta:</strong> ExifToolGUI v5 + ExifTool (Phil Harvey)<br>
+                    <strong>Verificación externa:</strong> Google Maps (coordenadas GPS)<br>
+                    <strong>Sistema:</strong> Windows
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             METODOLOGÍA
+             ===================================================== -->
+
+        <section id="metodologia" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-diagram-project"></i>
+                Metodología
+            </h2>
+
+            <p>
+                El análisis se hizo en cuatro fases, de la carga de las muestras a la
+                eliminación de los metadatos:
+            </p>
+
+            <div class="fases-grid">
+
+                <div class="fase-card color-blue">
+                    <div class="fase-num">01</div>
+                    <div class="fase-name">Adquisición</div>
+                    <ul>
+                        <li>Carpeta infocrim</li>
+                        <li>Carga en ExifToolGUI</li>
+                        <li>Vista ALL</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-purple">
+                    <div class="fase-num">02</div>
+                    <div class="fase-name">Análisis .docx</div>
+                    <ul>
+                        <li>Autor y empresa</li>
+                        <li>Plantilla y categoría</li>
+                        <li>Fechas y tiempo de edición</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-red">
+                    <div class="fase-num">03</div>
+                    <div class="fase-name">Análisis .jpg</div>
+                    <ul>
+                        <li>EXIF: ISO, focal, flash</li>
+                        <li>Coordenadas GPS</li>
+                        <li>Ubicación en Google Maps</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-orange">
+                    <div class="fase-num">04</div>
+                    <div class="fase-name">Sanitización</div>
+                    <ul>
+                        <li>Modify → Remove metadata</li>
+                        <li>-remove ALL metadata</li>
+                        <li>Verificación final</li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             RESULTADOS
+             ===================================================== -->
+
+        <section id="resultados" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Resultados
+            </h2>
+
+
+            <!-- PARTE I -->
+
+            <h3>Parte I // WOA database application form.docx</h3>
+
+            <p>
+                Metadatos del documento de Office elaborado por INTERPOL
+                (propiedades <strong>core</strong>, <strong>app</strong> y <strong>custom</strong>).
+            </p>
+
+            <div class="respuestas-grid">
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-doc">InterpolClassification</span>
+                        <span class="respuesta-id">P1-01</span>
+                    </div>
+                    <h3>Categoría asignada por INTERPOL</h3>
+                    <div class="valor">Unclassified</div>
+                    <p>No clasificado. Además, el campo Category del documento dice "English".</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-doc">Template</span>
+                        <span class="respuesta-id">P1-02</span>
+                    </div>
+                    <h3>Plantilla utilizada</h3>
+                    <div class="valor">G03 Basic Doc SP.dotx</div>
+                    <p>Plantilla institucional de Word con la que se elaboró el formulario.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-doc">TotalEditTime</span>
+                        <span class="respuesta-id">P1-03</span>
+                    </div>
+                    <h3>Tiempo total de edición</h3>
+                    <div class="valor">45 minutos</div>
+                    <p>Tiempo acumulado con el documento abierto en edición, en 6 revisiones.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-doc">Company</span>
+                        <span class="respuesta-id">P1-04</span>
+                    </div>
+                    <h3>Compañía propietaria</h3>
+                    <div class="valor">OIPC - INTERPOL</div>
+                    <p>Organización Internacional de Policía Criminal.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-doc">LastModifiedBy</span>
+                        <span class="respuesta-id">P1-05</span>
+                    </div>
+                    <h3>Última modificación</h3>
+                    <div class="valor">Carolyn Lejeune</div>
+                    <p>Última modificación el 03/05/2019 a las 16:22:00 UTC.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-doc">CreateDate</span>
+                        <span class="respuesta-id">P1-06</span>
+                    </div>
+                    <h3>Fecha de creación</h3>
+                    <div class="valor">03/05/2019 15:35:00 UTC</div>
+                    <p>Valor original: 2019-05-03T15:35:00Z.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-doc">Creator</span>
+                        <span class="respuesta-id">P1-07</span>
+                    </div>
+                    <h3>Creador del fichero</h3>
+                    <div class="valor">Carolyn Lejeune</div>
+                    <p>Creado con Microsoft Office Word 15.0 (Office 2013).</p>
+                </div>
+
+            </div>
+
+
+            <!-- PARTE II -->
+
+            <h3 style="margin-top: 35px;">Parte II // XiaomiMiA2Lite.jpg</h3>
+
+            <p>
+                Metadatos EXIF y GPS de la fotografía tomada con un
+                <strong>Xiaomi Mi A2 Lite</strong> (Android 9).
+            </p>
+
+            <div class="respuestas-grid">
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-img">ISO / FNumber</span>
+                        <span class="respuesta-id">P2-01</span>
+                    </div>
+                    <h3>ISO y apertura</h3>
+                    <div class="valor">ISO 100 · f/2.2</div>
+                    <p>Exposición de 1/316 s con balance de blancos automático.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-img">FocalLength</span>
+                        <span class="respuesta-id">P2-02</span>
+                    </div>
+                    <h3>Longitud focal</h3>
+                    <div class="valor">3.8 mm</div>
+                    <p>Equivale a 26 mm en formato de 35 mm (cámara trasera).</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-img">Flash</span>
+                        <span class="respuesta-id">P2-03</span>
+                    </div>
+                    <h3>Uso de flash</h3>
+                    <div class="valor">No</div>
+                    <p>Valor: "Off, Did not fire". El flash estaba apagado y no se disparó.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-img">DateTimeOriginal</span>
+                        <span class="respuesta-id">P2-04</span>
+                    </div>
+                    <h3>Fecha de creación</h3>
+                    <div class="valor">28/05/2020 18:11:41</div>
+                    <p>El GPS marca 17:11:42 UTC, así que la hora local era UTC+1 (horario de verano británico).</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-gps">GPS</span>
+                        <span class="respuesta-id">P2-05</span>
+                    </div>
+                    <h3>Coordenadas GPS</h3>
+                    <div class="valor">51°15'12.99" N · 0°32'21.93" W</div>
+                    <p>Decimal: 51.253610, -0.539426. Altitud registrada: 96.754 m.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-gps">GEO</span>
+                        <span class="respuesta-id">P2-05</span>
+                    </div>
+                    <h3>Lugar exacto</h3>
+                    <div class="valor">Bushy Hill, Guildford, Reino Unido</div>
+                    <p>Surrey, Inglaterra. Zona residencial entre Hareward Rd y Charlock Way, cerca de Bushy Hill Park (Plus Code 7F36+C6W).</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-ok">REMOVED</span>
+                        <span class="respuesta-id">P2-06</span>
+                    </div>
+                    <h3>Eliminación de metadatos</h3>
+                    <div class="valor">15 KB → 251 bytes</div>
+                    <p>Se borraron EXIF, GPS, IFD1 (miniatura), XMP, IPTC, Photoshop, JFIF e ICC Profile.</p>
+                </div>
+
+            </div>
+
+
+            <div class="topic-box" style="color: #f87171;">
+
+                <strong>
+                    <i class="fa-solid fa-location-dot"></i>
+                    Relevancia forense
+                </strong>
+
+                <p>
+                    La hora local de la cámara (18:11:41) y la hora GPS en UTC (17:11:42) difieren
+                    exactamente una hora. Eso concuerda con el <strong>horario de verano británico
+                    (BST, UTC+1)</strong> en mayo, y respalda que la foto se tomó en Reino Unido.
+                    Cruzar varios metadatos (fecha, zona horaria y coordenadas) le da más solidez
+                    a la geolocalización que fiarse de un solo dato.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             EVIDENCIAS
+             ===================================================== -->
+
+        <section id="evidencias" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-images"></i>
+                Evidencias
+            </h2>
+
+            <p>
+                Capturas de pantalla tomadas durante el análisis con ExifToolGUI,
+                organizadas por fase.
+            </p>
+
+
+            <!-- FASE 1: ADQUISICIÓN -->
+
+            <div class="evidence-item">
+
+                <h3>01 // Carga de las muestras en ExifToolGUI</h3>
+
+                <p>
+                    Se abrió <strong>ExifToolGUI</strong> y se navegó a la carpeta
+                    <strong>infocrim</strong>, donde aparecen las dos muestras:
+                    el documento de INTERPOL y la fotografía del Xiaomi Mi A2 Lite.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a1.png"
+                         alt="ExifToolGUI con la carpeta infocrim"
+                         class="evidence-image">
+                    <figcaption>Figura 1. ExifToolGUI abierto en la carpeta infocrim con las dos muestras.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <!-- FASE 3: ANÁLISIS JPG -->
+
+            <div class="evidence-item">
+
+                <h3>02 // Metadatos EXIF de la fotografía</h3>
+
+                <p>
+                    Sección <strong>ExifIFD</strong> de la imagen: <strong>ISO 100</strong>,
+                    <strong>FNumber 2.2</strong>, <strong>FocalLength 3.8 mm</strong>,
+                    <strong>Flash: Off, Did not fire</strong> y fecha original
+                    <strong>2020:05:28 18:11:41</strong>.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a3.png"
+                         alt="Metadatos EXIF de XiaomiMiA2Lite.jpg"
+                         class="evidence-image">
+                    <figcaption>Figura 2. Parámetros de captura y fechas en la sección ExifIFD.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>03 // Coordenadas GPS embebidas</h3>
+
+                <p>
+                    Sección <strong>GPS</strong>: latitud <strong>51.253610° N</strong>,
+                    longitud <strong>0.539426° W</strong>, altitud <strong>96.754 m</strong>
+                    y marca de tiempo <strong>2020:05:28 17:11:42</strong> UTC.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a4.png"
+                         alt="Sección GPS de los metadatos"
+                         class="evidence-image">
+                    <figcaption>Figura 3. Datos de geolocalización extraídos de la imagen.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>04 // Geolocalización en Google Maps</h3>
+
+                <p>
+                    Las coordenadas se pusieron en <strong>Google Maps</strong>. El punto
+                    cae en la zona residencial de <strong>Bushy Hill, Guildford (Surrey, Reino Unido)</strong>,
+                    entre Hareward Rd y Charlock Way, cerca de Bushy Hill Park.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a5.png"
+                         alt="Ubicación en Google Maps"
+                         class="evidence-image">
+                    <figcaption>Figura 4. Lugar exacto donde se tomó la fotografía: Guildford, Reino Unido.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <!-- FASE 4: SANITIZACIÓN -->
+
+            <div class="evidence-item">
+
+                <h3>05 // Menú Modify → Remove metadata</h3>
+
+                <p>
+                    Con la fotografía seleccionada se abrió la opción
+                    <strong>Remove metadata</strong> del menú <strong>Modify</strong>.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a6.png"
+                         alt="Menú Modify, Remove metadata"
+                         class="evidence-image">
+                    <figcaption>Figura 5. Acceso a la función de eliminación de metadatos.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>06 // Selección de todas las categorías</h3>
+
+                <p>
+                    Se marcó <strong>-remove ALL metadata</strong>, que incluye Exif (Makernotes,
+                    GPS, IFD1), XMP, IPTC, Photoshop, JFIF e ICC Profile, y se ejecutó con
+                    <strong>Execute</strong>.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a7.png"
+                         alt="Ventana Remove metadata"
+                         class="evidence-image">
+                    <figcaption>Figura 6. Ventana Remove metadata con todas las categorías seleccionadas.</figcaption>
+                </figure>
+
+            </div>
+
+
+            <div class="evidence-item">
+
+                <h3>07 // Verificación final</h3>
+
+                <p>
+                    Al volver a analizar la imagen ya no aparecen las secciones EXIF, GPS ni la
+                    miniatura. Solo quedan los datos que ExifTool calcula del propio archivo
+                    (tamaño, tipo y dimensiones), y el archivo bajó de <strong>15 KB a 251 bytes</strong>.
+                </p>
+
+                <figure>
+                    <img src="Evidencias/a8.png"
+                         alt="Imagen sin metadatos"
+                         class="evidence-image">
+                    <figcaption>Figura 7. XiaomiMiA2Lite.jpg después de eliminar los metadatos.</figcaption>
+                </figure>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             ENTREGABLES
+             ===================================================== -->
+
+        <section id="entregables" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-folder-open"></i>
+                Entregables
+            </h2>
+
+            <p>
+                Documento de la actividad.
+            </p>
+
+            <div class="download-container">
+
+                <a href="Evidencias/MartinezEscobedoJesus-ACT15.pdf" download class="btn-submit">
+                    <i class="fa-solid fa-file-pdf"></i> Descargar actividad (PDF)
+                </a>
+
+            
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             CONCLUSIÓN
+             ===================================================== -->
+
+        <section id="conclusion" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-flag-checkered"></i>
+                Conclusión
+            </h2>
+
+            <p>
+                La actividad demostró que los <strong>metadatos</strong> son una fuente de
+                evidencia muy valiosa en la investigación criminal. Del documento de INTERPOL
+                se obtuvieron la autora, la organización propietaria, la plantilla, la
+                clasificación y las fechas exactas de creación y modificación, todo sin abrir
+                su contenido.
+            </p>
+
+            <p>
+                En la fotografía, los datos EXIF revelaron el modelo del teléfono, los
+                parámetros de captura y las <strong>coordenadas GPS</strong> que ubican la toma
+                en Guildford, Reino Unido, el 28 de mayo de 2020. Así una imagen se vuelve
+                "testigo": puede ubicar a una persona en un lugar y un momento concretos.
+            </p>
+
+            <p>
+                La eliminación de metadatos mostró también lo fácil que es borrar ese rastro.
+                Por eso, en un contexto forense, hay que <strong>preservar el archivo original</strong>
+                (cadena de custodia y copia de respaldo) antes de cualquier modificación. Y como
+                usuarios, conviene limpiar los metadatos antes de compartir fotos para proteger
+                la privacidad y la ubicación.
+            </p>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+
+    <footer class="footer">
+
+        <p>
+            &copy; 2026 Jesús Israel Martínez Escobedo.
+        </p>
+
+        <p>
+            <i class="fa-solid fa-lock"></i>
+            Conexión Segura mediante HTTPS / SSL
+        </p>
+
+    </footer>
+
+
+
+</body>
+</html>
