@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Actividad 16 | La verdad en los bits — Adquisición forense con FTK Imager</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+
+        /* ENTREGABLES */
+        .download-container {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .download-container a { text-decoration: none; }
+
+
+        /* FASES */
+        .fases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .fase-card {
+            padding: 18px 16px;
+            border-radius: 8px;
+            border-left: 4px solid currentColor;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .fase-card .fase-num {
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .fase-card .fase-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .fase-card ul {
+            margin: 0;
+            padding-left: 16px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .fase-card ul li { margin-bottom: 3px; }
+
+        .color-blue   { color: #60a5fa; }
+        .color-purple { color: #a78bfa; }
+        .color-red    { color: #f87171; }
+        .color-orange { color: #fb923c; }
+        .color-green  { color: #4ade80; }
+
+
+        /* RESPUESTAS */
+        .respuestas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .respuesta-card {
+            padding: 16px 18px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .respuesta-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag-badge {
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            font-family: monospace;
+            color: #fff;
+        }
+
+        .tag-src  { background: #3b82f6; }
+        .tag-time { background: #a855f7; }
+        .tag-hash { background: #ef4444; }
+        .tag-ok   { background: #22c55e; }
+
+        .respuesta-id {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .respuesta-card h3 {
+            font-size: 0.95rem;
+            margin: 0 0 6px;
+        }
+
+        .respuesta-card .valor {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin: 0 0 6px;
+            word-break: break-word;
+        }
+
+        .respuesta-card .valor.hash {
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .respuesta-card p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.55);
+            margin: 0;
+        }
+
+
+        /* TOPIC BOX */
+        .topic-box {
+            margin-top: 25px;
+            padding: 25px;
+            border-left: 4px solid currentColor;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .topic-box strong {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .topic-box p strong {
+            display: inline;
+            margin: 0;
+        }
+
+
+        /* IMPRESIÓN */
+        @media print {
+
+            @page { size: A4; margin: 15mm; }
+
+            .header, .navbar, .back-to-top, .footer { display: none !important; }
+
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                color: #111 !important;
+                font-family: Arial, sans-serif !important;
+            }
+
+            .main-content {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+            }
+
+            .section-card {
+                background: white !important;
+                border: none !important;
+                border-radius: 0 !important;
+                margin: 0 0 15mm 0 !important;
+                padding: 0 !important;
+            }
+
+            .section-card h2 {
+                font-size: 18pt !important;
+                border-bottom: 2px solid #111 !important;
+                padding-bottom: 5px !important;
+                margin-bottom: 12px !important;
+            }
+
+            p, li {
+                font-size: 10.5pt !important;
+                line-height: 1.55 !important;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <a href="#" class="back-to-top" title="Volver arriba">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
+
+    <!-- ENCABEZADO -->
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <div class="student-info">
+
+                <h1 class="student-name">Actividad 16</h1>
+
+                <p class="course-badge">
+                    <i class="fa-solid fa-hard-drive"></i>
+                    La verdad en los bits — Adquisición forense con FTK Imager
+                </p>
+
+                <p class="academic-details">
+                    <span>
+                        <i class="fa-solid fa-university"></i>
+                        Universidad Politécnica de San Luis Potosí
+                    </span>
+                    |
+                    <span>
+                        <i class="fa-solid fa-calendar"></i>
+                        Informática Criminológica
+                    </span>
+                </p>
+
+            </div>
+
+            <nav class="navbar">
+                <ul>
+                    <li>
+                        <a href="../../index.html">
+                            <i class="fa-solid fa-house"></i>
+                            Inicio
+                        </a>
+                    </li>
+                    <li><a href="#objetivo">Objetivo</a></li>
+                    <li><a href="#metodologia">Metodología</a></li>
+                    <li><a href="#resultados">Resultados</a></li>
+                    <li><a href="#evidencias">Evidencias</a></li>
+                    <li><a href="#entregables">Entregables</a></li>
+                    <li><a href="#conclusion">Conclusión</a></li>
+                </ul>
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <main class="main-content" id="pdf-content">
+
+        <!-- PORTADA -->
+
+        <div class="dedsec-manifesto">
+
+            <div class="glitch-wrapper">
+                <h2 class="glitch-text" data-text="/// ACT16_FTK_IMAGER">
+                    /// ACT16_FTK_IMAGER
+                </h2>
+            </div>
+
+            <p class="typewriter-text">
+                &gt; INF_CRIM // ACTIVIDAD_16 // FORENSIC_ACQUISITION...
+            </p>
+
+            <div class="cover-info">
+                <p class="professor">Profesor: Servando Lopez Contreras</p>
+                <p class="student">Jesús Israel Martínez Escobedo - 175325</p>
+                <p>La verdad en los bits: adquisición forense con FTK Imager</p>
+                <p>Informática Criminológica</p>
+                <p>Ingeniería en Tecnologías de la Información</p>
+                <p>Universidad Politécnica de San Luis Potosí</p>
+                <p>7 de noviembre de 2026</p>
+            </div>
+
+        </div>
+
+
+        <!-- OBJETIVO -->
+
+        <section id="objetivo" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-crosshairs"></i>
+                Objetivo
+            </h2>
+
+            <p>
+                Realizar la <strong>adquisición forense</strong> de una memoria USB mediante una
+                <strong>imagen bit a bit</strong> con <strong>FTK Imager</strong>, documentando cada
+                paso, las marcas de tiempo y los <strong>hashes de integridad</strong> (MD5 y SHA-1)
+                que respaldan que la copia es fiel al original.
+            </p>
+
+            <p>
+                La adquisición es la primera de las cinco fases del análisis forense digital
+                (adquisición, preservación, análisis, documentación y presentación). Trabajar siempre
+                sobre copias bit a bit permite conservar la evidencia en su estado original y presentar
+                resultados verificables y reproducibles.
+            </p>
+
+            <div class="topic-box" style="color: #60a5fa;">
+
+                <strong>
+                    <i class="fa-solid fa-folder-tree"></i>
+                    Datos del caso
+                </strong>
+
+                <p>
+                    <strong>Case Number:</strong> InfoCrim-01_21.11.2023<br>
+                    <strong>Evidence Number:</strong> 00 (Original adq)<br>
+                    <strong>Unique Description:</strong> CNO IV - análisis de incidente de fraude bancario<br>
+                    <strong>Examiner:</strong> Martínez Escobedo Jesús Israel<br>
+                    <strong>Notes:</strong> Adquisición realizada en LIF de la UPSLP<br>
+                    <strong>Herramienta:</strong> AccessData FTK Imager 4.7.1.2<br>
+                    <strong>Sistema:</strong> Windows
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- METODOLOGÍA -->
+
+        <section id="metodologia" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-diagram-project"></i>
+                Metodología
+            </h2>
+
+            <p>
+                El procedimiento se dividió en cuatro fases, de la instalación de la herramienta
+                a la verificación de la imagen:
+            </p>
+
+            <div class="fases-grid">
+
+                <div class="fase-card color-blue">
+                    <div class="fase-num">01</div>
+                    <div class="fase-name">Preparación</div>
+                    <ul>
+                        <li>Descarga desde exterro.com</li>
+                        <li>Instalación como administrador</li>
+                        <li>Apertura de FTK Imager</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-purple">
+                    <div class="fase-num">02</div>
+                    <div class="fase-name">Origen</div>
+                    <ul>
+                        <li>File → Create Disk Image</li>
+                        <li>Physical Drive</li>
+                        <li>\\.\PHYSICALDRIVE1</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-red">
+                    <div class="fase-num">03</div>
+                    <div class="fase-name">Destino y formato</div>
+                    <ul>
+                        <li>Formato Raw (dd)</li>
+                        <li>Datos del caso</li>
+                        <li>Carpeta InfoCrim13</li>
+                        <li>Fragmentos de 1500 MB</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-orange">
+                    <div class="fase-num">04</div>
+                    <div class="fase-name">Verificación</div>
+                    <ul>
+                        <li>Start y marcas de tiempo</li>
+                        <li>Hashes MD5 y SHA-1</li>
+                        <li>Archivo .txt de resumen</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="topic-box" style="color: #fb923c;">
+
+                <strong>
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    Nota sobre el bloqueador de escritura
+                </strong>
+
+                <p>
+                    En una adquisición real es indispensable usar un <strong>bloqueador de escritura</strong>
+                    para que el equipo no modifique la evidencia. En esta práctica se omitió su uso
+                    por tratarse de un ejercicio de laboratorio.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- RESULTADOS -->
+
+        <section id="resultados" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Resultados
+            </h2>
+
+
+            <h3>Parte I // Adquisición de la memoria USB</h3>
+
+            <p>
+                Datos de la imagen forense generada con FTK Imager.
+            </p>
+
+            <div class="respuestas-grid">
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-src">SOURCE</span>
+                        <span class="respuesta-id">P1-01</span>
+                    </div>
+                    <h3>Dispositivo adquirido</h3>
+                    <div class="valor">General USB Flash Disk</div>
+                    <p>\\.\PHYSICALDRIVE1, interfaz USB, unidad removible, 7667 MB.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-time">START</span>
+                        <span class="respuesta-id">P1-02</span>
+                    </div>
+                    <h3>Hora de inicio</h3>
+                    <div class="valor">14:16:05</div>
+                    <p>Sábado 7 de noviembre de 2026, desde la selección del ítem hasta hacer clic en Start.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-time">END</span>
+                        <span class="respuesta-id">P1-03</span>
+                    </div>
+                    <h3>Hora de término</h3>
+                    <div class="valor">14:22:38</div>
+                    <p>Estado final: Image created successfully.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-time">ELAPSED</span>
+                        <span class="respuesta-id">P1-04</span>
+                    </div>
+                    <h3>Tiempo transcurrido</h3>
+                    <div class="valor">0:06:33</div>
+                    <p>Duración total de la adquisición.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-src">SECTORS</span>
+                        <span class="respuesta-id">P1-05</span>
+                    </div>
+                    <h3>Sectores copiados</h3>
+                    <div class="valor">15,702,112</div>
+                    <p>Equivalen a un tamaño de datos de origen de 7667 MB.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-hash">MD5</span>
+                        <span class="respuesta-id">P1-06</span>
+                    </div>
+                    <h3>Hash MD5</h3>
+                    <div class="valor hash">86d263958cbe76008ec7806c019b3561</div>
+                    <p>Suma de verificación calculada sobre la imagen.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-hash">SHA-1</span>
+                        <span class="respuesta-id">P1-07</span>
+                    </div>
+                    <h3>Hash SHA-1</h3>
+                    <div class="valor hash">518f28a7d7aadc63c046bf7685372619ba53cc45</div>
+                    <p>Segunda suma de verificación para validar la integridad.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-ok">FILES</span>
+                        <span class="respuesta-id">P1-08</span>
+                    </div>
+                    <h3>Archivos generados</h3>
+                    <div class="valor">6 archivos + 1 RAR</div>
+                    <p>Imagen dd fragmentada en bloques de 1500 MB, más el archivo comprimido.</p>
+                </div>
+
+            </div>
+
+
+            <h3 style="margin-top: 35px;">Parte II // Formatos de imagen forense</h3>
+
+            <div class="respuestas-grid">
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-src">RAW (dd)</span>
+                        <span class="respuesta-id">P2-01</span>
+                    </div>
+                    <h3>¿Qué es el formato Raw (dd)?</h3>
+                    <p>
+                        Copia exacta bit a bit (sector por sector) del dispositivo, guardada como una
+                        secuencia cruda de bytes, sin compresión, cabeceras, metadatos ni firmas adicionales.
+                    </p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-time">E01</span>
+                        <span class="respuesta-id">P2-02</span>
+                    </div>
+                    <h3>¿Qué es el formato E01?</h3>
+                    <p>
+                        Expert Witness Format: estándar de imagen forense que guarda la copia junto con
+                        metadatos detallados, información del caso, compresión y hashes integrados para
+                        validar la integridad de la evidencia.
+                    </p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-hash">SMART vs E01</span>
+                        <span class="respuesta-id">P2-03</span>
+                    </div>
+                    <h3>Diferencia entre SMART y E01</h3>
+                    <p>
+                        SMART (.s01) fue creado por ASR Data para su herramienta del mismo nombre; E01
+                        fue desarrollado por Guidance Software para EnCase. E01 se volvió el estándar,
+                        con soporte nativo en casi todas las herramientas forenses, mientras que SMART es
+                        menos común y puede requerir conversión previa.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="topic-box" style="color: #f87171;">
+
+                <strong>
+                    <i class="fa-solid fa-fingerprint"></i>
+                    Relevancia forense
+                </strong>
+
+                <p>
+                    Los hashes <strong>MD5</strong> y <strong>SHA-1</strong> funcionan como huella digital
+                    de la imagen: si se recalculan después y coinciden, se demuestra que la evidencia no
+                    fue alterada. Junto con el archivo de texto que genera FTK Imager (datos del caso,
+                    geometría del disco, fechas y hashes), forman la documentación que respalda la
+                    cadena de custodia.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- EVIDENCIAS -->
+
+        <section id="evidencias" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-images"></i>
+                Evidencias
+            </h2>
+
+            <p>
+                Capturas de pantalla del proceso de adquisición, en orden.
+            </p>
+
+
+            <div class="evidence-item">
+                <h3>01 // FTK Imager en ejecución</h3>
+                <p>
+                    Interfaz de <strong>AccessData FTK Imager 4.7.1.2</strong> tras la instalación,
+                    lista para agregar evidencia.
+                </p>
+                <figure>
+                    <img src="Evidencias/aa1.png" alt="Ventana principal de FTK Imager" class="evidence-image">
+                    <figcaption>Figura 1. FTK Imager 4.7.1.2 recién abierto.</figcaption>
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>02 // Create Disk Image</h3>
+                <p>
+                    Desde el menú <strong>File</strong> se eligió <strong>Create Disk Image…</strong>
+                    para iniciar la adquisición.
+                </p>
+                <figure>
+                    <img src="Evidencias/aa2.png" alt="Menú File, Create Disk Image" class="evidence-image">
+                    <figcaption>Figura 2. Menú File con la opción Create Disk Image.</figcaption>
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>03 // Selección del dispositivo de origen</h3>
+                <p>
+                    En <strong>Select Source</strong> se marcó <strong>Physical Drive</strong> y se
+                    seleccionó la memoria USB: <strong>\\.\PHYSICALDRIVE1 - General USB Flash Disk USB Device</strong>.
+                </p>
+                <figure>
+                    <img src="Evidencias/aa3.png" alt="Select Drive con la memoria USB" class="evidence-image">
+                    <figcaption>Figura 3. Dispositivo físico seleccionado como evidencia.</figcaption>
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>04 // Información de la evidencia</h3>
+                <p>
+                    Se capturaron los datos del caso: número de caso, número de evidencia, descripción,
+                    examinador y notas.
+                </p>
+                <figure>
+                    <img src="Evidencias/aa4.png" alt="Evidence Item Information" class="evidence-image">
+                    <figcaption>Figura 4. Ventana Evidence Item Information con los datos del caso.</figcaption>
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>05 // Destino de la imagen</h3>
+                <p>
+                    La imagen se guardó en la carpeta <strong>InfoCrim13</strong> del Escritorio con el
+                    nombre <strong>infocrim_MartinezEscobedoJesus</strong>, en fragmentos de
+                    <strong>1500 MB</strong>, sin compresión ni cifrado.
+                </p>
+                <figure>
+                    <img src="Evidencias/aa5.png" alt="Select Image Destination" class="evidence-image">
+                    <figcaption>Figura 5. Configuración del destino y nombre del archivo de evidencia.</figcaption>
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>06 // Marcas de tiempo</h3>
+                <p>
+                    Image Information registra el inicio (<strong>14:16:05</strong>) y el fin
+                    (<strong>14:22:38</strong>) de la adquisición, además de la lista de segmentos.
+                </p>
+                <figure>
+                    <img src="Evidencias/aa6.png" alt="Marcas de tiempo de la adquisición" class="evidence-image">
+                    <figcaption>Figura 6. Inicio y término de la adquisición el 7 de noviembre de 2026.</figcaption>
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>07 // Imagen creada correctamente</h3>
+                <p>
+                    La ventana <strong>Creating Image</strong> muestra el estado
+                    <strong>Image created successfully</strong> y un tiempo transcurrido de
+                    <strong>0:06:33</strong>.
+                </p>
+                <figure>
+                    <img src="Evidencias/aa7.png" alt="Creating Image completada" class="evidence-image">
+                    <figcaption>Figura 7. Adquisición finalizada con éxito.</figcaption>
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>08 // Image Summary y hashes</h3>
+                <p>
+                    Resumen con interfaz USB, unidad removible, <strong>7667 MB</strong>,
+                    <strong>15,702,112</strong> sectores y los hashes MD5 y SHA-1 calculados.
+                </p>
+                <figure>
+                    <img src="Evidencias/aa8.png" alt="Image Summary con hashes" class="evidence-image">
+                    <figcaption>Figura 8. Image Summary con las sumas de verificación.</figcaption>
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>09 // Archivo de texto con el detalle del proceso</h3>
+                <p>
+                    FTK Imager genera un <strong>.txt</strong> con el mismo nombre de la imagen, donde
+                    queda el detalle del caso, el dispositivo de origen y la geometría del disco.
+                </p>
+                <figure>
+                    <img src="Evidencias/aa9.png" alt="Archivo de texto generado por FTK Imager" class="evidence-image">
+                    <figcaption>Figura 9. Contenido del archivo infocrim_MartinezEscobedoJesus.txt.</figcaption>
+                </figure>
+            </div>
+
+        </section>
+
+
+        <!-- ENTREGABLES -->
+
+        <section id="entregables" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-folder-open"></i>
+                Entregables
+            </h2>
+
+            <p>
+                Documento de la actividad y Archivo txt generado.
+            </p>
+
+            <div class="download-container">
+
+                <a href="Evidencias/MartinezEscobedoJesus-ACT16.pdf" download class="btn-submit">
+                    <i class="fa-solid fa-file-pdf"></i> Descargar actividad (PDF)
+                </a>
+
+            </div>
+
+            <div class="download-container">
+
+                <a href="Evidencias/infocrim_MartinezEscobedoJesus-001.txt" download class="btn-submit">
+                    <i class="fa-solid fa-file-alt"></i> Descargar archivo de texto
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONCLUSIÓN -->
+
+        <section id="conclusion" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-flag-checkered"></i>
+                Conclusión
+            </h2>
+
+            <p>
+                La práctica permitió comprender el procedimiento de <strong>adquisición forense</strong>
+                con FTK Imager y la importancia de generar <strong>copias bit a bit</strong> de los
+                dispositivos de almacenamiento para preservar su información.
+            </p>
+
+            <p>
+                Se identificaron las características de los formatos <strong>RAW (dd)</strong>,
+                <strong>E01</strong> y <strong>SMART</strong>, así como sus diferencias y aplicaciones.
+                También se comprendió el papel de los algoritmos <strong>MD5</strong> y <strong>SHA-1</strong>
+                para verificar la integridad de las imágenes adquiridas.
+            </p>
+
+            <p>
+                Finalmente, la actividad reforzó los conocimientos sobre adquisición, preservación y
+                documentación de evidencia digital, y la necesidad de seguir procedimientos controlados
+                y verificables para garantizar la confiabilidad de los resultados en una investigación forense.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <p>&copy; 2026 Jesús Israel Martínez Escobedo.</p>
+
+        <p>
+            <i class="fa-solid fa-lock"></i>
+            Conexión Segura mediante HTTPS / SSL
+        </p>
+
+    </footer>
+
+</body>
+</html>

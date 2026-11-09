@@ -1,0 +1,50 @@
+﻿Created By AccessData® FTK® Imager 4.3.1.1 
+
+Case Information: 
+Acquired using: ADI4.3.1.1
+Case Number: InfoCrim-01_21.11.2023
+Evidence Number: 00 (Original Adq)
+Unique description: CNO IV - análisis de incidente de fraude bancario
+Examiner: Martínez Escobedo Jesús Israel
+Notes: Adquisición realizada en LIF de la UPSLP
+
+--------------------------------------------------------------
+
+Information for C:\Users\jesus\OneDrive\Escritorio\InfoCrim13\infocrim_MartinezEscobedoJesus:
+
+Physical Evidentiary Item (Source) Information:
+[Device Info]
+ Source Type: Physical
+[Drive Geometry]
+ Cylinders: 977
+ Tracks per Cylinder: 255
+ Sectors per Track: 63
+ Bytes per Sector: 512
+ Sector Count: 15.702.112
+[Physical Drive Information]
+ Drive Model: General USB Flash Disk USB Device
+ Drive Serial Number: @€
+ Drive Interface Type: USB
+ Removable drive: True
+ Source data size: 7667 MB
+ Sector count:    15702112
+[Computed Hashes]
+ MD5 checksum:    86d263958cbe76008ec7806c019b3561
+ SHA1 checksum:   518f28a7d7aadc63c046bf7685372619ba53cc45
+
+Image Information:
+ Acquisition started:   Sat Nov  7 14:16:05 2026
+ Acquisition finished:  Sat Nov  7 14:22:38 2026
+ Segment list:
+  C:\Users\jesus\OneDrive\Escritorio\InfoCrim13\infocrim_MartinezEscobedoJesus.001
+  C:\Users\jesus\OneDrive\Escritorio\InfoCrim13\infocrim_MartinezEscobedoJesus.002
+  C:\Users\jesus\OneDrive\Escritorio\InfoCrim13\infocrim_MartinezEscobedoJesus.003
+  C:\Users\jesus\OneDrive\Escritorio\InfoCrim13\infocrim_MartinezEscobedoJesus.004
+  C:\Users\jesus\OneDrive\Escritorio\InfoCrim13\infocrim_MartinezEscobedoJesus.005
+  C:\Users\jesus\OneDrive\Escritorio\InfoCrim13\infocrim_MartinezEscobedoJesus.006
+
+Image Verification Results:
+ Verification started:  Sat Nov  7 14:22:38 2026
+ Verification finished: Sat Nov  7 14:23:04 2026
+ MD5 checksum:    86d263958cbe76008ec7806c019b3561 : verified
+ SHA1 checksum:   518f28a7d7aadc63c046bf7685372619ba53cc45 : verified
