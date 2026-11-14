@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Actividad 17 | La memoria del crimen — Análisis de RAM con Volatility</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+
+        /* ENTREGABLES */
+        .download-container {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .download-container a { text-decoration: none; }
+
+
+        /* FASES */
+        .fases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .fase-card {
+            padding: 18px 16px;
+            border-radius: 8px;
+            border-left: 4px solid currentColor;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .fase-card .fase-num {
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .fase-card .fase-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .fase-card ul {
+            margin: 0;
+            padding-left: 16px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .fase-card ul li { margin-bottom: 3px; }
+
+        .color-blue   { color: #60a5fa; }
+        .color-purple { color: #a78bfa; }
+        .color-red    { color: #f87171; }
+        .color-orange { color: #fb923c; }
+        .color-green  { color: #4ade80; }
+
+
+        /* RESPUESTAS */
+        .respuestas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .respuesta-card {
+            padding: 16px 18px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .respuesta-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag-badge {
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            font-family: monospace;
+            color: #fff;
+        }
+
+        .tag-src  { background: #3b82f6; }
+        .tag-time { background: #a855f7; }
+        .tag-hash { background: #ef4444; }
+        .tag-ok   { background: #22c55e; }
+
+        .respuesta-id {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .respuesta-card h3 {
+            font-size: 0.95rem;
+            margin: 0 0 6px;
+        }
+
+        .respuesta-card .valor {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin: 0 0 6px;
+            word-break: break-word;
+        }
+
+        .respuesta-card .valor.hash {
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .respuesta-card p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.55);
+            margin: 0;
+        }
+
+
+        /* COMANDOS */
+        .cmd {
+            display: block;
+            margin: 10px 0 14px;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.55);
+            border-left: 3px solid #4ade80;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: #4ade80;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+
+        /* TOPIC BOX */
+        .topic-box {
+            margin-top: 25px;
+            padding: 25px;
+            border-left: 4px solid currentColor;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .topic-box strong {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .topic-box p strong {
+            display: inline;
+            margin: 0;
+        }
+
+        .topic-box ul {
+            margin: 0;
+            padding-left: 18px;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .topic-box ul li { margin-bottom: 6px; }
+
+
+        /* IMPRESIÓN */
+        @media print {
+
+            @page { size: A4; margin: 15mm; }
+
+            .header, .navbar, .back-to-top, .footer { display: none !important; }
+
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                color: #111 !important;
+                font-family: Arial, sans-serif !important;
+            }
+
+            .main-content {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+            }
+
+            .section-card {
+                background: white !important;
+                border: none !important;
+                border-radius: 0 !important;
+                margin: 0 0 15mm 0 !important;
+                padding: 0 !important;
+            }
+
+            .section-card h2 {
+                font-size: 18pt !important;
+                border-bottom: 2px solid #111 !important;
+                padding-bottom: 5px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .cmd {
+                background: #f2f2f2 !important;
+                color: #111 !important;
+            }
+
+            p, li {
+                font-size: 10.5pt !important;
+                line-height: 1.55 !important;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <a href="#" class="back-to-top" title="Volver arriba">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
+
+    <!-- ENCABEZADO -->
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <div class="student-info">
+
+                <h1 class="student-name">Actividad 17</h1>
+
+                <p class="course-badge">
+                    <i class="fa-solid fa-memory"></i>
+                    La memoria del crimen — Extracción de evidencia de un volcado RAM
+                </p>
+
+                <p class="academic-details">
+                    <span>
+                        <i class="fa-solid fa-university"></i>
+                        Universidad Politécnica de San Luis Potosí
+                    </span>
+                    |
+                    <span>
+                        <i class="fa-solid fa-calendar"></i>
+                        Informática Criminológica
+                    </span>
+                </p>
+
+            </div>
+
+            <nav class="navbar">
+                <ul>
+                    <li>
+                        <a href="../../index.html">
+                            <i class="fa-solid fa-house"></i>
+                            Inicio
+                        </a>
+                    </li>
+                    <li><a href="#objetivo">Objetivo</a></li>
+                    <li><a href="#metodologia">Metodología</a></li>
+                    <li><a href="#resultados">Resultados</a></li>
+                    <li><a href="#evidencias">Evidencias</a></li>
+                    <li><a href="#entregables">Entregables</a></li>
+                    <li><a href="#conclusion">Conclusión</a></li>
+                </ul>
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <main class="main-content" id="pdf-content">
+
+        <!-- PORTADA -->
+
+        <div class="dedsec-manifesto">
+
+            <div class="glitch-wrapper">
+                <h2 class="glitch-text" data-text="/// ACT17_VOLATILITY">
+                    /// ACT17_VOLATILITY
+                </h2>
+            </div>
+
+            <p class="typewriter-text">
+                &gt; INF_CRIM // ACTIVIDAD_17 // RAM_DUMP_ANALYSIS...
+            </p>
+
+            <div class="cover-info">
+                <p class="professor">Profesor: Servando Lopez Contreras</p>
+                <p class="student">Jesús Israel Martínez Escobedo - 175325</p>
+                <p>La memoria del crimen: extracción de evidencia de un volcado RAM</p>
+                <p>Informática Criminológica</p>
+                <p>Ingeniería en Tecnologías de la Información</p>
+                <p>Universidad Politécnica de San Luis Potosí</p>
+                <p>14 de noviembre de 2026</p>
+            </div>
+
+        </div>
+
+
+        <!-- OBJETIVO -->
+
+        <section id="objetivo" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-crosshairs"></i>
+                Objetivo
+            </h2>
+
+            <p>
+                Analizar el <strong>volcado de memoria RAM</strong> del equipo de un presunto cibercriminal
+                autodenominado <strong>"Morty"</strong> con la herramienta <strong>Volatility</strong>, para
+                extraer evidencia digital (sistema, credenciales, red, procesos, correos y criptomonedas) y
+                relacionarla con las hipótesis de la investigación.
+            </p>
+
+            <p>
+                La memoria volátil guarda información que se pierde al apagar el equipo y que muchas veces
+                no existe en el disco: contraseñas en texto claro, conexiones activas, procesos en ejecución
+                y sesiones abiertas. Por eso su análisis es clave en investigaciones de cibercrimen.
+            </p>
+
+            <div class="topic-box" style="color: #60a5fa;">
+
+                <strong>
+                    <i class="fa-solid fa-folder-tree"></i>
+                    Datos del caso
+                </strong>
+
+                <p>
+                    <strong>Evidencia:</strong> OtterCTF.vmem (≈2 GB), proporcionada por la FGM<br>
+                    <strong>Sospechoso:</strong> alias "Morty", vinculado a Reddit y a un grupo secreto de Telegram<br>
+                    <strong>Indicios previos:</strong> usuario "Ricky", grupo "S0_Just_M0v3_Socy", iniciales FAF3 (SEDENE) y TFE (CNDI)<br>
+                    <strong>Evidencias a cotejar:</strong> EV455FGM (IP y sistema operativo) y EV456FGM (contraseña / correos)<br>
+                    <strong>Herramientas:</strong> Volatility Framework 2.6 (standalone), Strings de Sysinternals, findstr<br>
+                    <strong>Sistema de análisis:</strong> Windows
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- METODOLOGÍA -->
+
+        <section id="metodologia" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-diagram-project"></i>
+                Metodología
+            </h2>
+
+            <p>
+                El análisis se dividió en cinco fases, de la preparación del volcado a la extracción de la
+                cartera de criptomonedas:
+            </p>
+
+            <div class="fases-grid">
+
+                <div class="fase-card color-blue">
+                    <div class="fase-num">01</div>
+                    <div class="fase-name">Preparación</div>
+                    <ul>
+                        <li>Unión de 7 partes con WinRAR</li>
+                        <li>Obtención de OtterCTF.vmem</li>
+                        <li>imageinfo: perfil Win7SP1x64</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-purple">
+                    <div class="fase-num">02</div>
+                    <div class="fase-name">Credenciales</div>
+                    <ul>
+                        <li>hashdump (SAM)</li>
+                        <li>lsadump (secretos LSA)</li>
+                        <li>hivelist y printkey</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-red">
+                    <div class="fase-num">03</div>
+                    <div class="fase-name">Red y procesos</div>
+                    <ul>
+                        <li>netscan: IPs y puertos</li>
+                        <li>pstree: árbol de procesos</li>
+                        <li>Geolocalización de IP</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-orange">
+                    <div class="fase-num">04</div>
+                    <div class="fase-name">Correos</div>
+                    <ul>
+                        <li>strings sobre el volcado</li>
+                        <li>findstr por dominios</li>
+                        <li>Sesión de webmail</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-green">
+                    <div class="fase-num">05</div>
+                    <div class="fase-name">Malware</div>
+                    <ul>
+                        <li>procdump del PID 3720</li>
+                        <li>strings -u del ejecutable</li>
+                        <li>Verificación en listas negras</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="topic-box" style="color: #fb923c;">
+
+                <strong>
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    Nota sobre el manejo del malware
+                </strong>
+
+                <p>
+                    Al extraer el proceso 3720, <strong>Windows Defender eliminó el ejecutable</strong> por
+                    detectarlo como malware. Se agregó una exclusión temporal solo para la carpeta de salida y el
+                    archivo <strong>nunca se ejecutó</strong>: únicamente se leyeron sus cadenas (análisis estático).
+                    Al terminar se borró la carpeta y se quitó la exclusión.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- RESULTADOS -->
+
+        <section id="resultados" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Resultados
+            </h2>
+
+
+            <h3>Parte I // Sistema y credenciales</h3>
+
+            <p>
+                Información del equipo y del usuario obtenida del volcado.
+            </p>
+
+            <div class="respuestas-grid">
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-time">TIMESTAMP</span>
+                        <span class="respuesta-id">P-01</span>
+                    </div>
+                    <h3>Marca de tiempo local</h3>
+                    <div class="valor">04/08/2018 22:34:22 +0300</div>
+                    <p>19:34:22 UTC. Zona horaria UTC+3, congruente con el país «IL» (Israel) del perfil de correo.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-src">OS</span>
+                        <span class="respuesta-id">P-02</span>
+                    </div>
+                    <h3>Sistema operativo</h3>
+                    <div class="valor">Windows 7 SP1 x64</div>
+                    <p>Perfil Win7SP1x64, arquitectura AMD64, 2 procesadores.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-hash">PASSWORD</span>
+                        <span class="respuesta-id">P-03</span>
+                    </div>
+                    <h3>Contraseña del perfil Rick</h3>
+                    <div class="valor hash">MortyIsReallyAnOtter</div>
+                    <p>Secreto LSA DefaultPassword (inicio de sesión automático). Hash NTLM: 518172d012f97d3a8fcc089615283940.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-src">IP</span>
+                        <span class="respuesta-id">P-04</span>
+                    </div>
+                    <h3>IP del equipo</h3>
+                    <div class="valor hash">192.168.202.131</div>
+                    <p>IP privada de origen de todas las conexiones salientes.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-ok">REGISTRY</span>
+                        <span class="respuesta-id">P-05</span>
+                    </div>
+                    <h3>Colmenas del Registro</h3>
+                    <div class="valor">SAM, SYSTEM, SOFTWARE, SECURITY</div>
+                    <p>Además de DEFAULT, HARDWARE, BCD y el ntuser.dat / UsrClass.dat del usuario Rick.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-hash">HOSTNAME</span>
+                        <span class="respuesta-id">P-06</span>
+                    </div>
+                    <h3>Nombre del equipo</h3>
+                    <div class="valor hash">WIN-LO6FAF3DTFE</div>
+                    <p>Contiene las iniciales FAF3 (SEDENE) y TFE (CNDI): vincula el equipo con el caso.</p>
+                </div>
+
+            </div>
+
+
+            <h3 style="margin-top: 35px;">Parte II // Procesos, red y comunicaciones</h3>
+
+            <div class="respuestas-grid">
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-hash">PROC A</span>
+                        <span class="respuesta-id">P-07</span>
+                    </div>
+                    <h3>Rick And Morty (PID 3820)</h3>
+                    <p>
+                        Lanzado por el usuario; 7 segundos después inicia vmware-tray.exe (PID 3720), el
+                        ransomware disfrazado. Probable troyano descargado por torrent.
+                    </p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-time">PROC B</span>
+                        <span class="respuesta-id">P-07</span>
+                    </div>
+                    <h3>LunarMS.exe (PID 708)</h3>
+                    <p>
+                        Cliente de los «servidores Lunar» (TFE) usados para publicitar a las víctimas;
+                        se conecta al servidor remoto en Londres.
+                    </p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-src">PROC C</span>
+                        <span class="respuesta-id">P-07</span>
+                    </div>
+                    <h3>BitTorrent.exe (PID 2836)</h3>
+                    <p>
+                        Decenas de conexiones P2P internacionales: los servicios Torrent usados para enviar
+                        los videos de las víctimas.
+                    </p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-hash">C2</span>
+                        <span class="respuesta-id">P-08</span>
+                    </div>
+                    <h3>Servidor malicioso</h3>
+                    <div class="valor hash">77.102.199.102:7575</div>
+                    <p>Londres, Inglaterra, Reino Unido. ISP Virgin Media Limited (conexión residencial).</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-ok">EMAIL</span>
+                        <span class="respuesta-id">P-09</span>
+                    </div>
+                    <h3>Correos empleados</h3>
+                    <div class="valor hash">rickopicko@mail.com<br>rickypinky@mail.com</div>
+                    <p>Webmail Mail.com, abierto en Windows con Google Chrome 68.0.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-hash">BTC</span>
+                        <span class="respuesta-id">P-10</span>
+                    </div>
+                    <h3>Cartera del rescate</h3>
+                    <div class="valor hash">1MmpEmebJkqXG8nQv4cjJSmxZQFVmFo63M</div>
+                    <p>El ransomware vmware-tray.exe pide 0.16 BTC. BTC Black fuera de servicio (404); sin reportes en Chainabuse.</p>
+                </div>
+
+            </div>
+
+
+            <div class="topic-box" style="color: #f87171;">
+
+                <strong>
+                    <i class="fa-solid fa-route"></i>
+                    Líneas de investigación propuestas
+                </strong>
+
+                <ul>
+                    <li>Solicitar a Virgin Media el titular de la IP 77.102.199.102 en la fecha y hora del volcado.</li>
+                    <li>Solicitar a Mail.com la preservación y los datos de acceso de ambas cuentas para identificar a otras víctimas (como GTH).</li>
+                    <li>Rastrear la cartera BTC en la blockchain hacia exchanges y reportarla en Chainabuse.</li>
+                    <li>Recuperar archivos .torrent y analizar la memoria de LunarMS.exe para identificar más integrantes de la red.</li>
+                    <li>Analizar el ransomware en un entorno aislado (sandbox) y obtener sus hashes como indicadores de compromiso.</li>
+                </ul>
+
+            </div>
+
+        </section>
+
+
+        <!-- EVIDENCIAS -->
+
+        <section id="evidencias" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-images"></i>
+                Evidencias
+            </h2>
+
+            <p>
+                Capturas de pantalla de cada comando ejecutado, en orden.
+            </p>
+
+
+            <div class="evidence-item">
+                <h3>01 // imageinfo: perfil y marca de tiempo</h3>
+                <code class="cmd">vol.exe -f OtterCTF.vmem imageinfo</code>
+                <p>
+                    Perfil sugerido <strong>Win7SP1x64</strong> y fecha local
+                    <strong>2018-08-04 22:34:22 +0300</strong>.
+                </p>
+                <figure>
+                    <img src="Evidencias/P1.png" alt="Salida de imageinfo" class="evidence-image">
+                    
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>02 // hashdump: usuarios y hashes</h3>
+                <code class="cmd">vol.exe -f OtterCTF.vmem --profile=Win7SP1x64 hashdump</code>
+                <p>
+                    El único usuario real es <strong>Rick (RID 1000)</strong>; Administrator y Guest tienen
+                    contraseña vacía.
+                </p>
+                <figure>
+                    <img src="Evidencias/P3a.png" alt="Salida de hashdump" class="evidence-image">
+                    
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>03 // lsadump: contraseña en texto claro</h3>
+                <code class="cmd">vol.exe -f OtterCTF.vmem --profile=Win7SP1x64 lsadump</code>
+               
+                <figure>
+                    <img src="Evidencias/P3b.png" alt="Salida de lsadump" class="evidence-image">
+                    
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>04 // netscan: IP local</h3>
+                <code class="cmd">vol.exe -f OtterCTF.vmem --profile=Win7SP1x64 netscan</code>
+                <p>
+                    Todas las conexiones salen de la IP <strong>192.168.202.131</strong>.
+                </p>
+                <figure>
+                    <img src="Evidencias/P4_netscan_1.png" alt="Salida de netscan, parte 1" class="evidence-image">
+                    
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>05 // netscan: servidor malicioso</h3>
+                <p>
+                    <strong>LunarMS.exe (PID 708)</strong> se conecta de 192.168.202.131:49530 a
+                    <strong>77.102.199.102:7575</strong>.
+                </p>
+                <figure>
+                    <img src="Evidencias/P4_netscan_2.png" alt="Salida de netscan, parte 2" class="evidence-image">
+                    
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>06 // Geolocalización del servidor</h3>
+                <p>
+                    La IP 77.102.199.102 se ubica en <strong>Londres, Reino Unido</strong>, con el ISP
+                    <strong>Virgin Media Limited</strong>.
+                </p>
+                <figure>
+                    <img src="Evidencias/P8_geo.png" alt="Geolocalización de la IP" class="evidence-image">
+                    
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>07 // hivelist: colmenas del Registro</h3>
+                <code class="cmd">vol.exe -f OtterCTF.vmem --profile=Win7SP1x64 hivelist</code>
+                
+                <figure>
+                    <img src="Evidencias/P5.png" alt="Salida de hivelist" class="evidence-image">
+                    
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>08 // printkey: nombre del equipo</h3>
+                <code class="cmd">vol.exe -f OtterCTF.vmem --profile=Win7SP1x64 printkey -K "ControlSet001\Control\ComputerName\ComputerName"</code>
+                <p>
+                    El equipo se llama <strong>WIN-LO6FAF3DTFE</strong>.
+                </p>
+                <figure>
+                    <img src="Evidencias/P6.png" alt="Salida de printkey" class="evidence-image">
+                    
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>09 // pstree: árbol de procesos</h3>
+                <code class="cmd">vol.exe -f OtterCTF.vmem --profile=Win7SP1x64 pstree</code>
+                <p>
+                    <strong>Rick And Morty</strong> (3820) lanza a <strong>vmware-tray.exe</strong> (3720);
+                    también se observan LunarMS.exe, BitTorrent.exe y chrome.exe.
+                </p>
+                <figure>
+                    <img src="Evidencias/P7a.png" alt="Salida de pstree, parte 1" class="evidence-image">
+                    
+                </figure>
+                <figure>
+                    <img src="Evidencias/P7b.png" alt="Salida de pstree, parte 2" class="evidence-image">
+                    
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>10 // strings: correos electrónicos</h3>
+                <code class="cmd">strings64.exe -nobanner -n 6 OtterCTF.vmem | findstr /I "@gmail.com @hotmail.com @outlook.com @yahoo.com @protonmail @mail.com @live.com" &gt; correos.txt
+sort /unique correos.txt</code>
+                <p>
+                    Aparecen <strong>rickopicko@mail.com</strong> y <strong>rickypinky@mail.com</strong>, y la
+                    sesión de Mail.com con Chrome 68 en Windows.
+                </p>
+                <figure>
+                    <img src="Evidencias/P9.png" alt="Correos encontrados en memoria" class="evidence-image">
+                    
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>11 // procdump: extracción del proceso 3720</h3>
+                <code class="cmd">vol.exe -f OtterCTF.vmem --profile=Win7SP1x64 procdump -p 3720 -D salida</code>
+                <p>
+                    Se extrajo el ejecutable de <strong>vmware-tray.exe</strong> como
+                    <strong>executable.3720.exe</strong>.
+                </p>
+                <figure>
+                    <img src="Evidencias/P10a.png" alt="Salida de procdump" class="evidence-image">
+                    
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>12 // strings: cartera del rescate</h3>
+                <code class="cmd">strings64.exe -nobanner -u salida\executable.3720.exe &gt; ransom.txt
+findstr /N /I "address encrypted bitcoin 1Mmp" ransom.txt</code>
+                <p>
+                    Mensaje: <strong>1MmpEmebJkqXG8nQv4cjJSmxZQFVmFo63M</strong>
+                    (0.16 BTC).
+                </p>
+                <figure>
+                    <img src="Evidencias/P10b.png" alt="Cadenas del ransomware" class="evidence-image">
+                    
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>13 // Verificación en listas negras</h3>
+                <p>
+                    BTC Black no responde, <strong>ERROR 404 en la pagina no encontrada</strong>; en <strong>Chainabuse</strong> la cartera
+                    no tiene reportes.
+                </p>
+                <figure>
+                    <img src="Evidencias/P10c.png" alt="BTC Black fuera de servicio" class="evidence-image">
+                    
+                </figure>
+                <figure>
+                    <img src="Evidencias/P10d.png" alt="Consulta en Chainabuse" class="evidence-image">
+                    
+                </figure>
+            </div>
+
+        </section>
+
+
+        <!-- ENTREGABLES -->
+
+        <section id="entregables" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-folder-open"></i>
+                Entregables
+            </h2>
+
+            <p>
+                PDF de la actividad.
+            </p>
+
+            <div class="download-container">
+
+                <a href="Evidencias/MartinezEscobedoJesus-ACT17.pdf" download class="btn-submit">
+                    <i class="fa-solid fa-file-pdf"></i> Descargar actividad (PDF)
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONCLUSIÓN -->
+
+        <section id="conclusion" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-flag-checkered"></i>
+                Conclusión
+            </h2>
+
+            <p>
+                La práctica permitió comprender el valor del <strong>análisis de memoria volátil</strong>:
+                con <strong>Volatility</strong> se obtuvo evidencia que no está en el disco o que es muy difícil
+                de recuperar, como contraseñas en texto claro, conexiones de red, procesos en ejecución y
+                sesiones de correo abiertas.
+            </p>
+
+            <p>
+                Se identificó el equipo <strong>WIN-LO6FAF3DTFE</strong> (Windows 7 SP1 x64, IP 192.168.202.131),
+                el usuario <strong>Rick</strong> con contraseña <strong>MortyIsReallyAnOtter</strong>, la conexión al
+                servidor Lunar en Londres, el uso de BitTorrent, los correos de Mail.com y la cartera del
+                ransomware. Estos hallazgos coinciden con las hipótesis del caso (Morty/Ricky, FAF3 y TFE,
+                servidores Lunar y servicios Torrent).
+            </p>
+
+            <p>
+                Finalmente, la actividad reforzó la importancia de manejar el malware con cuidado (análisis
+                estático, sin ejecutar binarios), de documentar cada comando y de correlacionar los resultados
+                técnicos con la investigación para proponer líneas de acción concretas.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <p>&copy; 2026 Jesús Israel Martínez Escobedo.</p>
+
+        <p>
+            <i class="fa-solid fa-lock"></i>
+            Conexión Segura mediante HTTPS / SSL
+        </p>
+
+    </footer>
+
+</body>
+</html>
