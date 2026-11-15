@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Actividad 18 | La huella digital de un cibercriminal: Análisis forense con Autopsy</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+
+        /* ENTREGABLES */
+        .download-container {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .download-container a { text-decoration: none; }
+
+
+        /* FASES */
+        .fases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .fase-card {
+            padding: 18px 16px;
+            border-radius: 8px;
+            border-left: 4px solid currentColor;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .fase-card .fase-num {
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .fase-card .fase-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .fase-card ul {
+            margin: 0;
+            padding-left: 16px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .fase-card ul li { margin-bottom: 3px; }
+
+        .color-blue   { color: #60a5fa; }
+        .color-purple { color: #a78bfa; }
+        .color-red    { color: #f87171; }
+        .color-orange { color: #fb923c; }
+        .color-green  { color: #4ade80; }
+
+
+        /* RESPUESTAS */
+        .respuestas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .respuesta-card {
+            padding: 16px 18px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .respuesta-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag-badge {
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            font-family: monospace;
+            color: #fff;
+        }
+
+        .tag-src  { background: #3b82f6; }
+        .tag-time { background: #a855f7; }
+        .tag-hash { background: #ef4444; }
+        .tag-ok   { background: #22c55e; }
+
+        .respuesta-id {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .respuesta-card h3 {
+            font-size: 0.95rem;
+            margin: 0 0 6px;
+        }
+
+        .respuesta-card .valor {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin: 0 0 6px;
+            word-break: break-word;
+        }
+
+        .respuesta-card .valor.hash {
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .respuesta-card p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.55);
+            margin: 0;
+        }
+
+
+        /* COMANDOS */
+        .cmd {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: #4ade80;
+            background: rgba(0, 0, 0, 0.45);
+            padding: 2px 8px;
+            border-radius: 4px;
+            word-break: break-all;
+        }
+
+
+        /* TOPIC BOX */
+        .topic-box {
+            margin-top: 25px;
+            padding: 25px;
+            border-left: 4px solid currentColor;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .topic-box strong {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .topic-box p strong {
+            display: inline;
+            margin: 0;
+        }
+
+        .topic-box ul {
+            margin: 0;
+            padding-left: 18px;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .topic-box ul li { margin-bottom: 6px; }
+
+
+        /* IMPRESIÓN */
+        @media print {
+
+            @page { size: A4; margin: 15mm; }
+
+            .header, .navbar, .back-to-top, .footer { display: none !important; }
+
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                color: #111 !important;
+                font-family: Arial, sans-serif !important;
+            }
+
+            .main-content {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+            }
+
+            .section-card {
+                background: white !important;
+                border: none !important;
+                border-radius: 0 !important;
+                margin: 0 0 15mm 0 !important;
+                padding: 0 !important;
+            }
+
+            .section-card h2 {
+                font-size: 18pt !important;
+                border-bottom: 2px solid #111 !important;
+                padding-bottom: 5px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .cmd {
+                background: #f2f2f2 !important;
+                color: #111 !important;
+            }
+
+            p, li {
+                font-size: 10.5pt !important;
+                line-height: 1.55 !important;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <a href="#" class="back-to-top" title="Volver arriba">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
+
+    <!-- ENCABEZADO -->
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <div class="student-info">
+
+                <h1 class="student-name">Actividad 18</h1>
+
+                <p class="course-badge">
+                    <i class="fa-solid fa-fingerprint"></i>
+                    La investigación forense: la huella digital de un cibercriminal
+                </p>
+
+                <p class="academic-details">
+                    <span>
+                        <i class="fa-solid fa-university"></i>
+                        Universidad Politécnica de San Luis Potosí
+                    </span>
+                    |
+                    <span>
+                        <i class="fa-solid fa-calendar"></i>
+                        Informática Criminológica
+                    </span>
+                </p>
+
+            </div>
+
+            <nav class="navbar">
+                <ul>
+                    <li>
+                        <a href="../../index.html">
+                            <i class="fa-solid fa-house"></i>
+                            Inicio
+                        </a>
+                    </li>
+                    <li><a href="#objetivo">Objetivo</a></li>
+                    <li><a href="#metodologia">Metodología</a></li>
+                    <li><a href="#resultados">Resultados</a></li>
+                    <li><a href="#evidencias">Evidencias</a></li>
+                    <li><a href="#entregables">Entregables</a></li>
+                    <li><a href="#conclusion">Conclusión</a></li>
+                </ul>
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <main class="main-content" id="pdf-content">
+
+        <!-- PORTADA -->
+
+        <div class="dedsec-manifesto">
+
+            <div class="glitch-wrapper">
+                <h2 class="glitch-text" data-text="/// ACT18_AUTOPSY">
+                    /// ACT18_AUTOPSY
+                </h2>
+            </div>
+
+            <p class="typewriter-text">
+                &gt; INF_CRIM // ACTIVIDAD_18 // HACKING_CASE...
+            </p>
+
+            <div class="cover-info">
+                <p class="professor">Profesor: Servando Lopez Contreras</p>
+                <p class="student">Jesús Israel Martínez Escobedo - 175325</p>
+                <p>La investigación forense: la huella digital de un cibercriminal</p>
+                <p>Informática Criminológica</p>
+                <p>Ingeniería en Tecnologías de la Información</p>
+                <p>Universidad Politécnica de San Luis Potosí</p>
+                <p>14 de noviembre de 2026</p>
+            </div>
+
+        </div>
+
+
+        <!-- OBJETIVO -->
+
+        <section id="objetivo" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-crosshairs"></i>
+                Objetivo
+            </h2>
+
+            <p>
+                Analizar con Autopsy la imagen del disco de una laptop que se encontró abandonada y que se
+                cree que usó Greg Schardt ("Mr. Evil") para robar datos en redes Wi-Fi públicas. La idea es
+                sacar los datos principales del sistema y tratar de ligar la computadora con el sospechoso.
+            </p>
+
+            <p>
+                También sirve para practicar cómo se arma un caso en Autopsy, por qué es importante revisar
+                el hash de la evidencia y cómo se lee el registro de Windows para encontrar información.
+            </p>
+
+            <div class="topic-box" style="color: #60a5fa;">
+
+                <strong>
+                    <i class="fa-solid fa-folder-tree"></i>
+                    Datos del caso
+                </strong>
+
+                <p>
+                    <strong>Caso:</strong> INV01UPSLP, número 01<br>
+                    <strong>Evidencia:</strong> laptop Dell CPi, serie VLQLW, encontrada el 20/09/2004<br>
+                    <strong>Sospechoso:</strong> Greg Schardt, alias "Mr. Evil"<br>
+                    <strong>Notas:</strong> Fraude (carding)<br>
+                    <strong>Imagen:</strong> SCHARDT.dd (8 partes unidas, 4.87 GB), Hacking Case del NIST<br>
+                    <strong>Herramientas:</strong> Autopsy 4.23.1, certutil, WinRAR
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- METODOLOGÍA -->
+
+        <section id="metodologia" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-diagram-project"></i>
+                Metodología
+            </h2>
+
+            <p>
+                Seguí los pasos en orden, porque en forense si te saltas algo la evidencia ya no sirve igual:
+            </p>
+
+            <div class="fases-grid">
+
+                <div class="fase-card color-blue">
+                    <div class="fase-num">01</div>
+                    <div class="fase-name">Preparación</div>
+                    <ul>
+                        <li>Descarga de las 8 partes</li>
+                        <li>Unión con WinRAR</li>
+                        <li>Renombrar a SCHARDT.dd</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-purple">
+                    <div class="fase-num">02</div>
+                    <div class="fase-name">Caso</div>
+                    <ul>
+                        <li>New Case INV01UPSLP</li>
+                        <li>Examinador y notas</li>
+                        <li>Organización UPSLP</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-red">
+                    <div class="fase-num">03</div>
+                    <div class="fase-name">Carga</div>
+                    <ul>
+                        <li>Disk Image or VM File</li>
+                        <li>Zona America/Chicago</li>
+                        <li>Todos los módulos</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-orange">
+                    <div class="fase-num">04</div>
+                    <div class="fase-name">Integridad</div>
+                    <ul>
+                        <li>Revisión del SCHARDT.LOG</li>
+                        <li>MD5 con certutil</li>
+                        <li>Comparación con referencia</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-green">
+                    <div class="fase-num">05</div>
+                    <div class="fase-name">Análisis</div>
+                    <ul>
+                        <li>Data Artifacts</li>
+                        <li>Registros software y system</li>
+                        <li>Registro SAM</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="topic-box" style="color: #fb923c;">
+
+                <strong>
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    Problema durante la carga
+                </strong>
+
+                <p>
+                    Al iniciar el análisis, Autopsy marcó error porque el módulo "Cyber Triage Malware Scanner"
+                    necesita licencia, y canceló todo. La imagen sí se agregó, así que volví a correr los módulos
+                    sin ese y ya funcionó.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- RESULTADOS -->
+
+        <section id="resultados" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Resultados
+            </h2>
+
+
+            <h3>Parte I // Integridad y sistema</h3>
+
+            <div class="respuestas-grid">
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-hash">MD5</span>
+                        <span class="respuesta-id">P-03</span>
+                    </div>
+                    <h3>Hash de la imagen</h3>
+                    <div class="valor hash">aee4fcd9301c03b3b054623ca261959a</div>
+                    <p>Coincide con el hash de adquisición y verificación de referencia del caso: la imagen no se alteró.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-src">OS</span>
+                        <span class="respuesta-id">P-04</span>
+                    </div>
+                    <h3>Sistema operativo</h3>
+                    <div class="valor">Windows XP (x86)</div>
+                    <p>Versión 5.1, build 2600, instalado en C:\WINDOWS.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-time">INSTALL</span>
+                        <span class="respuesta-id">P-05</span>
+                    </div>
+                    <h3>Fecha de instalación</h3>
+                    <div class="valor">19/08/2004 17:48:27 CDT</div>
+                    <p>InstallDate = 1092955707 (22:48:27 UTC).</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-time">TIMEZONE</span>
+                        <span class="respuesta-id">P-06</span>
+                    </div>
+                    <h3>Zona horaria</h3>
+                    <div class="valor">Central Standard Time</div>
+                    <p>UTC-6 normal; estaba activo el horario de verano (UTC-5).</p>
+                </div>
+
+            </div>
+
+
+            <h3 style="margin-top: 35px;">Parte II // Dueño, equipo y cuentas</h3>
+
+            <div class="respuestas-grid">
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-hash">OWNER</span>
+                        <span class="respuesta-id">P-07</span>
+                    </div>
+                    <h3>Propietario registrado</h3>
+                    <div class="valor">Greg Schardt</div>
+                    <p>Valor RegisteredOwner del registro software.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-src">HOSTNAME</span>
+                        <span class="respuesta-id">P-08</span>
+                    </div>
+                    <h3>Nombre de la computadora</h3>
+                    <div class="valor hash">N-1A9ODN6ZXK4LQ</div>
+                    <p>Sale en Operating System Information.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-src">DOMAIN</span>
+                        <span class="respuesta-id">P-09</span>
+                    </div>
+                    <h3>Dominio principal</h3>
+                    <div class="valor hash">N-1A9ODN6ZXK4LQ</div>
+                    <p>No estaba en un dominio de red. Usuario por defecto: Mr. Evil.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-time">SHUTDOWN</span>
+                        <span class="respuesta-id">P-10</span>
+                    </div>
+                    <h3>Último apagado</h3>
+                    <div class="valor">27/08/2004 10:46:33 CDT</div>
+                    <p>ShutdownTime en formato FILETIME (15:46:33 UTC).</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-ok">ACCOUNTS</span>
+                        <span class="respuesta-id">P-11</span>
+                    </div>
+                    <h3>Cuentas registradas</h3>
+                    <div class="valor">5 cuentas</div>
+                    <p>Administrator, Guest, HelpAssistant, Mr. Evil y SUPPORT_388945a0.</p>
+                </div>
+
+            </div>
+
+
+            <div class="topic-box" style="color: #f87171;">
+
+                <strong>
+                    <i class="fa-solid fa-link"></i>
+                    Lo que liga la laptop con el sospechoso
+                </strong>
+
+                <ul>
+                    <li>Windows está registrado a nombre de Greg Schardt.</li>
+                    <li>La única cuenta creada por el usuario se llama "Mr. Evil", su apodo, y era la que entraba por defecto.</li>
+                    <li>La zona horaria es la del centro de EU, donde se encontró la laptop.</li>
+                    <li>Se instaló el 19/08/2004 y se apagó por última vez el 27/08/2004: se usó unos 8 días y luego se abandonó.</li>
+                </ul>
+
+            </div>
+
+        </section>
+
+
+        <!-- EVIDENCIAS -->
+
+        <section id="evidencias" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-images"></i>
+                Evidencias
+            </h2>
+
+            <p>
+                Capturas de cada paso, en orden.
+            </p>
+
+
+            <div class="evidence-item">
+                <h3>01 // Creación del caso</h3>
+                <p>Caso INV01UPSLP con su carpeta base.</p>
+                <figure>
+                    <img src="Evidencias/PP1a.png" alt="New Case Information" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>02 // Examinador y organización</h3>
+                <p>Número 01, datos del examinador, notas y organización UPSLP.</p>
+                <figure>
+                    <img src="Evidencias/PP1b.png" alt="Optional Information" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>03 // Host</h3>
+                <p>Se eligió "Generate new host name based on data source name".</p>
+                <figure>
+                    <img src="Evidencias/PP1c.png" alt="Select Host" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>04 // Tipo de origen</h3>
+                <p>Se eligió "Disk Image or VM File" porque la evidencia es una imagen de disco.</p>
+                <figure>
+                    <img src="Evidencias/PP2.png" alt="Select Data Source Type" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>05 // Imagen y zona horaria</h3>
+                <p>Archivo SCHARDT.dd con la zona America/Chicago.</p>
+                <figure>
+                    <img src="Evidencias/PP3a.png" alt="Select Data Source" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>06 // Módulos de ingesta</h3>
+                <p>Se marcaron todos los módulos, incluido Data Source Integrity.</p>
+                <figure>
+                    <img src="Evidencias/PP3b.png" alt="Configure Ingest" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>07 // Error de Cyber Triage</h3>
+                <p>El módulo pidió licencia; se volvió a correr la ingesta sin él.</p>
+                <figure>
+                    <img src="Evidencias/PP3_error.png" alt="Error de Cyber Triage" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>08 // Imagen cargada</h3>
+                <p>Autopsy encontró una partición NTFS (vol2) y dos espacios sin asignar.</p>
+                <figure>
+                    <img src="Evidencias/PP3c.png" alt="Imagen cargada en Autopsy" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>09 // SCHARDT.LOG</h3>
+                <p>El log solo trae el MD5 de cada parte, no el de la imagen completa.</p>
+                <figure>
+                    <img src="Evidencias/PP3_log.png" alt="SCHARDT.LOG" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>10 // Hash con certutil</h3>
+                <p>Comando: <code class="cmd">certutil -hashfile SCHARDT.dd MD5</code></p>
+                <p>Resultado: aee4fcd9301c03b3b054623ca261959a, igual al de referencia.</p>
+                <figure>
+                    <img src="Evidencias/PP3d_certutil.png" alt="MD5 con certutil" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>11 // Datos de la imagen</h3>
+                <p>Imagen "Raw Single" de 4.87 GB con sectores de 512 bytes.</p>
+                <figure>
+                    <img src="Evidencias/PP3e.png" alt="Summary Container" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>12 // Operating System Information</h3>
+                <p>Windows XP, dueño Greg Schardt y equipo N-1A9ODN6ZXK4LQ.</p>
+                <figure>
+                    <img src="Evidencias/PP4.png" alt="Operating System Information" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>13 // Fecha de instalación</h3>
+                <p>Registro software, CurrentVersion: InstallDate = 1092955707.</p>
+                <figure>
+                    <img src="Evidencias/PP5.png" alt="InstallDate" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>14 // Zona horaria</h3>
+                <p>Registro system, TimeZoneInformation: Central Standard Time.</p>
+                <figure>
+                    <img src="Evidencias/PP6.png" alt="TimeZoneInformation" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>15 // Dominio y usuario por defecto</h3>
+                <p>Registro software, Winlogon: dominio N-1A9ODN6ZXK4LQ y usuario Mr. Evil.</p>
+                <figure>
+                    <img src="Evidencias/PP9.png" alt="Winlogon" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>16 // Último apagado</h3>
+                <p>Registro system, Control\Windows: ShutdownTime = C4 FC 00 07 4D 8C C4 01.</p>
+                <figure>
+                    <img src="Evidencias/PP10.png" alt="ShutdownTime" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <div class="evidence-item">
+                <h3>17 // Cuentas</h3>
+                <p>En OS Accounts no salían todas, así que se revisó el registro SAM: 5 cuentas.</p>
+                <figure>
+                    <img src="Evidencias/PP11a.png" alt="OS Accounts" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PP11b.png" alt="Registro SAM" class="evidence-image">
+                </figure>
+            </div>
+
+        </section>
+
+
+        <!-- ENTREGABLES -->
+
+        <section id="entregables" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-folder-open"></i>
+                Entregables
+            </h2>
+
+            <p>
+                Informe de la actividad.
+            </p>
+
+            <div class="download-container">
+
+                <a href="Evidencias/MartinezEscobedoJesus-ACT18.pdf" download class="btn-submit">
+                    <i class="fa-solid fa-file-pdf"></i> Descargar actividad (PDF)
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONCLUSIÓN -->
+
+        <section id="conclusion" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-flag-checkered"></i>
+                Conclusión
+            </h2>
+
+            <p>
+                Con Autopsy pude comprobar que la imagen está completa y sin cambios, y sacar del registro de
+                Windows los datos principales de la laptop: Windows XP instalado el 19/08/2004 y apagado por
+                última vez el 27/08/2004, con la zona horaria del centro de EU.
+            </p>
+
+            <p>
+                Lo más importante es que la compu está registrada a nombre de Greg Schardt y tiene una cuenta
+                llamada "Mr. Evil", que es su apodo. Con eso la laptop queda ligada al sospechoso.
+            </p>
+
+            <p>
+                También me quedó claro que seguir los pasos en orden, revisar el hash y documentar todo con
+                capturas es lo que hace que la evidencia sirva en un caso real.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <p>&copy; 2026 Jesús Israel Martínez Escobedo.</p>
+
+        <p>
+            <i class="fa-solid fa-lock"></i>
+            Conexión Segura mediante HTTPS / SSL
+        </p>
+
+    </footer>
+
+</body>
+</html>
