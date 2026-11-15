@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Actividad 19 | Los primeros minutos cuentan: Adquisición forense en vivo</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+
+        /* ENTREGABLES */
+        .download-container {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .download-container a { text-decoration: none; }
+
+
+        /* FASES */
+        .fases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .fase-card {
+            padding: 18px 16px;
+            border-radius: 8px;
+            border-left: 4px solid currentColor;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .fase-card .fase-num {
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .fase-card .fase-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .fase-card ul {
+            margin: 0;
+            padding-left: 16px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .fase-card ul li { margin-bottom: 3px; }
+
+        .color-blue   { color: #60a5fa; }
+        .color-purple { color: #a78bfa; }
+        .color-red    { color: #f87171; }
+        .color-orange { color: #fb923c; }
+        .color-green  { color: #4ade80; }
+
+
+        /* RESPUESTAS */
+        .respuestas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .respuesta-card {
+            padding: 16px 18px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .respuesta-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag-badge {
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            font-family: monospace;
+            color: #fff;
+        }
+
+        .tag-src  { background: #3b82f6; }
+        .tag-time { background: #a855f7; }
+        .tag-hash { background: #ef4444; }
+        .tag-ok   { background: #22c55e; }
+
+        .respuesta-id {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .respuesta-card h3 {
+            font-size: 0.95rem;
+            margin: 0 0 6px;
+        }
+
+        .respuesta-card .valor {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin: 0 0 6px;
+            word-break: break-word;
+        }
+
+        .respuesta-card .valor.hash {
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .respuesta-card p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.55);
+            margin: 0;
+        }
+
+
+        /* COMANDOS */
+        .cmd {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: #4ade80;
+            background: rgba(0, 0, 0, 0.45);
+            padding: 2px 8px;
+            border-radius: 4px;
+            word-break: break-all;
+        }
+
+
+        /* TOPIC BOX */
+        .topic-box {
+            margin-top: 25px;
+            padding: 25px;
+            border-left: 4px solid currentColor;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .topic-box strong {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .topic-box p strong {
+            display: inline;
+            margin: 0;
+        }
+
+        .topic-box ul {
+            margin: 0;
+            padding-left: 18px;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .topic-box ul li { margin-bottom: 6px; }
+
+
+        /* IMPRESIÓN */
+        @media print {
+
+            @page { size: A4; margin: 15mm; }
+
+            .header, .navbar, .back-to-top, .footer { display: none !important; }
+
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                color: #111 !important;
+                font-family: Arial, sans-serif !important;
+            }
+
+            .main-content {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+            }
+
+            .section-card {
+                background: white !important;
+                border: none !important;
+                border-radius: 0 !important;
+                margin: 0 0 15mm 0 !important;
+                padding: 0 !important;
+            }
+
+            .section-card h2 {
+                font-size: 18pt !important;
+                border-bottom: 2px solid #111 !important;
+                padding-bottom: 5px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .cmd {
+                background: #f2f2f2 !important;
+                color: #111 !important;
+            }
+
+            p, li {
+                font-size: 10.5pt !important;
+                line-height: 1.55 !important;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <a href="#" class="back-to-top" title="Volver arriba">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
+
+    <!-- ENCABEZADO -->
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <div class="student-info">
+
+                <h1 class="student-name">Actividad 19</h1>
+
+                <p class="course-badge">
+                    <i class="fa-solid fa-stopwatch"></i>
+                    Los primeros minutos cuentan: adquisición forense en escenas del crimen digital
+                </p>
+
+                <p class="academic-details">
+                    <span>
+                        <i class="fa-solid fa-university"></i>
+                        Universidad Politécnica de San Luis Potosí
+                    </span>
+                    |
+                    <span>
+                        <i class="fa-solid fa-calendar"></i>
+                        Informática Criminológica
+                    </span>
+                </p>
+
+            </div>
+
+            <nav class="navbar">
+                <ul>
+                    <li>
+                        <a href="../../index.html">
+                            <i class="fa-solid fa-house"></i>
+                            Inicio
+                        </a>
+                    </li>
+                    <li><a href="#objetivo">Objetivo</a></li>
+                    <li><a href="#metodologia">Metodología</a></li>
+                    <li><a href="#resultados">Resultados</a></li>
+                    <li><a href="#evidencias">Evidencias</a></li>
+                    <li><a href="#entregables">Entregables</a></li>
+                    <li><a href="#conclusion">Conclusión</a></li>
+                </ul>
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <main class="main-content" id="pdf-content">
+
+        <!-- PORTADA -->
+
+        <div class="dedsec-manifesto">
+
+            <div class="glitch-wrapper">
+                <h2 class="glitch-text" data-text="/// ACT19_LIVE_RESPONSE">
+                    /// ACT19_LIVE_RESPONSE
+                </h2>
+            </div>
+
+            <p class="typewriter-text">
+                &gt; INF_CRIM // ACTIVIDAD_19 // FIRST_RESPONDER...
+            </p>
+
+            <div class="cover-info">
+                <p class="professor">Profesor: Servando Lopez Contreras</p>
+                <p class="student">Jesús Israel Martínez Escobedo - 175325</p>
+                <p>Los primeros minutos cuentan: adquisición forense en escenas del crimen digital</p>
+                <p>Informática Criminológica</p>
+                <p>Ingeniería en Tecnologías de la Información</p>
+                <p>Universidad Politécnica de San Luis Potosí</p>
+                <p>15 de noviembre de 2026</p>
+            </div>
+
+        </div>
+
+
+        <!-- OBJETIVO -->
+
+        <section id="objetivo" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-crosshairs"></i>
+                Objetivo
+            </h2>
+
+            <p>
+                Hacer como primer respondiente: sacar la evidencia de un equipo Windows que sigue encendido
+                ("en caliente") antes de que se pierda. Para esto usé comandos de cmd y PowerShell y la
+                herramienta NetUsers.
+            </p>
+
+            <p>
+                Hay información que solo existe mientras el equipo está prendido, como los procesos, las
+                conexiones, la caché DNS o el historial de la consola. Si apagas el equipo antes de sacarla,
+                se pierde.
+            </p>
+
+            <div class="topic-box" style="color: #60a5fa;">
+
+                <strong>
+                    <i class="fa-solid fa-folder-tree"></i>
+                    Datos de la práctica
+                </strong>
+
+                <p>
+                    <strong>Equipo analizado:</strong> laptop propia, usada como equipo comprometido<br>
+                    <strong>Sistema:</strong> Windows 11 Pro<br>
+                    <strong>Herramientas:</strong> cmd, PowerShell, NetUsers.exe (OptimumX)<br>
+                    <strong>Carpeta de trabajo:</strong> C:\Act19<br>
+                    <strong>Nota:</strong> en las capturas de esta página tapé los datos personales
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- METODOLOGÍA -->
+
+        <section id="metodologia" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-diagram-project"></i>
+                Metodología
+            </h2>
+
+            <p>
+                Empecé por lo que más rápido se pierde y terminé con lo que se puede guardar para después:
+            </p>
+
+            <div class="fases-grid">
+
+                <div class="fase-card color-blue">
+                    <div class="fase-num">01</div>
+                    <div class="fase-name">Preparación</div>
+                    <ul>
+                        <li>Carpeta C:\Act19</li>
+                        <li>NetUsers.exe</li>
+                        <li>Consola como admin</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-purple">
+                    <div class="fase-num">02</div>
+                    <div class="fase-name">Lo más volátil</div>
+                    <ul>
+                        <li>Fecha y hora</li>
+                        <li>Procesos y servicios</li>
+                        <li>Usuarios</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-red">
+                    <div class="fase-num">03</div>
+                    <div class="fase-name">Red</div>
+                    <ul>
+                        <li>ipconfig y NetBIOS</li>
+                        <li>Conexiones y programas</li>
+                        <li>DNS, ARP y WiFi</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-orange">
+                    <div class="fase-num">04</div>
+                    <div class="fase-name">Sistema</div>
+                    <ul>
+                        <li>Historial y compartidos</li>
+                        <li>systeminfo</li>
+                        <li>Tareas programadas</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-green">
+                    <div class="fase-num">05</div>
+                    <div class="fase-name">Para después</div>
+                    <ul>
+                        <li>Logs (.evtx)</li>
+                        <li>Copia del hosts</li>
+                        <li>Árbol de archivos</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="topic-box" style="color: #fb923c;">
+
+                <strong>
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    Ojo con los permisos
+                </strong>
+
+                <p>
+                    Al correr netstat -nb salió "La operación solicitada requiere elevación", porque la
+                    consola no estaba como administrador. Tuve que abrir otra como admin, y por eso el
+                    historial de comandos solo muestra lo que se hizo desde esa ventana.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- RESULTADOS -->
+
+        <section id="resultados" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Resultados
+            </h2>
+
+
+            <h3>Parte I // Equipo y usuarios</h3>
+
+            <div class="respuestas-grid">
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-src">SISTEMA</span>
+                        <span class="respuesta-id">P-16</span>
+                    </div>
+                    <h3>Equipo</h3>
+                    <div class="valor">Windows 11 Pro</div>
+                    <p>Dell Latitude 3400, 16 GB de RAM, grupo WORKGROUP (no está en un dominio de empresa).</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-ok">USUARIOS</span>
+                        <span class="respuesta-id">P-04 / P-05</span>
+                    </div>
+                    <h3>Cuentas</h3>
+                    <div class="valor">1 usuario</div>
+                    <p>La misma cuenta está conectada y es la única que ha iniciado sesión.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-time">TIMELINE</span>
+                        <span class="respuesta-id">P-05 / P-06 / P-16</span>
+                    </div>
+                    <h3>Línea de tiempo</h3>
+                    <div class="valor">22:50:55 → 22:51</div>
+                    <p>Arranque del equipo, conexión al WiFi y luego inicio de sesión, sacado de tres comandos distintos.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-src">CMD vs PS</span>
+                        <span class="respuesta-id">P-03</span>
+                    </div>
+                    <h3>Servicios</h3>
+                    <div class="valor">sc query vs Get-Service</div>
+                    <p>cmd solo enseña los que corren; PowerShell enseña todos en una tabla más fácil de revisar.</p>
+                </div>
+
+            </div>
+
+
+            <h3 style="margin-top: 35px;">Parte II // Red y sistema</h3>
+
+            <div class="respuestas-grid">
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-src">RED</span>
+                        <span class="respuesta-id">P-06 a P-09</span>
+                    </div>
+                    <h3>Conexiones</h3>
+                    <div class="valor">Puerto 443</div>
+                    <p>Todas las conexiones hacia internet son HTTPS de programas conocidos (Microsoft, Edge, OneDrive, Telegram).</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-time">VOLÁTIL</span>
+                        <span class="respuesta-id">P-10 / P-13</span>
+                    </div>
+                    <h3>Caché DNS e historial</h3>
+                    <div class="valor">Se pierden rápido</div>
+                    <p>La caché tenía solo 4 dominios y el historial de cmd se borra al cerrar la ventana.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-ok">LIMPIO</span>
+                        <span class="respuesta-id">P-14 / P-15 / P-19</span>
+                    </div>
+                    <h3>Compartidos y hosts</h3>
+                    <div class="valor">Sin cambios raros</div>
+                    <p>Solo los compartidos por defecto, sin unidades de red, y el archivo hosts sin redirecciones.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-hash">LOGS</span>
+                        <span class="respuesta-id">P-18</span>
+                    </div>
+                    <h3>Registros de eventos</h3>
+                    <div class="valor">System, Application, Security</div>
+                    <p>Exportados a .evtx; cada uno llega a unos 20 MB y luego Windows borra lo más viejo.</p>
+                </div>
+
+            </div>
+
+
+            <div class="topic-box" style="color: #f87171;">
+
+                <strong>
+                    <i class="fa-solid fa-route"></i>
+                    Siguientes pasos en un caso real
+                </strong>
+
+                <ul>
+                    <li>Sacar una copia de la RAM antes de apagar el equipo y analizarla con Volatility.</li>
+                    <li>Sacar el hash de todo lo exportado y guardarlo en un medio externo.</li>
+                    <li>Revisar los logs en el Visor de eventos, sobre todo los inicios de sesión.</li>
+                    <li>Apagar el equipo, hacer una imagen del disco y analizarla con Autopsy.</li>
+                    <li>Llenar la cadena de custodia con cada paso y su hora.</li>
+                </ul>
+
+            </div>
+
+        </section>
+
+
+        <!-- EVIDENCIAS -->
+
+        <section id="evidencias" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-images"></i>
+                Evidencias
+            </h2>
+
+            <p>
+                Capturas de cada comando, en orden. Los datos personales (MAC, IPv6, redes WiFi y correo) están tapados.
+            </p>
+
+            <div class="evidence-item">
+                <h3>01 // Fecha y hora</h3>
+                <p>Comandos: <code class="cmd">date /t</code></p>
+                <p><code class="cmd">time /t</code></p>
+                <p>Fecha y hora del sistema al empezar la adquisición.</p>
+                <figure>
+                    <img src="Evidencias/A19_P1.png" alt="Fecha y hora" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>02 // Procesos en ejecución</h3>
+                <p>Comando: <code class="cmd">tasklist</code></p>
+                <p>Lista de programas corriendo con su PID y memoria. Solo procesos de Windows y de programas conocidos.</p>
+                <figure>
+                    <img src="Evidencias/A19_P2a.png" alt="Procesos en ejecución" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/A19_P2b.png" alt="Procesos en ejecución" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>03 // Servicios en cmd</h3>
+                <p>Comando: <code class="cmd">sc query</code></p>
+                <p>Solo enseña los servicios que están corriendo, en bloques largos con datos técnicos.</p>
+                <figure>
+                    <img src="Evidencias/A19_P3a.png" alt="Servicios en cmd" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>04 // Servicios en PowerShell</h3>
+                <p>Comando: <code class="cmd">Get-Service</code></p>
+                <p>Enseña todos los servicios, corriendo y detenidos, en una tabla fácil de leer.</p>
+                <figure>
+                    <img src="Evidencias/A19_P3b.png" alt="Servicios en PowerShell" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>05 // Usuarios conectados</h3>
+                <p>Comando: <code class="cmd">NetUsers.exe /local</code></p>
+                <p>Solo un usuario con sesión abierta.</p>
+                <figure>
+                    <img src="Evidencias/A19_P4.png" alt="Usuarios conectados" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>06 // Usuarios que han entrado</h3>
+                <p>Comando: <code class="cmd">NetUsers.exe /history /local</code></p>
+                <p>Solo la misma cuenta ha iniciado sesión en el equipo.</p>
+                <figure>
+                    <img src="Evidencias/A19_P5.png" alt="Usuarios que han entrado" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>07 // Información de red</h3>
+                <p>Comando: <code class="cmd">ipconfig /all</code></p>
+                <p>Tres adaptadores: Ethernet (desconectado), VirtualBox y WiFi. Los datos personales están tapados.</p>
+                <figure>
+                    <img src="Evidencias/A19_P6a_web.png" alt="Información de red" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/A19_P6b_web.png" alt="Información de red" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>08 // Nombres NetBIOS</h3>
+                <p>Comando: <code class="cmd">nbtstat -n</code></p>
+                <p>Nombre del equipo, servicio para compartir archivos y grupo WORKGROUP.</p>
+                <figure>
+                    <img src="Evidencias/A19_P7.png" alt="Nombres NetBIOS" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>09 // Conexiones establecidas</h3>
+                <p>Comando: <code class="cmd">netstat -an | findstr /I &quot;ESTAB&quot;</code></p>
+                <p>Conexiones locales y hacia internet, todas al puerto 443 (HTTPS).</p>
+                <figure>
+                    <img src="Evidencias/A19_P8_web.png" alt="Conexiones establecidas" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>10 // Programas con su conexión</h3>
+                <p>Comando: <code class="cmd">netstat -nb</code></p>
+                <p>Muestra qué programa abrió cada conexión. Necesita permisos de administrador.</p>
+                <figure>
+                    <img src="Evidencias/A19_P9a.png" alt="Programas con su conexión" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>11 // Caché DNS</h3>
+                <p>Comando: <code class="cmd">ipconfig /displaydns | findstr /C:&quot;Nombre de registro&quot;</code></p>
+                <p>Pocos dominios, porque la caché se borra sola cada cierto tiempo.</p>
+                <figure>
+                    <img src="Evidencias/A19_P10.png" alt="Caché DNS" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>12 // Tabla ARP</h3>
+                <p>Comando: <code class="cmd">arp -a</code></p>
+                <p>Relación entre IP y MAC de los equipos con los que se habló. Las MAC están tapadas.</p>
+                <figure>
+                    <img src="Evidencias/A19_P11_web.png" alt="Tabla ARP" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>13 // Redes WiFi guardadas</h3>
+                <p>Comando: <code class="cmd">netsh wlan show profiles</code></p>
+                <p>16 redes guardadas. Los nombres están tapados.</p>
+                <figure>
+                    <img src="Evidencias/A19_P12_web.png" alt="Redes WiFi guardadas" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>14 // Historial de comandos</h3>
+                <p>Comando: <code class="cmd">doskey /history</code></p>
+                <p>Solo guarda lo de la ventana actual; al cerrarla se pierde.</p>
+                <figure>
+                    <img src="Evidencias/A19_P13.png" alt="Historial de comandos" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>15 // Unidades mapeadas</h3>
+                <p>Comando: <code class="cmd">net use</code></p>
+                <p>No hay unidades de red conectadas.</p>
+                <figure>
+                    <img src="Evidencias/A19_P14.png" alt="Unidades mapeadas" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>16 // Recursos compartidos</h3>
+                <p>Comando: <code class="cmd">net share</code></p>
+                <p>Solo los que Windows comparte por defecto (C$, ADMIN$, IPC$).</p>
+                <figure>
+                    <img src="Evidencias/A19_P15.png" alt="Recursos compartidos" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>17 // Información del equipo</h3>
+                <p>Comando: <code class="cmd">systeminfo</code></p>
+                <p>Datos del sistema, fechas de instalación y arranque, memoria y red. Los datos personales están tapados.</p>
+                <figure>
+                    <img src="Evidencias/A19_P16a_web.png" alt="Información del equipo" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/A19_P16b_web.png" alt="Información del equipo" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>18 // Tareas programadas</h3>
+                <p>Comando: <code class="cmd">schtasks /query</code></p>
+                <p>Solo tareas de actualización de programas instalados.</p>
+                <figure>
+                    <img src="Evidencias/A19_P17.png" alt="Tareas programadas" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>19 // Exportar logs</h3>
+                <p>Comandos: <code class="cmd">wevtutil epl System &quot;%USERPROFILE%\OneDrive\Escritorio\System.evtx&quot;</code></p>
+                <p><code class="cmd">wevtutil epl Application &quot;%USERPROFILE%\OneDrive\Escritorio\Application.evtx&quot;</code></p>
+                <p><code class="cmd">wevtutil epl Security &quot;%USERPROFILE%\OneDrive\Escritorio\Security.evtx&quot;</code></p>
+                <p>Los tres logs principales exportados al Escritorio, de unos 20 MB cada uno.</p>
+                <figure>
+                    <img src="Evidencias/A19_P18.png" alt="Exportar logs" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>20 // Archivo hosts</h3>
+                <p>Comandos: <code class="cmd">type C:\Windows\System32\drivers\etc\hosts</code></p>
+                <p><code class="cmd">copy C:\Windows\System32\drivers\etc\hosts C:\Act19\hosts_copia.txt</code></p>
+                <p>Solo trae comentarios; no hay redirecciones. Se guardó una copia.</p>
+                <figure>
+                    <img src="Evidencias/A19_P19.png" alt="Archivo hosts" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <h3>21 // Árbol de archivos por fecha</h3>
+                <p>Comando: <code class="cmd">dir C:\Windows /s /tc /o:d &gt; C:\Act19\arbol_windows.txt</code></p>
+                <p>Listado de Windows ordenado por fecha de creación, guardado en un archivo.</p>
+                <figure>
+                    <img src="Evidencias/A19_P20.png" alt="Árbol de archivos por fecha" class="evidence-image">
+                </figure>
+            </div>
+
+        </section>
+
+
+        <!-- ENTREGABLES -->
+
+        <section id="entregables" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-folder-open"></i>
+                Entregables
+            </h2>
+
+            <p>
+                Informe de la actividad.
+            </p>
+
+            <div class="download-container">
+
+                <a href="Evidencias/MartinezEscobedoJesus-ACT19.pdf" download class="btn-submit">
+                    <i class="fa-solid fa-file-pdf"></i> Descargar actividad (PDF)
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONCLUSIÓN -->
+
+        <section id="conclusion" class="section-card">
+
+            <h2>
+                <i class="fa-solid fa-flag-checkered"></i>
+                Conclusión
+            </h2>
+
+            <p>
+                Con comandos que ya trae Windows y una herramienta pequeña como NetUsers se puede sacar mucha
+                información de un equipo prendido en pocos minutos, sin instalar nada.
+            </p>
+
+            <p>
+                Me quedó claro por qué se llama "los primeros minutos cuentan": la caché DNS, el historial de
+                cmd y las conexiones activas se pierden muy rápido, y los logs se van borrando solos. Por eso
+                hay que seguir un orden, empezar por lo más volátil y documentar cada paso.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <p>&copy; 2026 Jesús Israel Martínez Escobedo.</p>
+
+        <p>
+            <i class="fa-solid fa-lock"></i>
+            Conexión Segura mediante HTTPS / SSL
+        </p>
+
+    </footer>
+
+</body>
+</html>
