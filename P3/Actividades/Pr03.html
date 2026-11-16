@@ -1,0 +1,2176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PR03 | Operación narcos: expediente Kowhai</title>
+
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&family=Share+Tech+Mono&display=swap">
+
+    <style>
+
+        /* =====================================================
+           DEDSEC // CASE FILE
+           ===================================================== */
+        :root {
+            --wd-cyan: #00f0ff;
+            --wd-pink: #ff2a6d;
+            --wd-yellow: #f5e400;
+            --wd-white: #f2f2f2;
+            --wd-black: #050505;
+            --pixel: 'Silkscreen', 'Share Tech Mono', monospace;
+            --term: 'VT323', 'Share Tech Mono', monospace;
+        }
+
+
+        /* ---------- Ruido de pixeles y scanlines ---------- */
+        #wd-noise {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.012;
+            image-rendering: pixelated;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 3;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.18) 0 1px,
+                transparent 1px 3px
+            );
+        }
+
+        .main-content, .header, .footer { position: relative; z-index: 1; }
+
+
+        /* ---------- Glitch blanco y negro de pantalla completa ---------- */
+        #wd-glitch {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 50;
+            display: none;
+        }
+
+        #wd-glitch.on { display: block; }
+
+        #wd-glitch .bar {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            mix-blend-mode: difference;
+        }
+
+        #wd-glitch .blk {
+            position: absolute;
+            background: #fff;
+            mix-blend-mode: difference;
+        }
+
+        body.wd-bw .main-content,
+        body.wd-bw .header {
+            filter: grayscale(1) contrast(1.8);
+        }
+
+
+        /* ---------- Títulos con fuente pixel y glitch RGB ---------- */
+        .section-card h2,
+        .wd-h {
+            font-family: var(--pixel);
+            letter-spacing: 0.04em;
+            position: relative;
+        }
+
+        .section-card h2 {
+            text-transform: uppercase;
+        }
+
+        .section-card h2:hover {
+            animation: rgb-split 0.35s steps(2) 2;
+        }
+
+        @keyframes rgb-split {
+            0%   { text-shadow: 3px 0 var(--wd-pink), -3px 0 var(--wd-cyan); transform: translateX(0); }
+            33%  { text-shadow: -4px 0 var(--wd-pink), 4px 0 var(--wd-cyan); transform: translateX(2px); clip-path: inset(10% 0 40% 0); }
+            66%  { text-shadow: 2px 0 var(--wd-pink), -2px 0 var(--wd-cyan); transform: translateX(-2px); clip-path: inset(50% 0 5% 0); }
+            100% { text-shadow: none; transform: none; clip-path: none; }
+        }
+
+        .wd-sub {
+            font-family: var(--pixel);
+            font-size: 1rem;
+            letter-spacing: 0.06em;
+            margin-top: 38px;
+            display: inline-block;
+            background: var(--wd-white);
+            color: var(--wd-black);
+            padding: 4px 12px;
+            clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+        }
+
+        p, li { font-size: 0.98rem; }
+
+
+        /* ---------- Portada: DedSec case file ---------- */
+        .wd-hero-title {
+            font-family: var(--pixel) !important;
+            font-weight: 700;
+        }
+
+        .wd-ascii {
+            font-family: var(--term);
+            color: var(--wd-cyan);
+            font-size: 1.15rem;
+            line-height: 1.15;
+            margin: 6px 0 0;
+            opacity: 0.85;
+            white-space: pre;
+            overflow: hidden;
+        }
+
+        .wd-hack-line {
+            font-family: var(--term);
+            font-size: 1.25rem;
+            color: var(--wd-white);
+            margin: 4px 0;
+        }
+
+        .wd-hack-line .ok  { color: var(--wd-cyan); }
+        .wd-hack-line .bad { color: var(--wd-pink); }
+
+
+        /* ---------- Profiler (como cuando escaneas a alguien en el juego) ---------- */
+        .profiler {
+            position: relative;
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 0;
+            border: 2px solid var(--wd-white);
+            background: rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            max-width: 680px;
+        }
+
+        .profiler-photo {
+            position: relative;
+            background: #111;
+            border-right: 2px solid var(--wd-white);
+            min-height: 190px;
+            overflow: hidden;
+        }
+
+        .profiler-photo canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            image-rendering: pixelated;
+        }
+
+        .profiler-photo .scan {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--wd-cyan);
+            box-shadow: 0 0 14px var(--wd-cyan);
+            animation: scan 2.4s linear infinite;
+        }
+
+        @keyframes scan {
+            0%   { top: 0; }
+            100% { top: 100%; }
+        }
+
+        .profiler-data {
+            padding: 14px 18px;
+            font-family: var(--term);
+            font-size: 1.25rem;
+            line-height: 1.25;
+        }
+
+        .profiler-data .name {
+            font-family: var(--pixel);
+            font-size: 1.3rem;
+            color: var(--wd-white);
+            margin-bottom: 6px;
+        }
+
+        .profiler-data .row { color: rgba(255, 255, 255, 0.85); }
+        .profiler-data .row b { color: var(--wd-cyan); font-weight: 400; }
+
+        .profiler-data .trait {
+            margin-top: 8px;
+            color: var(--wd-pink);
+        }
+
+        .profiler-tag {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--wd-pink);
+            color: #000;
+            font-family: var(--pixel);
+            font-size: 0.75rem;
+            padding: 3px 10px;
+        }
+
+        .glitch-block {
+            display: inline-block;
+            background: var(--wd-white);
+            color: var(--wd-white);
+            cursor: help;
+            padding: 0 3px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .glitch-block:hover {
+            background: transparent;
+            color: var(--wd-pink);
+            animation: rgb-split 0.3s steps(2) 1;
+        }
+
+
+        /* ---------- Banda glitch entre secciones ---------- */
+        .wd-band {
+            position: relative;
+            margin: 34px 0;
+            height: 42px;
+            overflow: hidden;
+            background: var(--wd-black);
+            border-top: 2px solid var(--wd-white);
+            border-bottom: 2px solid var(--wd-white);
+        }
+
+        .wd-band .track {
+            position: absolute;
+            white-space: nowrap;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: var(--pixel);
+            font-size: 1rem;
+            color: var(--wd-white);
+            animation: band 22s linear infinite;
+        }
+
+        .wd-band .track span { margin-right: 46px; }
+        .wd-band .track .p { color: var(--wd-pink); }
+        .wd-band .track .c { color: var(--wd-cyan); }
+
+        .wd-band::before,
+        .wd-band::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(90deg, transparent 0 12%, #fff 12% 13%, transparent 13% 47%, #fff 47% 47.6%, transparent 47.6% 81%, #fff 81% 83%, transparent 83%);
+            mix-blend-mode: difference;
+            opacity: 0;
+            animation: band-glitch 3.7s steps(1) infinite;
+        }
+
+        .wd-band::after { animation-delay: 1.9s; transform: scaleX(-1); }
+
+        @keyframes band {
+            from { transform: translate(0, -50%); }
+            to   { transform: translate(-50%, -50%); }
+        }
+
+        @keyframes band-glitch {
+            0%, 91%, 100% { opacity: 0; }
+            92%, 95% { opacity: 1; }
+        }
+
+
+        /* ---------- Contadores tipo HUD ---------- */
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .counter {
+            padding: 12px 14px;
+            border: 2px solid var(--wd-white);
+            background: rgba(0, 0, 0, 0.5);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+        }
+
+        .counter .num {
+            font-family: var(--pixel);
+            font-size: 2rem;
+            color: var(--wd-yellow);
+        }
+
+        .counter .lbl {
+            font-family: var(--term);
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+
+        /* ENTREGABLES */
+        .download-container {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .download-container a { text-decoration: none; }
+
+
+        /* ---------- Fases ---------- */
+        .fases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .fase-card {
+            padding: 18px 16px;
+            border: 2px solid currentColor;
+            background: rgba(0, 0, 0, 0.45);
+            clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+            transition: background 0.15s;
+        }
+
+        .fase-card:hover { background: currentColor; }
+        .fase-card:hover .fase-num,
+        .fase-card:hover .fase-name,
+        .fase-card:hover ul { color: #000; }
+
+        .fase-card .fase-num {
+            font-family: var(--pixel);
+            font-size: 1.8rem;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .fase-card .fase-name {
+            font-family: var(--pixel);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .fase-card ul {
+            margin: 0;
+            padding-left: 16px;
+            font-family: var(--term);
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .color-cyan   { color: var(--wd-cyan); }
+        .color-pink   { color: var(--wd-pink); }
+        .color-yellow { color: var(--wd-yellow); }
+        .color-white  { color: var(--wd-white); }
+
+
+        /* ---------- Respuestas ---------- */
+        .respuestas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .respuesta-card {
+            position: relative;
+            padding: 16px 18px;
+            background: rgba(0, 0, 0, 0.55);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+            transition: border-color 0.15s;
+        }
+
+        .respuesta-card:hover {
+            border-color: var(--wd-cyan);
+            animation: card-jitter 0.25s steps(2) 1;
+        }
+
+        @keyframes card-jitter {
+            0%   { transform: translate(0); filter: grayscale(1) contrast(2); }
+            50%  { transform: translate(3px, -1px); }
+            100% { transform: none; filter: none; }
+        }
+
+        .respuesta-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag-badge {
+            padding: 2px 8px;
+            font-family: var(--pixel);
+            font-size: 0.68rem;
+            color: #000;
+        }
+
+        .tag-cyan   { background: var(--wd-cyan); }
+        .tag-pink   { background: var(--wd-pink); }
+        .tag-yellow { background: var(--wd-yellow); }
+        .tag-white  { background: var(--wd-white); }
+
+        .respuesta-id {
+            font-family: var(--term);
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .respuesta-card h3 {
+            font-size: 0.95rem;
+            margin: 0 0 6px;
+        }
+
+        .respuesta-card .valor {
+            font-family: var(--term);
+            font-size: 1.45rem;
+            line-height: 1.1;
+            color: var(--wd-white);
+            margin: 0 0 6px;
+            word-break: break-word;
+        }
+
+        .respuesta-card .valor.hash {
+            font-size: 1.2rem;
+            color: var(--wd-cyan);
+        }
+
+        .respuesta-card p {
+            font-size: 0.86rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+        }
+
+
+        /* COMANDOS */
+        .cmd {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--wd-cyan);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2px 8px;
+            word-break: break-all;
+        }
+
+
+        /* ---------- Topic box ---------- */
+        .topic-box {
+            margin-top: 25px;
+            padding: 22px 24px;
+            border: 2px solid currentColor;
+            background: rgba(0, 0, 0, 0.5);
+            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+        }
+
+        .topic-box strong {
+            display: block;
+            margin-bottom: 10px;
+            font-family: var(--pixel);
+            font-weight: 400;
+        }
+
+        .topic-box p strong,
+        .topic-box li b {
+            display: inline;
+            margin: 0;
+            font-family: inherit;
+            font-weight: 700;
+        }
+
+        .topic-box p, .topic-box ul { color: rgba(255, 255, 255, 0.8); }
+
+        .topic-box ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .topic-box ul li { margin-bottom: 6px; }
+
+
+        /* ---------- Mapa ctOS ---------- */
+        .map-wrap {
+            margin-top: 18px;
+            border: 2px solid var(--wd-white);
+            background: #000;
+            padding: 10px;
+            position: relative;
+        }
+
+        .map-wrap::before {
+            content: "ctOS // WELLINGTON_NZ // CASE_ROUTES";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            background: var(--wd-white);
+            color: #000;
+            font-family: var(--pixel);
+            font-size: 0.7rem;
+            padding: 3px 10px;
+            z-index: 2;
+        }
+
+        .map-wrap svg { width: 100%; height: auto; display: block; shape-rendering: crispEdges; }
+
+        .map-wrap .px { fill: rgba(255, 255, 255, 0.07); }
+        .map-wrap .px-water { fill: rgba(0, 240, 255, 0.16); }
+
+        .map-wrap .land-label { fill: rgba(255, 255, 255, 0.35); font-size: 12px; font-family: 'Silkscreen', monospace; }
+
+        .map-wrap .node rect.dot { stroke-width: 2.5; fill: #000; }
+        .map-wrap .node text { fill: #fff; font-size: 17px; font-family: 'VT323', monospace; }
+        .map-wrap .node .sub { fill: rgba(255, 255, 255, 0.5); font-size: 14px; }
+
+        .map-wrap .blink { animation: blink 0.9s steps(1) infinite; }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .route {
+            fill: none;
+            stroke-width: 4;
+            stroke-linecap: square;
+            stroke-linejoin: miter;
+            stroke-dasharray: 8 6;
+            animation: route-flow 0.9s steps(4) infinite;
+            transition: opacity 0.2s;
+        }
+
+        .route.off { opacity: 0.07; }
+
+        @keyframes route-flow { to { stroke-dashoffset: -28; } }
+
+        .r-airport { stroke: var(--wd-cyan); }
+        .r-method  { stroke: var(--wd-pink); }
+        .r-drop    { stroke: var(--wd-yellow); }
+        .r-flight  { stroke: var(--wd-white); }
+
+        .map-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .map-legend button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #000;
+            border: 2px solid var(--c);
+            color: var(--c);
+            padding: 5px 12px;
+            cursor: pointer;
+            font-family: var(--term);
+            font-size: 1.1rem;
+        }
+
+        .map-legend button.active,
+        .map-legend button:hover { background: var(--c); color: #000; }
+
+        .map-note {
+            font-family: var(--term);
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.45);
+            margin-top: 8px;
+        }
+
+
+        /* ---------- Barras de hackeo (bloques) ---------- */
+        .tool-levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .tool-card {
+            padding: 18px;
+            border: 2px solid var(--wd-white);
+            background: rgba(0, 0, 0, 0.55);
+        }
+
+        .tool-card h4 {
+            margin: 0 0 14px;
+            font-family: var(--pixel);
+            font-weight: 400;
+            color: var(--wd-yellow);
+        }
+
+        .lvl {
+            display: grid;
+            grid-template-columns: 135px 1fr 40px;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-family: var(--term);
+            font-size: 1.15rem;
+        }
+
+        .blocks { display: flex; gap: 3px; }
+
+        .blocks i {
+            flex: 1;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .blocks i.on { background: var(--wd-cyan); }
+        .lvl.no .blocks i.on { background: var(--wd-pink); }
+        .lvl.no .blocks i:nth-child(n+3).on { background: rgba(255, 42, 109, 0.2); }
+
+        .lvl .st { font-family: var(--pixel); font-size: 0.7rem; text-align: right; }
+        .lvl .st.ok  { color: var(--wd-cyan); }
+        .lvl .st.bad { color: var(--wd-pink); }
+
+
+        /* ---------- Línea de tiempo tipo terminal ---------- */
+        .tl-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 18px 0 10px;
+        }
+
+        .tl-filters button {
+            font-family: var(--pixel);
+            font-size: 0.7rem;
+            background: #000;
+            border: 2px solid var(--c, #fff);
+            color: var(--c, #fff);
+            padding: 5px 12px;
+            cursor: pointer;
+        }
+
+        .tl-filters button.active,
+        .tl-filters button:hover { background: var(--c, #fff); color: #000; }
+
+        .terminal {
+            background: #000;
+            border: 2px solid var(--wd-white);
+            padding: 16px 18px 10px;
+            font-family: var(--term);
+            font-size: 1.25rem;
+            line-height: 1.35;
+            position: relative;
+        }
+
+        .terminal::before {
+            content: "root@dedsec:~/casos/kowhai$ cat timeline_NZDT.log";
+            display: block;
+            color: var(--wd-cyan);
+            margin-bottom: 8px;
+        }
+
+        .tl-day {
+            color: #000;
+            background: var(--wd-white);
+            display: inline-block;
+            padding: 0 10px;
+            margin: 12px 0 4px;
+            font-family: var(--pixel);
+            font-size: 0.8rem;
+        }
+
+        .tl-item {
+            color: rgba(255, 255, 255, 0.85);
+            visibility: hidden;
+        }
+
+        .tl-item.show { visibility: visible; }
+        .tl-item.hide { display: none; }
+
+        .tl-item .hora { color: var(--c); margin-right: 8px; }
+        .tl-item .cat  { color: var(--c); margin-right: 6px; }
+
+        .tl-item.droga   { --c: var(--wd-cyan); }
+        .tl-item.comunic { --c: var(--wd-white); }
+        .tl-item.ruta    { --c: var(--wd-yellow); }
+        .tl-item.oculta  { --c: var(--wd-pink); }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.1em;
+            background: var(--wd-white);
+            vertical-align: middle;
+            animation: blink 0.8s steps(1) infinite;
+        }
+
+
+        /* ---------- Evidencias: se "desencriptan" en pixeles ---------- */
+        .evidence-item { position: relative; }
+
+        .ev-tag {
+            display: inline-block;
+            font-family: var(--pixel);
+            font-size: 0.7rem;
+            color: #000;
+            background: var(--wd-cyan);
+            padding: 2px 10px;
+            margin-bottom: 6px;
+        }
+
+        .ev-group-title {
+            margin-top: 40px;
+            font-family: var(--pixel);
+            color: var(--wd-yellow);
+        }
+
+        .evidence-item figure { position: relative; }
+
+        .px-cover {
+            position: absolute;
+            left: 0;
+            top: 0;
+            image-rendering: pixelated;
+            pointer-events: none;
+        }
+
+        .evidence-image { cursor: zoom-in; }
+
+        .evidence-image:hover {
+            outline: 2px solid var(--wd-cyan);
+            outline-offset: 3px;
+        }
+
+
+        /* ---------- Visor ---------- */
+        #lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.94);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            cursor: zoom-out;
+            padding: 20px;
+        }
+
+        #lightbox.open { display: flex; animation: lb-in 0.25s steps(3); }
+
+        @keyframes lb-in {
+            0%   { filter: grayscale(1) contrast(3) blur(2px); }
+            100% { filter: none; }
+        }
+
+        #lightbox img {
+            max-width: 96%;
+            max-height: 92vh;
+            border: 2px solid var(--wd-white);
+        }
+
+
+        /* ---------- Aparecer con glitch ---------- */
+        .reveal { opacity: 0; }
+
+        .reveal.show { animation: glitch-in 0.5s steps(5) forwards; }
+
+        @keyframes glitch-in {
+            0%   { opacity: 1; clip-path: inset(0 0 85% 0); filter: grayscale(1) contrast(3); transform: translateX(-8px); }
+            25%  { clip-path: inset(40% 0 30% 0); transform: translateX(6px); }
+            50%  { clip-path: inset(10% 0 55% 0); filter: grayscale(1) contrast(2) invert(1); transform: translateX(-4px); }
+            75%  { clip-path: inset(0 0 10% 0); filter: grayscale(1); transform: translateX(2px); }
+            100% { opacity: 1; clip-path: none; filter: none; transform: none; }
+        }
+
+
+        @media (max-width: 600px) {
+            .profiler { grid-template-columns: 1fr; }
+            .profiler-photo { border-right: none; border-bottom: 2px solid var(--wd-white); height: 170px; }
+            .lvl { grid-template-columns: 95px 1fr 44px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #wd-noise, #wd-glitch { display: none !important; }
+            .wd-band .track, .route, .profiler-photo .scan { animation: none; }
+            .reveal { opacity: 1; }
+            .reveal.show { animation: none; }
+        }
+
+
+        /* IMPRESIÓN */
+        @media print {
+
+            @page { size: A4; margin: 15mm; }
+
+            .header, .navbar, .back-to-top, .footer, body::after,
+            #wd-noise, #wd-glitch, .wd-band, .tl-filters, .map-legend, #lightbox, .px-cover { display: none !important; }
+
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                color: #111 !important;
+                font-family: Arial, sans-serif !important;
+            }
+
+            .main-content {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+            }
+
+            .section-card {
+                background: white !important;
+                border: none !important;
+                border-radius: 0 !important;
+                margin: 0 0 15mm 0 !important;
+                padding: 0 !important;
+            }
+
+            .section-card h2 {
+                font-size: 18pt !important;
+                border-bottom: 2px solid #111 !important;
+                padding-bottom: 5px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .reveal, .tl-item { opacity: 1 !important; visibility: visible !important; animation: none !important; }
+
+            .cmd {
+                background: #f2f2f2 !important;
+                color: #111 !important;
+            }
+
+            p, li {
+                font-size: 10.5pt !important;
+                line-height: 1.55 !important;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <canvas id="wd-noise"></canvas>
+    <div id="wd-glitch"></div>
+
+    <a href="#" class="back-to-top" title="Volver arriba">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
+
+    <!-- ENCABEZADO -->
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <div class="student-info">
+
+                <h1 class="student-name">Proyecto PR03</h1>
+
+                <p class="course-badge">
+                    <i class="fa-solid fa-user-secret"></i>
+                    Operación narcos: expediente Kowhai
+                </p>
+
+                <p class="academic-details">
+                    <span>
+                        <i class="fa-solid fa-university"></i>
+                        Universidad Politécnica de San Luis Potosí
+                    </span>
+                    |
+                    <span>
+                        <i class="fa-solid fa-calendar"></i>
+                        Informática Criminológica
+                    </span>
+                </p>
+
+            </div>
+
+            <nav class="navbar">
+                <ul>
+                    <li>
+                        <a href="../../index.html">
+                            <i class="fa-solid fa-house"></i>
+                            Inicio
+                        </a>
+                    </li>
+                    <li><a href="#objetivo">Objetivo</a></li>
+                    <li><a href="#metodologia">Metodología</a></li>
+                    <li><a href="#resultados">Resultados</a></li>
+                    <li><a href="#timeline">Línea de tiempo</a></li>
+                    <li><a href="#evidencias">Evidencias</a></li>
+                    <li><a href="#entregables">Entregables</a></li>
+                    <li><a href="#conclusion">Conclusión</a></li>
+                </ul>
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <main class="main-content" id="pdf-content">
+
+        <!-- PORTADA -->
+
+        <div class="dedsec-manifesto">
+
+            <div class="glitch-wrapper">
+                <h2 class="glitch-text wd-hero-title" data-text="/// PR03_OPERACION_NARCOS">
+                    /// PR03_OPERACION_NARCOS
+                </h2>
+            </div>
+
+            <p class="typewriter-text">
+                &gt; INF_CRIM // EXPEDIENTE_KOWHAI // TARGET: SK-DESKTOP...
+            </p>
+
+            <div class="cover-info">
+                <p class="professor">Profesor: Servando Lopez Contreras</p>
+                <p class="student">Jesús Israel Martínez Escobedo - 175325</p>
+                <p>Operación narcos: expediente Kowhai</p>
+                <p>Informática Criminológica</p>
+                <p>Ingeniería en Tecnologías de la Información</p>
+                <p>Universidad Politécnica de San Luis Potosí</p>
+                <p>16 de noviembre de 2026</p>
+            </div>
+
+            <div style="margin-top: 26px;">
+                <p class="wd-hack-line">&gt; conectando a ctOS... <span class="ok">[OK]</span></p>
+                <p class="wd-hack-line">&gt; montando Narcos-1.001 (30 GB)... <span class="ok">[MD5 VERIFIED]</span></p>
+                <p class="wd-hack-line">&gt; buscando sujeto... <span class="bad">[MATCH]</span></p>
+            </div>
+
+            <div class="profiler">
+
+                <div class="profiler-photo">
+                    <canvas id="profiler-canvas" width="30" height="38"></canvas>
+                    <div class="scan"></div>
+                </div>
+
+                <div class="profiler-data">
+                    <div class="name">STEVE KOWHAI</div>
+                    <div class="row"><b>EQUIPO:</b> SK-DESKTOP // Windows 10 Pro</div>
+                    <div class="row"><b>UBICACIÓN:</b> Petone, Wellington, NZ</div>
+                    <div class="row"><b>OCUPACIÓN:</b> desconocida</div>
+                    <div class="row"><b>CONTACTO:</b> <span class="glitch-block">crayfish1980@protonmail.com</span></div>
+                    <div class="row"><b>APPS:</b> Discord, ProtonMail, TrueCrypt</div>
+                    <div class="trait">&gt; buscó "best places to trade drugs"</div>
+                </div>
+
+                <div class="profiler-tag">SOSPECHOSO</div>
+
+            </div>
+
+        </div>
+
+
+        <div class="wd-band">
+            <div class="track">
+                <span>DEDSEC</span><span class="c">EXPEDIENTE_KOWHAI</span><span>NARCOS-1</span><span class="p">ICE // METANFETAMINA</span><span>WELLINGTON_NZ</span><span class="c">CASE_FILE</span>
+                <span>DEDSEC</span><span class="c">EXPEDIENTE_KOWHAI</span><span>NARCOS-1</span><span class="p">ICE // METANFETAMINA</span><span>WELLINGTON_NZ</span><span class="c">CASE_FILE</span>
+                <span>DEDSEC</span><span class="c">EXPEDIENTE_KOWHAI</span><span>NARCOS-1</span><span class="p">ICE // METANFETAMINA</span><span>WELLINGTON_NZ</span><span class="c">CASE_FILE</span>
+                <span>DEDSEC</span><span class="c">EXPEDIENTE_KOWHAI</span><span>NARCOS-1</span><span class="p">ICE // METANFETAMINA</span><span>WELLINGTON_NZ</span><span class="c">CASE_FILE</span>
+            </div>
+        </div>
+
+
+        <!-- OBJETIVO -->
+
+        <section id="objetivo" class="section-card reveal">
+
+            <h2>
+                <i class="fa-solid fa-crosshairs"></i>
+                Objetivo
+            </h2>
+
+            <p>
+                Analizar la imagen del disco de Steve Kowhai (Narcos-1), un sospechoso de meter metanfetamina a
+                Nueva Zelanda, para contestar las preguntas del caso. La imagen es del escenario "2019 Narcos"
+                de Digital Corpora.
+            </p>
+
+            <p>
+                En la Parte I había que encontrar datos exactos dentro de la imagen: sistema, usuario, rutas,
+                hashes y fechas. En la Parte II había que juntar esos datos y explicar qué hizo el usuario,
+                separando lo que se ve de lo que yo interpreto.
+            </p>
+
+            <div class="counter-grid">
+                <div class="counter"><div class="num" data-to="15">0</div><div class="lbl">partes del ZIP</div></div>
+                <div class="counter"><div class="num" data-to="30" data-suf="GB">0</div><div class="lbl">disco analizado</div></div>
+                <div class="counter"><div class="num" data-to="5">0</div><div class="lbl">días de actividad</div></div>
+                <div class="counter"><div class="num" data-to="20">0</div><div class="lbl">preguntas</div></div>
+            </div>
+
+            <div class="topic-box" style="color: var(--wd-cyan);">
+
+                <strong>
+                    <i class="fa-solid fa-folder-tree"></i>
+                    Datos del caso
+                </strong>
+
+                <p>
+                    <strong>Imagen:</strong> Narcos-1 (disco de 30 GB en 21 partes, hecha con FTK Imager)<br>
+                    <strong>Herramienta:</strong> Autopsy 4.23.1<br>
+                    <strong>Zona horaria:</strong> Pacific/Auckland (NZDT, UTC+13)<br>
+                    <strong>Periodo revisado:</strong> 29/01/2019 al 02/02/2019<br>
+                    <strong>Contexto:</strong> dos personas que venían de Australia fueron detenidas en el aeropuerto
+                    de Wellington con metanfetamina y dieron dos lugares de entrega
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- METODOLOGÍA -->
+
+        <section id="metodologia" class="section-card reveal">
+
+            <h2>
+                <i class="fa-solid fa-diagram-project"></i>
+                Metodología
+            </h2>
+
+            <p>
+                Primero me aseguré de que la evidencia estuviera completa y sin cambios, y luego la fui revisando
+                desde lo general hasta los detalles:
+            </p>
+
+            <div class="fases-grid">
+
+                <div class="fase-card color-cyan">
+                    <div class="fase-num">01</div>
+                    <div class="fase-name">Integridad</div>
+                    <ul>
+                        <li>MD5 de las 15 partes</li>
+                        <li>Log de FTK Imager</li>
+                        <li>MD5 y SHA1 "verified"</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-white">
+                    <div class="fase-num">02</div>
+                    <div class="fase-name">Caso en Autopsy</div>
+                    <ul>
+                        <li>Caso PR03_Kowhai</li>
+                        <li>Hora de Nueva Zelanda</li>
+                        <li>Módulos de ingest</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-yellow">
+                    <div class="fase-num">03</div>
+                    <div class="fase-name">Sistema y usuario</div>
+                    <ul>
+                        <li>Registro de Windows</li>
+                        <li>Perfil de Steve</li>
+                        <li>UserAssist</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-pink">
+                    <div class="fase-num">04</div>
+                    <div class="fase-name">Archivos</div>
+                    <ul>
+                        <li>Imágenes en Misc</li>
+                        <li>Descargas</li>
+                        <li>Exportar y sacar MD5</li>
+                    </ul>
+                </div>
+
+                <div class="fase-card color-cyan">
+                    <div class="fase-num">05</div>
+                    <div class="fase-name">Cruzar fuentes</div>
+                    <ul>
+                        <li>Historial de Chrome</li>
+                        <li>Línea de tiempo de Windows</li>
+                        <li>Prefetch y Zone.Identifier</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="topic-box" style="color: var(--wd-yellow);">
+
+                <strong>
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    Ojo con la hora
+                </strong>
+
+                <p>
+                    Al principio Autopsy enseñaba las fechas con la hora de mi computadora (hora del centro de
+                    México). Lo cambié en Tools &gt; Options &gt; View a Pacific/Auckland para que todas las horas
+                    estuvieran en hora de Nueva Zelanda, que es donde pasó el caso.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- RESULTADOS -->
+
+        <section id="resultados" class="section-card reveal">
+
+            <h2>
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Resultados
+            </h2>
+
+
+            <h3 class="wd-sub">PARTE I // SISTEMA Y USUARIO</h3>
+
+            <div class="respuestas-grid">
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-white">SISTEMA</span>
+                        <span class="respuesta-id">P-01</span>
+                    </div>
+                    <h3>Sistema operativo</h3>
+                    <div class="valor">Windows 10 Pro 1809</div>
+                    <p>Equipo SK-DESKTOP, a nombre de Steve, instalado el 29/01/2019.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-cyan">USUARIO</span>
+                        <span class="respuesta-id">P-02</span>
+                    </div>
+                    <h3>Perfil principal</h3>
+                    <div class="valor">Steve</div>
+                    <p>C:\Users\Steve, la única cuenta de usuario real en el equipo.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-white">REGISTRO</span>
+                        <span class="respuesta-id">P-03</span>
+                    </div>
+                    <h3>Programas usados</h3>
+                    <div class="valor">UserAssist</div>
+                    <p>Dentro de NTUSER.DAT de Steve, en Explorer\UserAssist.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-white">NAVEGADOR</span>
+                        <span class="respuesta-id">P-04</span>
+                    </div>
+                    <h3>Historiales</h3>
+                    <div class="valor">Chrome y Edge</div>
+                    <p>Chrome en el archivo History y Edge en WebCacheV01.dat, los dos en AppData\Local.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-pink">MD5</span>
+                        <span class="respuesta-id">P-05</span>
+                    </div>
+                    <h3>History de Chrome</h3>
+                    <div class="valor hash">F3F979C6DEE9FBB7CBDF5818AAA4B723</div>
+                    <p>Hash de la copia exportada.</p>
+                </div>
+
+            </div>
+
+
+            <h3 class="wd-sub">PARTE I // IMÁGENES Y DESCARGAS</h3>
+
+            <div class="respuestas-grid">
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-yellow">RUTA</span>
+                        <span class="respuesta-id">P-06 / P-07</span>
+                    </div>
+                    <h3>airport crystals.jpg</h3>
+                    <div class="valor">Documents\Misc</div>
+                    <p>Creada el 31/01/2019 a las 10:25:18 NZDT.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-pink">MD5</span>
+                        <span class="respuesta-id">P-08 / P-09</span>
+                    </div>
+                    <h3>dropoff.jpg</h3>
+                    <div class="valor hash">7FEB763BEBE42C3A3464C9EE3BB1D3E8</div>
+                    <p>Modificada el 02/02/2019 a las 14:06:06 NZDT.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-yellow">VUELOS</span>
+                        <span class="respuesta-id">P-10</span>
+                    </div>
+                    <h3>Imagen de reservas</h3>
+                    <div class="valor">flightbookings.PNG</div>
+                    <p>En la misma carpeta Misc que las otras imágenes.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-pink">MD5</span>
+                        <span class="respuesta-id">P-11</span>
+                    </div>
+                    <h3>Method run.jpg</h3>
+                    <div class="valor hash">69B225BC0EF5A0C003F1E2A6646AAF92</div>
+                    <p>Recorte de una ruta de reparto en Google Maps.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-pink">MD5</span>
+                        <span class="respuesta-id">P-12</span>
+                    </div>
+                    <h3>BNE.png</h3>
+                    <div class="valor hash">DFFA98BDD7371D1806ADB09DB27BA283</div>
+                    <p>En Downloads\Misc. BNE es el código del aeropuerto de Brisbane.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-cyan">OCULTAR</span>
+                        <span class="respuesta-id">P-13</span>
+                    </div>
+                    <h3>Esteganografía</h3>
+                    <div class="valor">Image Steganography 1.5.2</div>
+                    <p>Instalador en Downloads. MD5 C9B7C382DEA6D7F45AE1BF437860CB69.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-cyan">CIFRADO</span>
+                        <span class="respuesta-id">P-14</span>
+                    </div>
+                    <h3>Cifrado</h3>
+                    <div class="valor">TrueCrypt 7.1a</div>
+                    <p>Instalador en Downloads. MD5 7A23AC83A0856C352025A6F7C9CC1526.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-white">APPS</span>
+                        <span class="respuesta-id">P-15</span>
+                    </div>
+                    <h3>Discord y línea de tiempo</h3>
+                    <div class="valor">Discord\Cache // ActivitiesCache.db</div>
+                    <p>La caché de Discord en AppData\Roaming y la línea de tiempo de Windows en AppData\Local.</p>
+                </div>
+
+            </div>
+
+
+            <h3 class="wd-sub">PARTE II // MAPA DE LAS RUTAS</h3>
+
+            <p>
+                Las imágenes "airport crystals", "Method run" y "dropoff" son recortes de Google Maps que Steve
+                guardó con Snip &amp; Sketch, y la reserva es de un vuelo de Brisbane a Wellington. Junté todo en
+                un esquema. Dale clic a cada ruta para verla sola.
+            </p>
+
+            <div class="map-wrap">
+
+                <svg viewBox="0 0 900 540" role="img" aria-label="Esquema de las rutas del caso en Wellington">
+
+                    <g id="px-grid"></g>
+                    <g id="px-water"></g>
+
+                    <text class="land-label" x="292" y="380">BAHIA</text>
+                    <text class="land-label" x="292" y="396">WELLINGTON</text>
+                    <text class="land-label" x="560" y="200">HUTT VALLEY</text>
+
+                    <!-- Rutas -->
+                    <polyline class="route r-flight" data-r="flight"
+                              points="880,40 160,40 160,430 240,430 240,490"/>
+
+                    <polyline class="route r-airport" data-r="airport"
+                              points="240,490 240,300 300,300 300,222 395,222 470,222 470,320 492,320 492,392"/>
+
+                    <polyline class="route r-method" data-r="method"
+                              points="492,392 640,392 640,360 700,360 700,250 650,250 650,150 730,150 730,80"/>
+
+                    <polyline class="route r-drop" data-r="drop"
+                              points="492,392 492,446 515,446"/>
+
+                    <!-- Lugares -->
+                    <g class="node">
+                        <rect class="dot blink" x="232" y="482" width="16" height="16" stroke="#00f0ff"/>
+                        <text x="120" y="520">AEROPUERTO WLG</text>
+                        <text class="sub" x="120" y="535">Rongotai</text>
+                    </g>
+
+                    <g class="node">
+                        <rect class="dot" x="388" y="215" width="14" height="14" stroke="#00f0ff"/>
+                        <text x="340" y="205">PETONE</text>
+                        <text class="sub" x="290" y="188">aquí estaba el inmueble cateado</text>
+                    </g>
+
+                    <g class="node">
+                        <rect class="dot blink" x="483" y="383" width="18" height="18" stroke="#ff2a6d"/>
+                        <text x="510" y="387">EASTBOURNE "HOME"</text>
+                        <text class="sub" x="510" y="403">escrito a mano en Method run</text>
+                    </g>
+
+                    <g class="node">
+                        <rect class="dot blink" x="508" y="439" width="14" height="14" stroke="#f5e400"/>
+                        <text x="532" y="451">EASTBOURNE LIBRARY</text>
+                        <text class="sub" x="532" y="467">punto de entrega (dropoff)</text>
+                    </g>
+
+                    <g class="node">
+                        <rect class="dot" x="633" y="353" width="14" height="14" stroke="#ff2a6d"/>
+                        <text x="575" y="350">WAINUIOMATA</text>
+                    </g>
+
+                    <g class="node">
+                        <rect class="dot" x="643" y="243" width="14" height="14" stroke="#ff2a6d"/>
+                        <text x="712" y="255">NAENAE</text>
+                    </g>
+
+                    <g class="node">
+                        <rect class="dot" x="723" y="73" width="14" height="14" stroke="#ff2a6d"/>
+                        <text x="745" y="86">STOKES VALLEY</text>
+                    </g>
+
+                    <g class="node">
+                        <text x="560" y="28">&gt;&gt; VUELO DESDE BRISBANE (BNE)</text>
+                    </g>
+
+                </svg>
+
+                <div class="map-legend">
+                    <button class="active" data-show="all" style="--c: #f2f2f2;">[ TODAS ]</button>
+                    <button data-show="flight" style="--c: #f2f2f2;">VUELO BNE &gt; WLG (16/02)</button>
+                    <button data-show="airport" style="--c: #00f0ff;">AIRPORT CRYSTALS (47 MIN)</button>
+                    <button data-show="method" style="--c: #ff2a6d;">METHOD RUN (54 MIN)</button>
+                    <button data-show="drop" style="--c: #f5e400;">DROPOFF</button>
+                </div>
+
+                <p class="map-note">&gt; esquema hecho a mano, no está a escala. Los lugares y tiempos salen de las capturas de Google Maps que estaban en el equipo.</p>
+
+            </div>
+
+
+            <h3 class="wd-sub">PARTE II // LO QUE SE ENCONTRÓ</h3>
+
+            <div class="respuestas-grid">
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-yellow">P-16</span>
+                    </div>
+                    <h3>Reserva y punto de entrega</h3>
+                    <div class="valor">2 adultos BNE &gt; WLG</div>
+                    <p>La reserva llegó como adjunto de Discord ("Steve_K.PNG"). BNE.png llegó por ProtonMail y dropoff.jpg es la Eastbourne Library, uno de los lugares de entrega del caso.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-cyan">P-17</span>
+                    </div>
+                    <h3>Rutas planeadas</h3>
+                    <div class="valor">Aeropuerto y reparto</div>
+                    <p>El 31/01 armó las rutas en Google Maps y minutos después las recortó con Snip &amp; Sketch. Esa misma tarde buscó "crystal meth".</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-white">P-18</span>
+                    </div>
+                    <h3>Discord</h3>
+                    <div class="valor">Se usó todos los días</div>
+                    <p>Se descargó el 29/01 y se abrió varias veces hasta el 02/02. Sin los mensajes no se sabe con quién hablaba.</p>
+                </div>
+
+                <div class="respuesta-card">
+                    <div class="respuesta-header">
+                        <span class="tag-badge tag-pink">P-19</span>
+                    </div>
+                    <h3>Ocultar y borrar</h3>
+                    <div class="valor">Ejecutadas, uso no probado</div>
+                    <p>Image Steganography y TrueCrypt se abrieron (Prefetch), y CCleaner se usó dos días. No encontré un archivo escondido o cifrado.</p>
+                </div>
+
+            </div>
+
+
+            <h3 class="wd-sub">PARTE II // ¿HASTA DÓNDE LLEGÓ CADA HERRAMIENTA?</h3>
+
+            <div class="tool-levels">
+
+                <div class="tool-card">
+                    <h4>&gt; IMAGE_STEGANOGRAPHY_1.5.2</h4>
+                    <div class="lvl"><span>Descarga</span><div class="blocks" data-on="10"></div><span class="st ok">OK</span></div>
+                    <div class="lvl"><span>Instalación</span><div class="blocks" data-on="10"></div><span class="st ok">OK</span></div>
+                    <div class="lvl"><span>Ejecución</span><div class="blocks" data-on="10"></div><span class="st ok">OK</span></div>
+                    <div class="lvl no"><span>Uso efectivo</span><div class="blocks" data-on="2"></div><span class="st bad">NO</span></div>
+                </div>
+
+                <div class="tool-card">
+                    <h4>&gt; TRUECRYPT_7.1a</h4>
+                    <div class="lvl"><span>Descarga</span><div class="blocks" data-on="10"></div><span class="st ok">OK</span></div>
+                    <div class="lvl"><span>Instalación</span><div class="blocks" data-on="10"></div><span class="st ok">OK</span></div>
+                    <div class="lvl"><span>Ejecución</span><div class="blocks" data-on="10"></div><span class="st ok">OK</span></div>
+                    <div class="lvl no"><span>Uso efectivo</span><div class="blocks" data-on="2"></div><span class="st bad">NO</span></div>
+                </div>
+
+            </div>
+
+
+            <div class="topic-box" style="color: var(--wd-pink);">
+
+                <strong>
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    Hipótesis (P-20)
+                </strong>
+
+                <p>
+                    El equipo de Steve se usó entre el 29/01 y el 02/02/2019 para organizar la llegada de la
+                    metanfetamina a Wellington: hablar con otras personas por Discord y ProtonMail, recibir la
+                    reserva de dos personas desde Brisbane, planear la ruta desde el aeropuerto y el reparto, escoger
+                    un punto de entrega en Eastbourne y usar programas para esconder, cifrar y borrar información.
+                </p>
+
+                <ul style="margin-top: 12px;">
+                    <li><b>Otra explicación:</b> alguien más pudo usar la cuenta "Steve", o él solo guardaba lo que le mandaban. TrueCrypt y CCleaner también tienen usos legales.</li>
+                    <li><b>Lo que haría falta:</b> los mensajes de Discord y ProtonMail, y analizar la copia de la memoria RAM (Narcos-Mem-1) con Volatility.</li>
+                </ul>
+
+            </div>
+
+        </section>
+
+
+        <div class="wd-band">
+            <div class="track">
+                <span class="p">TIMELINE_NZDT</span><span>29/01 &gt; 02/02/2019</span><span class="c">CHROME // ACTIVITIESCACHE // PREFETCH</span><span>DEDSEC</span>
+                <span class="p">TIMELINE_NZDT</span><span>29/01 &gt; 02/02/2019</span><span class="c">CHROME // ACTIVITIESCACHE // PREFETCH</span><span>DEDSEC</span>
+                <span class="p">TIMELINE_NZDT</span><span>29/01 &gt; 02/02/2019</span><span class="c">CHROME // ACTIVITIESCACHE // PREFETCH</span><span>DEDSEC</span>
+                <span class="p">TIMELINE_NZDT</span><span>29/01 &gt; 02/02/2019</span><span class="c">CHROME // ACTIVITIESCACHE // PREFETCH</span><span>DEDSEC</span>
+            </div>
+        </div>
+
+
+        <!-- LÍNEA DE TIEMPO -->
+
+        <section id="timeline" class="section-card reveal">
+
+            <h2>
+                <i class="fa-solid fa-terminal"></i>
+                Línea de tiempo
+            </h2>
+
+            <p>
+                Lo que hizo el usuario día por día, sacado del historial de Chrome, la línea de tiempo de Windows,
+                Prefetch y las fechas de los archivos. Todas las horas son de Nueva Zelanda. Puedes filtrar por tipo.
+            </p>
+
+            <div class="tl-filters">
+                <button class="active" data-f="all" style="--c: #f2f2f2;">TODO</button>
+                <button data-f="droga" style="--c: #00f0ff;">DROGA</button>
+                <button data-f="comunic" style="--c: #f2f2f2;">COMUNICACIÓN</button>
+                <button data-f="ruta" style="--c: #f5e400;">RUTAS</button>
+                <button data-f="oculta" style="--c: #ff2a6d;">OCULTAR / BORRAR</button>
+            </div>
+
+            <div class="terminal" id="terminal">
+
+                <div class="tl-day">MAR 29/01/2019</div>
+                <div class="tl-item comunic"><span class="hora">[09:55]</span><span class="cat">COM</span>Busca "download discord" en Edge y lo descarga.</div>
+                <div class="tl-item comunic"><span class="hora">[10:03]</span><span class="cat">COM</span>Entra a ProtonMail con la cuenta crayfish1980.</div>
+                <div class="tl-item droga"><span class="hora">[11:58]</span><span class="cat">ICE</span>Busca "cutting agents for ice" y "how to launder money".</div>
+
+                <div class="tl-day">MIÉ 30/01/2019</div>
+                <div class="tl-item oculta"><span class="hora">[12:27]</span><span class="cat">OCU</span>Descarga TrueCrypt de Softpedia y lo instala.</div>
+                <div class="tl-item oculta"><span class="hora">[12:31]</span><span class="cat">OCU</span>Abre TrueCrypt y el asistente para crear volúmenes (TrueCrypt Format).</div>
+                <div class="tl-item oculta"><span class="hora">[12:41]</span><span class="cat">OCU</span>Descarga CCleaner y lo usa por primera vez.</div>
+
+                <div class="tl-day">JUE 31/01/2019</div>
+                <div class="tl-item ruta"><span class="hora">[10:17]</span><span class="cat">RUT</span>Arma en Google Maps la ruta Wainuiomata, Eastbourne, Stokes Valley y Naenae.</div>
+                <div class="tl-item ruta"><span class="hora">[10:22]</span><span class="cat">RUT</span>Recorta la ruta con Snip &amp; Sketch: se crea "Method run.jpg".</div>
+                <div class="tl-item ruta"><span class="hora">[10:25]</span><span class="cat">RUT</span>Busca la ruta del aeropuerto a Eastbourne y la recorta: "airport crystals.jpg".</div>
+                <div class="tl-item droga"><span class="hora">[15:54]</span><span class="cat">ICE</span>Busca "crystal meth", "drug paraphernalia meth" y "gangs nz drugs".</div>
+
+                <div class="tl-day">VIE 01/02/2019</div>
+                <div class="tl-item comunic"><span class="hora">[13:13]</span><span class="cat">COM</span>Descarga BNE.png desde un correo de ProtonMail.</div>
+                <div class="tl-item oculta"><span class="hora">[13:15]</span><span class="cat">OCU</span>Busca "image steganography download".</div>
+                <div class="tl-item oculta"><span class="hora">[13:17]</span><span class="cat">OCU</span>Instala y abre Image Steganography, 4 minutos después de recibir BNE.png.</div>
+                <div class="tl-item oculta"><span class="hora">[15:41]</span><span class="cat">OCU</span>Vuelve a usar CCleaner.</div>
+
+                <div class="tl-day">SÁB 02/02/2019</div>
+                <div class="tl-item droga"><span class="hora">[13:56]</span><span class="cat">ICE</span>Busca "best places to trade drugs".</div>
+                <div class="tl-item ruta"><span class="hora">[14:04]</span><span class="cat">RUT</span>Busca "eastbourne library" y la abre en Google Maps.</div>
+                <div class="tl-item ruta"><span class="hora">[14:06]</span><span class="cat">RUT</span>Recorta el mapa de la biblioteca: se crea "dropoff.jpg".</div>
+                <div class="tl-item comunic"><span class="hora">[15:28]</span><span class="cat">COM</span>Descarga "Steve_K.PNG" de Discord y queda guardado como flightbookings.PNG.</div>
+
+                <p style="margin: 10px 0 0;"><span class="cursor"></span></p>
+
+            </div>
+
+        </section>
+
+
+        <!-- EVIDENCIAS -->
+
+        <section id="evidencias" class="section-card reveal">
+
+            <h2>
+                <i class="fa-solid fa-images"></i>
+                Evidencias
+            </h2>
+
+            <p>
+                Capturas de cada paso, en orden. Dale clic a cualquier imagen para verla en grande.
+            </p>
+
+
+            <h3 class="ev-group-title">// INTEGRIDAD Y CASO</h3>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-01</span>
+                <h3>Las 15 partes descargadas</h3>
+                <p>El ZIP de Narcos-1 viene partido en 15 archivos.</p>
+                <figure>
+                    <img src="Evidencias/PR3_P0a_partes.png" alt="Partes del ZIP" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-02</span>
+                <h3>MD5 de cada parte</h3>
+                <p>Comando: <code class="cmd">Get-FileHash .\Narcos1.zip* -Algorithm MD5 | Format-Table Hash, Path -AutoSize</code></p>
+                <p>Saqué el hash de cada parte antes de descomprimir.</p>
+                <figure>
+                    <img src="Evidencias/PR3_P0b_hashes.png" alt="Hashes de las partes" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-03</span>
+                <h3>Contenido del ZIP</h3>
+                <p>Trae la imagen del disco (21 partes) y una copia de la memoria RAM.</p>
+                <figure>
+                    <img src="Evidencias/PR3_P0c2.png" alt="Carpetas de la evidencia" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P0c4_image.png" alt="Partes de la imagen" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-04</span>
+                <h3>Log de FTK Imager</h3>
+                <p>El log dice que el MD5 y el SHA1 de la imagen salieron "verified".</p>
+                <figure>
+                    <img src="Evidencias/PR3_P0d_log1.png" alt="Log de FTK Imager" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P0d_log2.png" alt="Verificación del log" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-05</span>
+                <h3>Caso en Autopsy</h3>
+                <p>Caso PR03_Kowhai, imagen con zona horaria de Nueva Zelanda y módulos de ingest.</p>
+                <figure>
+                    <img src="Evidencias/PR3_P1a.png" alt="Datos del caso" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P1b.png" alt="Fuente de datos" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P1c.png" alt="Módulos de ingest" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <h3 class="ev-group-title">// PARTE I</h3>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-06</span>
+                <h3>Sistema operativo (P-01)</h3>
+                <p>Datos del sistema y la clave CurrentVersion del registro.</p>
+                <figure>
+                    <img src="Evidencias/PR3_P01.png" alt="Información del sistema" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P01b.png" alt="Clave CurrentVersion" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-07</span>
+                <h3>Perfil de usuario (P-02)</h3>
+                <p>Carpeta Users con el perfil de Steve.</p>
+                <figure>
+                    <img src="Evidencias/PR3_P02.png" alt="Perfil de Steve" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-08</span>
+                <h3>UserAssist (P-03)</h3>
+                <p>Los nombres vienen en ROT13, por eso se ven revueltos.</p>
+                <figure>
+                    <img src="Evidencias/PR3_P03a.png" alt="UserAssist" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P03b.png" alt="Valores de UserAssist" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-09</span>
+                <h3>Historial web (P-04)</h3>
+                <p>Historial de Edge y Chrome, y dónde están sus archivos.</p>
+                <figure>
+                    <img src="Evidencias/PR3_P04a.png" alt="Historial web" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P04b.png" alt="Historial de Chrome" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P04d.png" alt="Archivo History" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P04c.png" alt="Archivo WebCacheV01.dat" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-10</span>
+                <h3>MD5 del History (P-05)</h3>
+                <p>Comando: <code class="cmd">Get-FileHash C:\PR03\Exportados\History -Algorithm MD5</code></p>
+                <figure>
+                    <img src="Evidencias/PR3_P05a.png" alt="History exportado" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P05b.png" alt="MD5 del History" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-11</span>
+                <h3>airport crystals.jpg (P-06 / P-07)</h3>
+                <p>Búsqueda por nombre y sus fechas.</p>
+                <figure>
+                    <img src="Evidencias/PR3_P06_lista.png" alt="Resultados de la búsqueda" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P06.png" alt="airport crystals.jpg" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-12</span>
+                <h3>dropoff.jpg (P-08 / P-09)</h3>
+                <p>Comando: <code class="cmd">Get-FileHash "C:\PR03\Exportados\dropoff.jpg" -Algorithm MD5</code></p>
+                <figure>
+                    <img src="Evidencias/PR3_P08a.png" alt="dropoff exportado" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P08b.png" alt="MD5 de dropoff" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P09.png" alt="Fechas de dropoff" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-13</span>
+                <h3>Carpeta Misc (P-10)</h3>
+                <p>Las cuatro imágenes del caso, cada una con su Zone.Identifier.</p>
+                <figure>
+                    <img src="Evidencias/PR3_P10.png" alt="Carpeta Misc" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-14</span>
+                <h3>Method run.jpg (P-11)</h3>
+                <p>Comando: <code class="cmd">Get-FileHash "C:\PR03\Exportados\29939-Method run.jpg" -Algorithm MD5</code></p>
+                <figure>
+                    <img src="Evidencias/PR3_P11a.png" alt="Archivos exportados" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P11b.png" alt="MD5 de Method run" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-15</span>
+                <h3>BNE.png (P-12)</h3>
+                <p>Comando: <code class="cmd">Get-FileHash "C:\PR03\Exportados\*BNE*" -Algorithm MD5 | Format-Table Hash, Path -AutoSize</code></p>
+                <figure>
+                    <img src="Evidencias/PR3_P12a.png" alt="BNE.png en Autopsy" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P12b.png" alt="MD5 de BNE.png" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-16</span>
+                <h3>Instaladores en Downloads (P-13 / P-14)</h3>
+                <p>Comando: <code class="cmd">Get-FileHash "C:\PR03\Exportados\*Setup*" -Algorithm MD5 | Format-Table Hash, Path -AutoSize</code></p>
+                <figure>
+                    <img src="Evidencias/PR3_P13.png" alt="Carpeta Downloads" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P13b.png" alt="Instaladores exportados" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P13c.png" alt="MD5 de los instaladores" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-17</span>
+                <h3>Discord y ActivitiesCache.db (P-15)</h3>
+                <p>La caché de Discord y la base de datos de la línea de tiempo de Windows.</p>
+                <figure>
+                    <img src="Evidencias/PR3_P15a.png" alt="Caché de Discord" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P15b.png" alt="ActivitiesCache.db" class="evidence-image">
+                </figure>
+            </div>
+
+
+            <h3 class="ev-group-title">// PARTE II</h3>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-18</span>
+                <h3>Reserva, BNE y punto de entrega (P-16)</h3>
+                <p>Las tres imágenes que se recuperaron del equipo.</p>
+                <figure>
+                    <img src="Evidencias/IMG_flightbookings.png" alt="Reserva de vuelos" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/IMG_BNE.jpg" alt="BNE.png" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/IMG_dropoff.jpg" alt="dropoff.jpg" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-19</span>
+                <h3>Rutas (P-17)</h3>
+                <p>Recortes de Google Maps: del aeropuerto a Eastbourne y la ruta de reparto.</p>
+                <figure>
+                    <img src="Evidencias/IMG_airport.jpg" alt="airport crystals.jpg" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/IMG_methodrun.jpg" alt="Method run.jpg" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-20</span>
+                <h3>Prefetch (P-19)</h3>
+                <p>Archivos que deja Windows al abrir Image Steganography, TrueCrypt y CCleaner.</p>
+                <figure>
+                    <img src="Evidencias/PR3_P19a_steg.png" alt="Prefetch de Image Steganography" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P19a_tc.png" alt="Prefetch de TrueCrypt" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P19a_cc.png" alt="Prefetch de CCleaner" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-21</span>
+                <h3>Configuración de TrueCrypt (P-19)</h3>
+                <p>Estaba puesto para no guardar historial de volúmenes y se eligió la unidad F:.</p>
+                <figure>
+                    <img src="Evidencias/PR3_P19d.png" alt="Carpeta de TrueCrypt" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P19f1.png" alt="Configuration.xml" class="evidence-image">
+                </figure>
+            </div>
+
+            <div class="evidence-item">
+                <span class="ev-tag">EV-22</span>
+                <h3>Carpeta de Image Steganography y archivos cifrados (P-19)</h3>
+                <p>La carpeta del programa está vacía y lo único marcado como cifrado es un archivo de Windows Defender.</p>
+                <figure>
+                    <img src="Evidencias/PR3_P19e.png" alt="Carpeta de Image Steganography" class="evidence-image">
+                </figure>
+                <figure>
+                    <img src="Evidencias/PR3_P19c.png" alt="Encryption Suspected" class="evidence-image">
+                </figure>
+            </div>
+
+        </section>
+
+
+        <!-- ENTREGABLES -->
+
+        <section id="entregables" class="section-card reveal">
+
+            <h2>
+                <i class="fa-solid fa-folder-open"></i>
+                Entregables
+            </h2>
+
+            <p>
+                Informe del proyecto.
+            </p>
+
+            <div class="download-container">
+
+                <a href="Evidencias/MartinezEscobedoJesus-PR03.pdf" download class="btn-submit">
+                    <i class="fa-solid fa-file-pdf"></i> Descargar proyecto (PDF)
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONCLUSIÓN -->
+
+        <section id="conclusion" class="section-card reveal">
+
+            <h2>
+                <i class="fa-solid fa-flag-checkered"></i>
+                Conclusión
+            </h2>
+
+            <p>
+                Con Autopsy y los registros de Windows se pudo armar lo que pasó en el equipo de Steve entre el
+                29/01 y el 02/02/2019. Lo que más sirvió fue cruzar fuentes: el sistema de archivos dice cuándo
+                apareció cada archivo, el Zone.Identifier dice de dónde vino, el historial de Chrome dice qué se
+                buscó antes, y la línea de tiempo y Prefetch dicen qué programas se abrieron.
+            </p>
+
+            <p>
+                También me quedó claro que hay que separar lo que se ve de lo que uno interpreta. Hay mucha
+                evidencia que apunta al narcotráfico, pero sin los mensajes de Discord y ProtonMail no se puede
+                probar todo.
+            </p>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- VISOR -->
+    <div id="lightbox"><img src="" alt="Evidencia en grande"></div>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <p>&copy; 2026 Jesús Israel Martínez Escobedo.</p>
+
+        <p>
+            <i class="fa-solid fa-lock"></i>
+            Conexión Segura mediante HTTPS / SSL
+        </p>
+
+    </footer>
+
+
+    <script>
+    (function () {
+
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        function rnd(a, b) { return a + Math.random() * (b - a); }
+
+
+        /* ---------- Ruido de pixeles blanco y negro ---------- */
+        var nz = document.getElementById('wd-noise');
+        if (nz && !reduce) {
+            nz.width = 160; nz.height = 90;
+            var nctx = nz.getContext('2d');
+            var img = nctx.createImageData(160, 90);
+            setInterval(function () {
+                for (var i = 0; i < img.data.length; i += 4) {
+                    var v = Math.random() < 0.5 ? 0 : 255;
+                    img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+                    img.data[i + 3] = 255;
+                }
+                nctx.putImageData(img, 0, 0);
+            }, 90);
+        }
+
+
+        /* ---------- Glitch b/n de pantalla completa (como en el juego) ---------- */
+        var gl = document.getElementById('wd-glitch');
+
+        function glitchBurst() {
+            gl.innerHTML = '';
+            var bars = 3 + Math.floor(Math.random() * 6);
+            for (var i = 0; i < bars; i++) {
+                var b = document.createElement('div');
+                b.className = 'bar';
+                b.style.top = rnd(0, 100) + '%';
+                b.style.height = rnd(2, 40) + 'px';
+                b.style.transform = 'translateX(' + rnd(-30, 30) + 'px)';
+                gl.appendChild(b);
+            }
+            var blks = 6 + Math.floor(Math.random() * 14);
+            for (var j = 0; j < blks; j++) {
+                var k = document.createElement('div');
+                var s = [8, 16, 24, 32][Math.floor(Math.random() * 4)];
+                k.className = 'blk';
+                k.style.left = rnd(0, 100) + '%';
+                k.style.top = rnd(0, 100) + '%';
+                k.style.width = (s * Math.ceil(rnd(1, 6))) + 'px';
+                k.style.height = s + 'px';
+                gl.appendChild(k);
+            }
+            gl.classList.add('on');
+            document.body.classList.add('wd-bw');
+
+            setTimeout(function () {
+                gl.style.transform = 'translateX(' + rnd(-12, 12) + 'px)';
+            }, 60);
+
+            setTimeout(function () {
+                gl.classList.remove('on');
+                gl.style.transform = '';
+                document.body.classList.remove('wd-bw');
+            }, 160 + Math.random() * 120);
+
+            setTimeout(glitchBurst, rnd(5000, 11000));
+        }
+
+        if (!reduce) setTimeout(glitchBurst, 1800);
+
+
+        /* ---------- Foto del profiler: silueta en pixeles ---------- */
+        var pc = document.getElementById('profiler-canvas');
+        if (pc) {
+            var p = pc.getContext('2d');
+            function drawProfile() {
+                p.fillStyle = '#0a0a0a';
+                p.fillRect(0, 0, 30, 38);
+                p.fillStyle = '#d9d9d9';
+                // cabeza y gorra
+                p.fillRect(10, 6, 10, 3);
+                p.fillRect(8, 9, 15, 2);
+                p.fillRect(10, 11, 10, 10);
+                // cuello y hombros
+                p.fillRect(13, 21, 4, 3);
+                p.fillRect(5, 24, 20, 3);
+                p.fillRect(3, 27, 24, 11);
+                // ojos tapados
+                p.fillStyle = '#ff2a6d';
+                p.fillRect(9, 14, 12, 3);
+                // ruido
+                for (var i = 0; i < 70; i++) {
+                    p.fillStyle = Math.random() < 0.5 ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.25)';
+                    p.fillRect(Math.floor(rnd(0, 30)), Math.floor(rnd(0, 38)), 1, 1);
+                }
+                // corte glitch
+                if (Math.random() < 0.35) {
+                    var y = Math.floor(rnd(0, 34));
+                    var d = p.getImageData(0, y, 30, 3);
+                    p.putImageData(d, Math.floor(rnd(-4, 4)), y);
+                }
+            }
+            drawProfile();
+            if (!reduce) setInterval(drawProfile, 140);
+        }
+
+
+        /* ---------- Pixeles del mapa ---------- */
+        var NS = 'http://www.w3.org/2000/svg';
+        var gGrid = document.getElementById('px-grid');
+        var gWater = document.getElementById('px-water');
+        if (gGrid && gWater) {
+            for (var x = 10; x < 900; x += 20) {
+                for (var y = 10; y < 540; y += 20) {
+                    var r = document.createElementNS(NS, 'rect');
+                    r.setAttribute('x', x); r.setAttribute('y', y);
+                    r.setAttribute('width', 2); r.setAttribute('height', 2);
+                    r.setAttribute('class', 'px');
+                    gGrid.appendChild(r);
+                }
+            }
+            // bahía hecha de bloques
+            for (var wx = 250; wx < 470; wx += 12) {
+                for (var wy = 240; wy < 480; wy += 12) {
+                    var nx = (wx - 360) / 110, ny = (wy - 350) / 120;
+                    var inside = nx * nx + ny * ny < 1 || (wy > 380 && wx > 262 && wx < 452);
+                    if (inside && wy < 476) {
+                        var w = document.createElementNS(NS, 'rect');
+                        w.setAttribute('x', wx); w.setAttribute('y', wy);
+                        w.setAttribute('width', 11); w.setAttribute('height', 11);
+                        w.setAttribute('class', 'px-water');
+                        gWater.appendChild(w);
+                    }
+                }
+            }
+        }
+
+
+        /* ---------- Bloques de las barras de herramientas ---------- */
+        document.querySelectorAll('.blocks').forEach(function (bk) {
+            for (var i = 0; i < 10; i++) bk.appendChild(document.createElement('i'));
+        });
+
+        function fillBlocks(card) {
+            card.querySelectorAll('.blocks').forEach(function (bk, row) {
+                var n = +bk.dataset.on;
+                bk.querySelectorAll('i').forEach(function (cell, i) {
+                    if (i < n || bk.parentNode.classList.contains('no')) {
+                        setTimeout(function () { cell.classList.add('on'); }, row * 300 + i * 45);
+                    }
+                });
+            });
+        }
+
+
+        /* ---------- Imágenes que se "desencriptan" en pixeles ---------- */
+        function pixelReveal(img) {
+            if (reduce || !img.complete || !img.naturalWidth) return;
+            var fig = img.parentNode;
+            var cv = document.createElement('canvas');
+            cv.className = 'px-cover';
+            cv.style.left = img.offsetLeft + 'px';
+            cv.style.top = img.offsetTop + 'px';
+            cv.style.width = img.clientWidth + 'px';
+            cv.style.height = img.clientHeight + 'px';
+            fig.appendChild(cv);
+            var ctx = cv.getContext('2d');
+            var steps = [48, 32, 20, 12, 7, 4, 2];
+            var i = 0;
+            (function tick() {
+                if (i >= steps.length) { cv.remove(); return; }
+                var s = steps[i++];
+                var w = Math.max(1, Math.round(img.clientWidth / s));
+                var h = Math.max(1, Math.round(img.clientHeight / s));
+                cv.width = w; cv.height = h;
+                ctx.imageSmoothingEnabled = false;
+                ctx.filter = i < 4 ? 'grayscale(1) contrast(1.6)' : 'none';
+                try { ctx.drawImage(img, 0, 0, w, h); } catch (e) { cv.remove(); return; }
+                setTimeout(tick, 70);
+            })();
+        }
+
+
+        /* ---------- Línea de tiempo: se escribe línea por línea ---------- */
+        function typeTimeline() {
+            var items = document.querySelectorAll('#terminal .tl-item');
+            items.forEach(function (it, i) {
+                setTimeout(function () { it.classList.add('show'); }, i * 110);
+            });
+        }
+
+
+        /* ---------- Todo lo que pasa al hacer scroll ---------- */
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (!e.isIntersecting) return;
+                var el = e.target;
+
+                if (el.classList.contains('reveal')) el.classList.add('show');
+
+                if (el.classList.contains('num')) {
+                    var to = +el.dataset.to, suf = el.dataset.suf || '', t0 = null;
+                    (function step(ts) {
+                        if (!t0) t0 = ts;
+                        var k = Math.min(1, (ts - t0) / 1200);
+                        var v = k < 1 ? Math.floor(Math.random() * 99) : to;
+                        el.textContent = (k < 0.85 ? v : to) + suf;
+                        if (k < 1) setTimeout(function () { step(performance.now()); }, 50);
+                    })(performance.now());
+                }
+
+                if (el.classList.contains('tool-card')) fillBlocks(el);
+                if (el.id === 'terminal') typeTimeline();
+                if (el.classList.contains('evidence-image')) pixelReveal(el);
+
+                io.unobserve(el);
+            });
+        }, { threshold: 0, rootMargin: '0px 0px -12% 0px' });
+
+        document.querySelectorAll('.reveal, .counter .num, .tool-card, #terminal, .evidence-image')
+            .forEach(function (el) { io.observe(el); });
+
+        if (reduce) {
+            document.querySelectorAll('.tl-item').forEach(function (it) { it.classList.add('show'); });
+        }
+
+
+        /* ---------- Filtros de la línea de tiempo ---------- */
+        var fbtn = document.querySelectorAll('.tl-filters button');
+        fbtn.forEach(function (b) {
+            b.addEventListener('click', function () {
+                fbtn.forEach(function (x) { x.classList.remove('active'); });
+                b.classList.add('active');
+                var f = b.dataset.f;
+                document.querySelectorAll('.tl-item').forEach(function (it) {
+                    it.classList.toggle('hide', f !== 'all' && !it.classList.contains(f));
+                    it.classList.add('show');
+                });
+            });
+        });
+
+
+        /* ---------- Rutas del mapa ---------- */
+        var mbtn = document.querySelectorAll('.map-legend button');
+        mbtn.forEach(function (b) {
+            b.addEventListener('click', function () {
+                mbtn.forEach(function (x) { x.classList.remove('active'); });
+                b.classList.add('active');
+                var s = b.dataset.show;
+                document.querySelectorAll('.route').forEach(function (r) {
+                    r.classList.toggle('off', s !== 'all' && r.dataset.r !== s);
+                });
+            });
+        });
+
+
+        /* ---------- Visor de imágenes ---------- */
+        var lb = document.getElementById('lightbox'), lbi = lb.querySelector('img');
+        document.querySelectorAll('.evidence-image').forEach(function (img) {
+            img.addEventListener('click', function () {
+                lbi.src = img.src;
+                lb.classList.add('open');
+            });
+        });
+        lb.addEventListener('click', function () { lb.classList.remove('open'); });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') lb.classList.remove('open');
+        });
+
+    })();
+    </script>
+
+</body>
+</html>
